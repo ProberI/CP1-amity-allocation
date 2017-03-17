@@ -6,7 +6,7 @@
 
 [Amity]
 
-[Rooms|Room_id: int; Room_name: String|Create_Room(); 
+[Rooms|Room_id: int; Room_name: String|Create_Room();
 
 Print_room()]-:>[Amity]
 
