@@ -1,7 +1,6 @@
-
 class Amity():
     def __init__(self, Rname="Narnia", Rtype=True, Role="STAFF",
-                 Pname="PAUL", PId=001):
+                 Pname="PAUL", PId=1):
         self.Rname = Rname
         self.Rtype = Rtype
         self.Role = Role
@@ -34,31 +33,6 @@ class Amity():
             else:
                 return ValuerError("Name can only be String value")
         return(NStore)
-
-
-class Rooms(Amity):
-    amity = Amity()
-    if amity.Rtype == "Office" or amity.Rtype == "O":
-        pass
-
-
-class Living(Rooms):
-    """ People"""
-
-    def numTest(self, fellows):
-        self.Rname = fellows
-        each = self.Rname.split()
-        store = []
-        for name in each:
-            if (len(store)) < 4:
-                store.append(name)
-            else:
-                return "You have exceeded maximum"
-        return(store)
-
-
-class Office(Rooms):
-    pass
 
 
 """
