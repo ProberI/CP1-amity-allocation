@@ -1,4 +1,5 @@
 import unittest
+from Trys import Amity, Living
 
 
 class TestModel(unittest.TestCase):
