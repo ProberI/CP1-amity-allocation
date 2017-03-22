@@ -1,7 +1,6 @@
-from Amity import Amity
+import sys
+sys.path.insert(0, '/Users/Upendo/Documents/CP1/CP1-amity-allocation')
 
 
-class Rooms(Amity):
-    amity = Amity()
-    if amity.Rtype == "Office" or amity.Rtype == "O":
-        pass
+class Rooms():
+    pass

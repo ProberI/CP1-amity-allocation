@@ -1,14 +1,13 @@
-[Person|id: Int;Name: String;Category: Boolean|add_person()]-:>[Amity]
+[Person]-:>[Amity]
 
 [Fellow|names: dict|add_fellow()]-:>[Person]
 
 [Staff|names: dict|add_staff()]-:>[Person]
 
-[Amity]
+[Amity|+ Pid: Int;+ Name: String;+ Role: Boolean; + Room_id: int;
++ Room_name: String|create_room(); add_person()]
 
-[Rooms|Room_id: int; Room_name: String|Create_Room();
-
-Print_room()]-:>[Amity]
+[Rooms|Print_room()]-:>[Amity]
 
 [Office|People: Dict|add_person()]-:>[Rooms]
 

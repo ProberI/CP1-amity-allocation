@@ -1,12 +1,8 @@
 import unittest
-from Amity import Amity
-from Rooms import Rooms
-from Living import Living
-from Office import Office
+import
 
 
 class TestModel(unittest.TestCase):
-
     def setUp(self):
         self.amity = Amity()
         self.living = Living()

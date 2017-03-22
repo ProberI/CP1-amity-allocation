@@ -6,6 +6,7 @@ class Amity():
         self.Role = Role
         self.Pname = Pname
         self.PId = PId
+        self.space = []
 
     def create_room(self, name, Rtype):
         self.Rname = name
@@ -13,14 +14,14 @@ class Amity():
         each = self.Rname.split()
         for rname in each:
             if Rtype == "Office" or Rtype == "O":
-                space = dict([(True, rname)])
+                self.space.append(dict([(True, rname)]))
                 # return(space)
             elif Rtype == "Living_Space" or Rtype == "L":
-                space = dict([(False, rname)])
+                self.space.append(dict([(False, rname)]))
                 # return(space)
             else:
                 return "Wrong input"
-        return(space)
+        return(self.space)
 
     def add_person(self, PName, Role, Accomodation):
         self.Pname = PName
@@ -35,7 +36,4 @@ class Amity():
         return(NStore)
 
 
-"""
-amity = Amity()
-amity.create_room("Mombasa", "Office")
-"""
+#print(Amity().create_room("Hogwarts", "Office"))
