@@ -13,6 +13,10 @@ class TestModel(unittest.TestCase):
         self.amity = Amity()
 
     """ Tests if classes are correctly inheriting as expected """
+# Test if room exists
+# Test room capacity
+# Test Room Allocation
+# Test accomodation differences STAFF Y raise error
 
     def test_Office_Inheritance(self):
         self.assertTrue(issubclass(Office, Rooms))
@@ -32,14 +36,18 @@ class TestModel(unittest.TestCase):
         self.assertIn('Hogwarts', self.amity.create_room("Hogwarts", "Office"))
         # check inside self.rooms if that room name exists
 
-    def test_Room_correct_input(self):
-        self.assertEqual([{True: 'Hogwarts'}],
+    def test_Office_type_creation(self):
+        self.assertEqual([{"Office": 'Hogwarts'}],
                          self.amity.create_room("Hogwarts", "Office"))
+
+    def test_living_space_creation(self):
+        self.assertEqual([{"Living_Space": "Barmuda"}],
+                         self.amity.create_room("Barmuda", "L"))
 
         # Test Multiple Room Insertion
 
     def test_Multiple_Room_Creation(self):
-        self.assertEqual([{True: 'Hogwarts'}, {True: 'Mombasa'}],
+        self.assertEqual([{"Office": 'Hogwarts'}, {"Office": 'Mombasa'}],
                          self.amity.create_room("Hogwarts Mombasa", "Office"))
 
     def test_Living_max_capacity_exceeded(self):
@@ -52,17 +60,23 @@ class TestModel(unittest.TestCase):
         self.assertEqual(['Paul', 'Kagwe', 'Enjoy', 'Kagwe'],
                          self.living.numTest("Paul Kagwe Enjoy Kagwe"))
 
-# Ensure O and L return appropriate Bool values
-
     def test_Room_Type_assertion(self):
         self.assertNotEqual({False: 'Hogwarts'},
                             self.amity.create_room('Hogwarts', "O"))
 
+    """ Tests add_person fucntion """
 
-# Test if room exists
-# Test room capacity
-# Test Room Allocation
-# Test accomodation differences STAFF Y raise error
+    def test_person_name_as_string(self):
+        with self.assertRaises(TypeError):
+            self.amity.add_person(2, "STAFF", "Y")
+
+    def test_role(self):
+        with self.assertRaises(ValueError):
+            self.amity.add_person("Hey", "Member", "Y")
+
+    def test_accomodation(self):
+        with self.assertRaises(ValueError):
+            self.amity.add_person("Hey", "STAFF", "J")
 
 
 """
