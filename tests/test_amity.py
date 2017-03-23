@@ -5,6 +5,9 @@ from cp.Amity import Amity
 from cp.Living import Living
 from cp.Rooms import Rooms
 from cp.Office import Office
+from cp.Person import Person
+from cp.Fellow import Fellow
+from cp.Staff import Staff
 
 
 class TestModel(unittest.TestCase):
@@ -22,7 +25,13 @@ class TestModel(unittest.TestCase):
         self.assertTrue(issubclass(Office, Rooms))
 
     def test_Living_inheritance(self):
-        issubclass(Rooms, Living)
+        self.assertTrue(issubclass(Living, Rooms))
+
+    def test_FellowInherit(self):
+        self.assertTrue(issubclass(Fellow, Person))
+
+    def test_StaffInherit(self):
+        self.assertTrue(issubclass(Staff, Person))
 
     """ Tests for the create_room function in class Amity.
     The tests validate input and output data and also see if
@@ -30,7 +39,8 @@ class TestModel(unittest.TestCase):
 
     def test_Room_wrong_value_input(self):
         self.assertEqual("Wrong input",
-                         self.amity.create_room("Narnia", "Toilet"))
+                         self.amity.create_room("Narnia",
+                                                "Toilet"), msg="Incorrect input")
 
     def test_Room_existance(self):
         self.assertIn('Hogwarts', self.amity.create_room("Hogwarts", "Office"))
@@ -57,26 +67,38 @@ class TestModel(unittest.TestCase):
 
     def test_living_capacity_output(self):
         self.living = Living()
-        self.assertEqual(['Paul', 'Kagwe', 'Enjoy', 'Kagwe'],
-                         self.living.numTest("Paul Kagwe Enjoy Kagwe"))
+        self.assertEqual(self.living.numTest("Paul Kagwe Enjoy Kagwe"),
+                         ['Paul', 'Kagwe', 'Enjoy', 'Kagwe'])
 
     def test_Room_Type_assertion(self):
         self.assertNotEqual({False: 'Hogwarts'},
                             self.amity.create_room('Hogwarts', "O"))
 
-    """ Tests add_person fucntion """
+    """ Tests add_person function. """
 
     def test_person_name_as_string(self):
         with self.assertRaises(TypeError):
-            self.amity.add_person(2, "STAFF", "Y")
+            self.amity.add_person(2, "STAFF", "N")
 
     def test_role(self):
         with self.assertRaises(ValueError):
-            self.amity.add_person("Hey", "Member", "Y")
+            self.amity.add_person("John", "Member", "Y")
 
     def test_accomodation(self):
         with self.assertRaises(ValueError):
-            self.amity.add_person("Hey", "STAFF", "J")
+            self.amity.add_person("Paul", "STAFF", "J")
+
+    def test_staff_accomodation(self):
+        self.assertEqual(self.amity.add_person("Paul", "STAFF", "Y"),
+                         "Staff cannot have accomodation!")
+
+    def test_fellow_accomodation(self):
+        self.assertEqual(self.amity.add_person("Paul", "FELLOW", "Y"),
+                         "Living_Space successfully allocated")
+
+    def test_fellow_doesnt_want_accomodation(self):
+        self.assertEqual(self.amity.add_person("Paul", "FELLOW", "N"),
+                         "Living_Space not allocated.")
 
 
 """
@@ -95,11 +117,7 @@ class TestModel(unittest.TestCase):
         self.assertEqual('Staff', rooms.getName())
 
     # Tests to check if classes correctly inherit
-    def test_FellowInherit(self):
-        issubclass(Person, Fellow)
 
-    def test_StaffInherit(self):
-        issubclass(Person, Staff)
 """
 
 

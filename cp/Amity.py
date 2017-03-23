@@ -23,13 +23,21 @@ class Amity():
                 return "Wrong input"
         return(self.space)
 
-    def add_person(self, PersonName, Role, Accomodation):
+    def add_person(self, PersonName, Role, Accomodation="N"):
         self.PersonName = PersonName
         self.Role = Role
         NameStore = []
-        if isinstance(PersonName, str) and Role in ("STAFF", "FELLOW") and Accomodation in ("Y", "N"):
+        if isinstance(PersonName, str) and Role in ("STAFF",
+                                                    "FELLOW") and Accomodation in ("Y", "N"):
             PersonName.split()
-            NameStore.append(PersonName)
+            if Role == "STAFF" and Accomodation == "Y":
+                return "Staff cannot have accomodation!"
+            elif Role == "FELLOW" and Accomodation == "Y":
+                return "Living_Space successfully allocated"
+            elif Role == "FELLOW" and Accomodation == "N":
+                return "Living_Space not allocated."
+            else:
+                NameStore.append(PersonName)
             return NameStore
         else:
             if not isinstance(PersonName, str):
@@ -40,4 +48,4 @@ class Amity():
                 raise ValueError("only Y or N accepted ")
 
 
-#print(Amity().add_person("Hey", "Staff", "Y"))
+print(Amity().add_person("Hey", "FELLOW", "Y"))
