@@ -14,14 +14,16 @@ class Amity():
         each = self.Rname.split()
         for rname in each:
             if Rtype == "Office" or Rtype == "O":
+                Rtype = "Office"
                 self.space.append(dict([("Office", rname)]))
                 # return(space)
             elif Rtype == "Living_Space" or Rtype == "L":
+                Rtype = "Living_Space"
                 self.space.append(dict([("Living_Space", rname)]))
                 # return(space)
             else:
-                return "Wrong input"
-        return(self.space)
+                return "Room_Type can only be Office or Living_Space"
+        return(str(Rtype) + " successfully created!")
 
     def add_person(self, PersonName, Role, Accomodation="N"):
         self.PersonName = PersonName
@@ -41,11 +43,11 @@ class Amity():
             return NameStore
         else:
             if not isinstance(PersonName, str):
-                raise TypeError("Name can only be String")
+                return ("Name can only be String")
             elif Role not in ("STAFF", "FELLOW"):
-                raise ValueError("Role can only be Staff or fellow")
+                return("Role can only be STAFF or FELLOW")
             elif Accomodation not in ("Y", "N"):
-                raise ValueError("only Y or N accepted ")
+                return("Accomodation options are only Y or N")
 
 
-print(Amity().add_person("Hey", "FELLOW", "Y"))
+# print(Amity().add_person("Hey", "FELLOW", "Y"))
