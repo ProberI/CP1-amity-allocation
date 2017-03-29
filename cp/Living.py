@@ -4,6 +4,7 @@ from cp.Rooms import Rooms
 
 
 class Living(Rooms):
+
     """ People"""
 
     def numTest(self, fellows):

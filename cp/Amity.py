@@ -1,4 +1,5 @@
 class Amity():
+
     def __init__(self, Rname="Narnia", Rtype="Office", Role="STAFF",
                  PersonName="PAUL", PId=1):
         self.Rname = Rname
@@ -48,6 +49,24 @@ class Amity():
                 return("Role can only be STAFF or FELLOW")
             elif Accomodation not in ("Y", "N"):
                 return("Accomodation options are only Y or N")
+
+    def allocate_room(self, Person_name, Role, Accomodation_status):
+        pass
+
+    def rellocate_person(self, PersonID, Room_name):
+        pass
+
+    def load_people(self):
+        pass
+
+    def print_allocations(self):
+        pass
+
+    def print_unallocated(self):
+        pass
+
+    def print_room(self):
+        pass
 
 
 # print(Amity().add_person("Hey", "FELLOW", "Y"))
