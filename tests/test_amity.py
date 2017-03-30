@@ -16,11 +16,10 @@ class TestModel(unittest.TestCase):
         self.amity = Amity()
 
     """
-    ---------------------------------------------------
     Tests for the create_room function in class Amity.
     The tests validate input and output data and also see if
     specified constraints are met.
-    --------------------------------------------------- """
+    """
 
     def test_CreatingRoom_with_wrong_RoomType(self):
         self.assertEqual(self.amity.create_room("Narnia", "Quiet_Room"),
@@ -56,10 +55,8 @@ class TestModel(unittest.TestCase):
         # recheck
         self.amity.create_room("VALHALLA VALHALLA", "O")
         self.assertFalse(self.amity.all_rooms.count("VALHALLA") == 2)
-    """
-    -----------------------------
-    Test add_person functionality
-    ----------------------------- """
+
+    # Test add_person functionality
 
     def test_AddingPerson_with_integers_as_name(self):
         self.assertEqual(self.amity.add_person(2, "STAFF", "N"),
@@ -85,10 +82,7 @@ class TestModel(unittest.TestCase):
         self.assertEqual(self.amity.add_person("Paul", "FELLOW", "N"),
                          "Living_Space not allocated.")
 
-    """
-    -----------------------
-    Room reallocation tests
-    ----------------------- """
+    # Room reallocation tests
 
     def test_Reallocating_Person_without_a_room(self):
         self.assertEqual(self.amity.rellocate_person("UID002", "Hogwarts"),
