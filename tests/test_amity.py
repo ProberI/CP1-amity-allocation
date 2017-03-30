@@ -52,11 +52,11 @@ class TestModel(unittest.TestCase):
     def test_Creation_of_Office_with_O_as_RoomType_Input(self):
         self.assertNotEqual("Living_Space successfully created!",
                             self.amity.create_room('Hogwarts', "O"))
-        """
-        -----------------------------
-        Test add_person functionality
-        -----------------------------
-        """
+    """
+    -----------------------------
+    Test add_person functionality
+    -----------------------------
+    """
 
     def test_AddingPerson_with_integers_as_name(self):
         self.assertEqual(self.amity.add_person(2, "STAFF", "N"),
@@ -82,11 +82,11 @@ class TestModel(unittest.TestCase):
         self.assertEqual(self.amity.add_person("Paul", "FELLOW", "N"),
                          "Living_Space not allocated.")
 
-        """
-        -----------------------
-        Room reallocation tests
-        -----------------------
-        """
+    """
+    -----------------------
+    Room reallocation tests
+    -----------------------
+    """
 
     def test_Reallocating_Person_without_a_room(self):
         self.assertEqual(self.amity.rellocate_person("UID002", "Hogwarts"),
