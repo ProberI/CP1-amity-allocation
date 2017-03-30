@@ -61,7 +61,13 @@ class Amity():
     def print_unallocated(self):
         pass
 
-    def print_room(self):
+    def print_room(self, room_name):
+        pass
+
+    def save_state(self, db_name):
+        pass
+
+    def load_state(self):
         pass
 
 

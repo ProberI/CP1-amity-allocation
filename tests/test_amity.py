@@ -15,18 +15,12 @@ class TestModel(unittest.TestCase):
     def setUp(self):
         self.amity = Amity()
 
-# Test if room exists
-# Test room capacity
-# Test Room Allocation
-# Test accomodation differences STAFF Y raise error
-
     """
     ---------------------------------------------------
     Tests for the create_room function in class Amity.
     The tests validate input and output data and also see if
     specified constraints are met.
-    ---------------------------------------------------
-    """
+    --------------------------------------------------- """
 
     def test_CreatingRoom_with_wrong_RoomType(self):
         self.assertEqual(self.amity.create_room("Narnia", "Quiet_Room"),
@@ -57,11 +51,15 @@ class TestModel(unittest.TestCase):
         self.amity.create_room("Hogwarts", "O")
         self.assertEqual(self.amity.create_room("Hogwarts", "O"),
                          "Room Hogwarts already exists!")
+
+    def test_rooms_with_same_name_not_persisted(self):
+        # recheck
+        self.amity.create_room("VALHALLA VALHALLA", "O")
+        self.assertFalse(self.amity.all_rooms.count("VALHALLA") == 2)
     """
     -----------------------------
     Test add_person functionality
-    -----------------------------
-    """
+    ----------------------------- """
 
     def test_AddingPerson_with_integers_as_name(self):
         self.assertEqual(self.amity.add_person(2, "STAFF", "N"),
@@ -90,8 +88,7 @@ class TestModel(unittest.TestCase):
     """
     -----------------------
     Room reallocation tests
-    -----------------------
-    """
+    ----------------------- """
 
     def test_Reallocating_Person_without_a_room(self):
         self.assertEqual(self.amity.rellocate_person("UID002", "Hogwarts"),
@@ -123,7 +120,7 @@ class TestModel(unittest.TestCase):
         self.assertEqual(self.amity.allocate_room(),
                          "Office and Living_space successfuly allocated")
 
-    """ Test print_allocations"""
+    # Test load_people function
 
     def test_successfull_people_load(self):
         self.assertEqual(self.amity.load_people("Names.txt"),
@@ -133,6 +130,19 @@ class TestModel(unittest.TestCase):
         self.assertEqual(self.amity.print_allocations(),
                          'ROOM NAME "\n" ------------------------------------\
                          "\n" MEMBER 1, MEMBER 2, MEMBER 3')
+
+    def test_printing_non_existent_room(self):
+        self.assertTrue(self.amity.print_room("Kenya") == "Ooops, plesase enter\
+                        valid roomName")
+
+    def test_print_persons_in_a_room(self):
+        # Think logic
+        self.amity.allocate_room()
+        self.assertEqual(self.amity.print_room("VALHALLA"),
+                         ['Paul Upendo', 'John Chang'])
+
+    def tearDown(self):
+        del self.amity
 
 
 if __name__ == "__main__":
