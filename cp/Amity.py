@@ -1,26 +1,23 @@
 class Amity():
 
-    def __init__(self, Rname="Narnia", Rtype="Office", Role="STAFF",
-                 PersonName="PAUL", PId=1):
-        self.Rname = Rname
-        self.Rtype = Rtype
-        self.Role = Role
-        self.PersonName = PersonName
-        self.PId = PId
-        self.space = []
+    def __init__(self):
+        self.all_people = []
+        self.all_rooms = []
+        self.allocations = []
+        self.unallocated_people = []
 
     def create_room(self, name, Rtype):
-        self.Rname = name
+        self.name = name
         self.Rtype = Rtype
-        each = self.Rname.split()
+        each = self.name.split()
         for rname in each:
             if Rtype == "Office" or Rtype == "O":
                 Rtype = "Office"
-                self.space.append(dict([("Office", rname)]))
+                self.all_rooms.append(dict([("Office", rname)]))
                 # return(space)
             elif Rtype == "Living_Space" or Rtype == "L":
                 Rtype = "Living_Space"
-                self.space.append(dict([("Living_Space", rname)]))
+                self.all_rooms.append(dict([("Living_Space", rname)]))
                 # return(space)
             else:
                 return "Room_Type can only be Office or Living_Space"
@@ -29,7 +26,6 @@ class Amity():
     def add_person(self, PersonName, Role, Accomodation="N"):
         self.PersonName = PersonName
         self.Role = Role
-        NameStore = []
         if isinstance(PersonName, str) and Role in ("STAFF",
                                                     "FELLOW") and Accomodation in ("Y", "N"):
             PersonName.split()
@@ -40,8 +36,8 @@ class Amity():
             elif Role == "FELLOW" and Accomodation == "N":
                 return "Living_Space not allocated."
             else:
-                NameStore.append(PersonName)
-            return NameStore
+                self.all_people.append(PersonName)
+            return self.all_people
         else:
             if not isinstance(PersonName, str):
                 return ("Name can only be String")

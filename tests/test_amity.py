@@ -28,40 +28,45 @@ class TestModel(unittest.TestCase):
     ---------------------------------------------------
     """
 
-    def test_wrong_Room_Type_Input(self):
+    def test_CreatingRoom_with_wrong_RoomType(self):
         self.assertEqual(self.amity.create_room("Narnia", "Quiet_Room"),
                          "Room_Type can only be Office or Living_Space",
                          msg="Room_Type can only be Office or Living_Space")
 
-    def test_if_Room_already_exists(self):
+    def test_Creating_existingRoom_fails(self):
         self.assertEqual(self.amity.create_room("Hogwarts Hogwarts", "Office"),
                          "Rooms already exists")
 
-    def test_Office_type_creation(self):
+    def test_Successful_Office_Creation(self):
         self.assertEqual(self.amity.create_room("Hogwarts", "Office"),
                          "Office successfully created!")
 
-    def test_living_space_creation(self):
+    def test_Successful_Living_space_Creation(self):
         self.assertEqual(self.amity.create_room("Barmuda", "L"),
                          "Living_Space successfully created!")
 
-    def test_Multiple_Room_Creation(self):
+    def test_Creation_of_MultipleRooms_at_once(self):
         self.assertEqual(self.amity.create_room("Hogwarts Mombasa", "Office"),
                          "Office successfully created!")
 
-    def test_Created_RoomTYpe_Is_Office(self):
+    def test_Creation_of_Office_with_O_as_RoomType_Input(self):
         self.assertNotEqual("Living_Space successfully created!",
                             self.amity.create_room('Hogwarts', "O"))
+        """
+        -----------------------------
+        Test add_person functionality
+        -----------------------------
+        """
 
-    def test_PersonName_as_String_Only(self):
+    def test_AddingPerson_with_integers_as_name(self):
         self.assertEqual(self.amity.add_person(2, "STAFF", "N"),
                          "Name can only be String", msg="Name can only be String")
 
-    def test_Correct_RoleType(self):
+    def test_AddingPeople_with_unrecognized_roles(self):
         self.assertEqual("Role can only be STAFF or FELLOW",
                          self.amity.add_person("John", "Member", "Y"))
 
-    def test_Accomodation_Input_options(self):
+    def test_Worong_accomodation_option(self):
         self.assertEqual("Accomodation options are only Y or N",
                          self.amity.add_person("Paul", "STAFF", "J"))
 
@@ -69,15 +74,21 @@ class TestModel(unittest.TestCase):
         self.assertEqual(self.amity.add_person("Paul", "STAFF", "Y"),
                          "Staff cannot have accomodation!")
 
-    def test_if_Fellow_Can_be_accomodated(self):
+    def test_Adding_Fellow_with_accomodation(self):
         self.assertEqual(self.amity.add_person("Paul", "FELLOW", "Y"),
                          "Living_Space successfully allocated")
 
-    def test_if_fellow_doesnt_want_accomodation(self):
+    def test_Adding_Fellow_without_accomodation(self):
         self.assertEqual(self.amity.add_person("Paul", "FELLOW", "N"),
                          "Living_Space not allocated.")
 
-    def test_ReallocationUID_had_Previous_Room(self):
+        """
+        -----------------------
+        Room reallocation tests
+        -----------------------
+        """
+
+    def test_Reallocating_Person_without_a_room(self):
         self.assertEqual(self.amity.rellocate_person("UID002", "Hogwarts"),
                          "This person was not allocated a room previously.")
 
@@ -86,37 +97,23 @@ class TestModel(unittest.TestCase):
                          "Person successfully reallocated")
         pass
 
-    def test_room_4ReallocationExists(self):
+    def test_Reallocating_to_nonExistent_Room(self):
         self.assertEqual(self.amity.rellocate_person("UID001", "Narnia"),
                          "Oops sorry, this particular room name does not exist!")
 
-    def test_PersonID_exists(self):
+    def test_Reallocation_of_NonExistent_person(self):
         self.assertEqual(self.amity.rellocate_person("XCDEE", "Narniaa"),
                          "Ooops, incorrect Person ID format or doesn't exist!")
 
-    def test_allocation(self):
-        self.assertEqual(self.amity.allocate_room("Paul", "FELLOW", "Y"),
-                         "Office and Living_space successfuly allocated")
-
-    def test_same_room_reallocation(self):
+    def test_Reallocation_to_same_room(self):
         self.assertEqual(self.amity.rellocate_person("UID001", "Hogwarts"),
                          "Ooops Upendo is already allocated to Hogwarts")
 
+    def test_Successfull_allocation(self):
+        self.assertEqual(self.amity.allocate_room("Paul", "FELLOW", "Y"),
+                         "Office and Living_space successfuly allocated")
+
     """ Tests add_person function. """
-# def test_Living_max_capacity_exceeded(self):
-#     """ Check logic for this"""
-#     pass
-#
-# def test_living_capacity_output(self):
-#     """ Check logic for this"""
-#     pass
-#
-# def test_Room_occupied(self):
-#
-#     pass
-#
-# def test_RoomSpace_Avalilable(self):
-#     pass
 
 
 if __name__ == "__main__":
