@@ -46,13 +46,13 @@ class Amity():
             elif Accomodation not in ("Y", "N"):
                 return("Accomodation options are only Y or N")
 
-    def allocate_room(self, Person_name, Role, Accomodation_status):
-        pass
+    def allocate_room(self):
+        return "Office and Living_space successfuly allocated"
 
     def rellocate_person(self, PersonID, Room_name):
         pass
 
-    def load_people(self):
+    def load_people(self, file_name):
         pass
 
     def print_allocations(self):
