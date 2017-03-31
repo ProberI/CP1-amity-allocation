@@ -10,10 +10,13 @@ from cp.Fellow import Fellow
 from cp.Staff import Staff
 
 
-class TestModel(unittest.TestCase):
+class Test_Amity_Class(unittest.TestCase):
 
     def setUp(self):
         self.amity = Amity()
+
+    def tearDown(self):
+        del self.amity
 
     """
     Tests for the create_room function in class Amity.
@@ -42,7 +45,7 @@ class TestModel(unittest.TestCase):
         self.assertEqual(self.amity.create_room("Hogwarts Mombasa", "Office"),
                          "Office successfully created!")
 
-    def test_Creation_of_Office_with_O_as_RoomType_Input(self):
+    def test_Living_Space_isnt_created_when_office_is_specified(self):
         self.assertNotEqual("Living_Space successfully created!",
                             self.amity.create_room('Hogwarts', "O"))
 
@@ -134,9 +137,6 @@ class TestModel(unittest.TestCase):
         self.amity.allocate_room()
         self.assertEqual(self.amity.print_room("VALHALLA"),
                          ['Paul Upendo', 'John Chang'])
-
-    def tearDown(self):
-        del self.amity
 
 
 if __name__ == "__main__":
