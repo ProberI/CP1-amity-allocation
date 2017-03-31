@@ -6,6 +6,6 @@ install:
     - pip install -r requirements.txt
 
 script: 
-    - nosetests --with-coverage --cover-erase --cover-package= tests\test_amity.py
+    - nosetests --with-coverage --cover-erase --cover-package=Coverage.py
 cache: pip
 
