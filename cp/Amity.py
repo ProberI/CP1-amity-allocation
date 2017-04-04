@@ -19,25 +19,19 @@ class Amity():
         self.cleaned = []
 
         for rname in each:
-            if Rtype.upper() == "OFFICE" or Rtype.upper() == "O":
+            self.offices.append(rname)
+            if self.offices.count(rname) > 1 or self.living_spaces.count(rname) > 1:
+                cleaned = list(set(self.offices))
+                return ("Room %s already exists!" % rname)
+            elif Rtype.upper() == "OFFICE" or Rtype.upper() == "O":
                 Rtype = "OFFICE"
-                self.offices.append(rname)
-
-                if self.offices.count(rname) > 1 or self.living_spaces.count(rname):
-
-                    cleaned = list(set(self.offices))
-                    return ("Room %s already exists!" % rname)
-                elif self.offices.count(rname) < 1 or self.living_spaces.count(rname) < 1:
-                    self.all_rooms.append(dict([(Rtype, rname)]))
-
+                self.all_rooms.append(dict([(Rtype, rname)]))
             elif Rtype.upper() == "LIVING_SPACE" or Rtype.upper() == "L":
                 Rtype = "LIVING_SPACE"
                 self.living_spaces.append(rname)
                 self.all_rooms.append(dict([(Rtype, rname)]))
-
             else:
                 return "Room_Type can only be OFFICE or LIVING_SPACE"
-
         return (Rtype + " successfully created!")
 
     def add_person(self, PersonName, Role, Accomodation="N"):
@@ -88,4 +82,4 @@ class Amity():
         pass
 
 
-print(Amity().create_room("Mombasa Hogwarts Hogwarts Kenya", "o"))
+print(Amity().create_room("Mombasa Hogwarts Kenya", "L"))
