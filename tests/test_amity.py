@@ -5,9 +5,9 @@ from cp.Amity import Amity
 from cp.Living import Living
 from cp.Rooms import Rooms
 from cp.Office import Office
-from cp.Person import Person
-from cp.Fellow import Fellow
-from cp.Staff import Staff
+#from cp.Person import Person
+#from cp.Fellow import Fellow
+#from cp.Staff import Staff
 
 
 class Test_Amity_Class(unittest.TestCase):

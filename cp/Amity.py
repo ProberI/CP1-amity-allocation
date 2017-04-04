@@ -60,7 +60,8 @@ class Amity():
                 return("Accomodation options are only Y or N")
 
     def allocate_room(self):
-        return "Office and Living_space successfuly allocated"
+        # return "Office and Living_space successfuly allocated"
+        pass
 
     def rellocate_person(self, PersonID, Room_name):
         pass
