@@ -1,4 +1,6 @@
-from Rooms import Rooms
+import sys
+sys.path.insert(0, '/Users/Upendo/Documents/CP1/CP1-amity-allocation')
+from cp.Rooms import Rooms
 
 
 class Amity():
@@ -73,7 +75,8 @@ class Amity():
         pass
 
     def print_room(self, room_name):
-        print(room_name)
+        # print(room_name)
+        pass
 
     def save_state(self, db_name):
         pass
@@ -82,4 +85,4 @@ class Amity():
         pass
 
 
-print(Amity().create_room("Mombasa Hogwarts Kenya", "L"))
+#print(Amity().create_room("Mombasa Hogwarts Kenya", "L"))
