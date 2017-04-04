@@ -26,31 +26,31 @@ class Test_Amity_Class(unittest.TestCase):
 
     def test_CreatingRoom_with_wrong_RoomType(self):
         self.assertEqual(self.amity.create_room("Narnia", "Quiet_Room"),
-                         "Room_Type can only be Office or Living_Space",
-                         msg="Room_Type can only be Office or Living_Space")
+                         "Room_Type can only be OFFICE or LIVING_SPACE",
+                         msg="Room_Type can only be OFFICE or LIVING_SPACE")
 
     def test_CreatedRoom_persisted(self):
         self.amity.create_room("Hogwarts", "Office")
-        self.assertIn({'Office': 'Hogwarts'}, self.amity.all_rooms)
+        self.assertIn({'OFFICE': 'Hogwarts'}, self.amity.all_rooms)
 
     def test_Successful_Office_Creation(self):
         self.assertEqual(self.amity.create_room("Hogwarts", "Office"),
-                         "Office successfully created!")
+                         "OFFICE successfully created!")
 
     def test_Successful_Living_space_Creation(self):
         self.assertEqual(self.amity.create_room("Barmuda", "L"),
-                         "Living_Space successfully created!")
+                         "LIVING_SPACE successfully created!")
 
     def test_Creation_of_MultipleRooms_at_once(self):
         self.assertEqual(self.amity.create_room("Hogwarts Mombasa", "Office"),
-                         "Office successfully created!")
+                         "OFFICE successfully created!")
 
     def test_Living_Space_isnt_created_when_office_is_specified(self):
         self.assertNotEqual("Living_Space successfully created!",
                             self.amity.create_room('Hogwarts', "O"))
 
     def test_creation_of_exiting_room(self):
-        self.amity.create_room("Hogwarts", "O")
+        self.amity.offices.append("Hogwarts")
         self.assertEqual(self.amity.create_room("Hogwarts", "O"),
                          "Room Hogwarts already exists!")
 

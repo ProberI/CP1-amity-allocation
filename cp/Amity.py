@@ -1,3 +1,6 @@
+from Rooms import Rooms
+
+
 class Amity():
 
     def __init__(self):
@@ -5,23 +8,35 @@ class Amity():
         self.all_rooms = []
         self.allocations = []
         self.unallocated_people = []
+        self.rooms = Rooms()
+        self.offices = []
+        self.living_spaces = []
 
     def create_room(self, name, Rtype):
         self.name = name
         self.Rtype = Rtype
         each = self.name.split()
+
         for rname in each:
-            if Rtype == "Office" or Rtype == "O":
-                Rtype = "Office"
-                self.all_rooms.append(dict([("Office", rname)]))
-                # return(space)
-            elif Rtype == "Living_Space" or Rtype == "L":
-                Rtype = "Living_Space"
-                self.all_rooms.append(dict([("Living_Space", rname)]))
-                # return(space)
+
+            if Rtype.upper() == "OFFICE" or Rtype.upper() == "O":
+                Rtype = "OFFICE"
+                self.offices.append(rname)
+                if self.offices.count(rname) > 1 or self.living_spaces.count(rname):
+                    return ("Room %s already exists" % rname)
+                else:
+                    self.offices.append(rname)
+                    self.all_rooms.append(dict([(Rtype, rname)]))
+
+            elif Rtype.upper() == "LIVING_SPACE" or Rtype.upper() == "L":
+                Rtype = "LIVING_SPACE"
+                self.living_spaces.append(rname)
+                self.all_rooms.append(dict([(Rtype, rname)]))
+
             else:
-                return "Room_Type can only be Office or Living_Space"
-        return(str(Rtype) + " successfully created!")
+                return "Room_Type can only be OFFICE or LIVING_SPACE"
+
+        return (Rtype + " successfully created!")
 
     def add_person(self, PersonName, Role, Accomodation="N"):
         self.PersonName = PersonName
@@ -62,7 +77,7 @@ class Amity():
         pass
 
     def print_room(self, room_name):
-        pass
+        print(room_name)
 
     def save_state(self, db_name):
         pass
@@ -71,4 +86,4 @@ class Amity():
         pass
 
 
-# print(Amity().add_person("Hey", "FELLOW", "Y"))
+print(Amity().create_room("Hogwarts, Mombasa", "o"))
