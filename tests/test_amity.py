@@ -57,7 +57,7 @@ class Test_Amity_Class(unittest.TestCase):
     def test_rooms_with_same_name_not_persisted(self):
         # recheck
         self.amity.create_room("VALHALLA VALHALLA", "O")
-        self.assertFalse(self.amity.all_rooms.count("VALHALLA") == 2)
+        self.assertFalse(self.amity.cleaned.count("VALHALLA") == 2)
 
     # Test add_person functionality
 

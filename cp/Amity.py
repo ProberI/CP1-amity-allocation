@@ -16,16 +16,18 @@ class Amity():
         self.name = name
         self.Rtype = Rtype
         each = self.name.split()
+        self.cleaned = []
 
         for rname in each:
-
             if Rtype.upper() == "OFFICE" or Rtype.upper() == "O":
                 Rtype = "OFFICE"
                 self.offices.append(rname)
+
                 if self.offices.count(rname) > 1 or self.living_spaces.count(rname):
-                    return ("Room %s already exists" % rname)
-                else:
-                    self.offices.append(rname)
+
+                    cleaned = list(set(self.offices))
+                    return ("Room %s already exists!" % rname)
+                elif self.offices.count(rname) < 1 or self.living_spaces.count(rname) < 1:
                     self.all_rooms.append(dict([(Rtype, rname)]))
 
             elif Rtype.upper() == "LIVING_SPACE" or Rtype.upper() == "L":
@@ -86,4 +88,4 @@ class Amity():
         pass
 
 
-print(Amity().create_room("Hogwarts, Mombasa", "o"))
+print(Amity().create_room("Mombasa Hogwarts Hogwarts Kenya", "o"))
