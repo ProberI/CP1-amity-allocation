@@ -1,6 +1,5 @@
 import sys
 sys.path.insert(0, '/Users/Upendo/Documents/CP1/CP1-amity-allocation')
-from cp.Rooms import Rooms
 
 
 class Amity():
@@ -18,7 +17,6 @@ class Amity():
         self.name = name
         self.Rtype = Rtype
         each = self.name.split()
-        self.cleaned = []
 
         for rname in each:
             self.rooms.append(rname)
@@ -38,28 +36,21 @@ class Amity():
 
         return (Rtype + " successfully created!")
 
-    def add_person(self, PersonName, Role, Accomodation="N"):
-        self.PersonName = PersonName
-        self.Role = Role
-        if isinstance(PersonName, str) and Role in ("STAFF",
-                                                    "FELLOW") and Accomodation in ("Y", "N"):
-            PersonName.split()
-            if Role == "STAFF" and Accomodation == "Y":
-                return "Staff cannot have accomodation!"
-            elif Role == "FELLOW" and Accomodation == "Y":
-                return "Living_Space successfully allocated"
-            elif Role == "FELLOW" and Accomodation == "N":
-                return "Living_Space not allocated."
+    def add_person(self, First_name, Last_Name, Role, Accomodation="N"):
+        try:
+            Person_name = First_name + " " + Last_Name
+            if any(char.isdigit() for char in Person_name):
+                return "Ooops! Name cannot contain a digit!"
             else:
-                self.all_people.append(PersonName)
-            return self.all_people
-        else:
-            if not isinstance(PersonName, str):
-                return ("Name can only be String")
-            elif Role not in ("STAFF", "FELLOW"):
-                return("Role can only be STAFF or FELLOW")
-            elif Accomodation not in ("Y", "N"):
-                return("Accomodation options are only Y or N")
+                if Role not in ("STAFF", "FELLOW"):
+                    return "Role can only be STAFF or FELLOW"
+                elif Accomodation not in ("Y", "N"):
+                    return "Accomodation options are only 'Y' or 'N'"
+                elif Role == "STAFF" and Accomodation == "Y":
+                    return "Staff cannot have accomodation!"
+
+        except TypeError, e:
+            return "Name cannot be a number!"
 
     def allocate_room(self):
         # return "Office and Living_space successfuly allocated"
@@ -88,4 +79,4 @@ class Amity():
         pass
 
 
-#print(Amity().create_room("Mombasa Hogwarts Kenya", "o"))
+#print(Amity().add_person("Paul", "Upendo", "STAFF", "Y"))

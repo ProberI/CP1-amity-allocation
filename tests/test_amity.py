@@ -50,8 +50,8 @@ class Test_Amity_Class(unittest.TestCase):
                             self.amity.create_room('Hogwarts', "L"))
 
     def test_creation_of_exiting_room(self):
-        self.amity.offices.append("Hogwarts")
-        self.assertTrue(self.amity.create_room("Hogwarts", "O"),
+        self.amity.rooms.append("Hogwarts")
+        self.assertTrue(self.amity.create_room("Hogwarts", "O") ==
                         "Room Hogwarts already exists!")
 
     """
@@ -61,30 +61,27 @@ class Test_Amity_Class(unittest.TestCase):
     """
 
     def test_AddingPerson_with_integers_as_name(self):
-        self.assertEqual(self.amity.add_person(2, "STAFF", "N"),
-                         "Name can only be String", msg="Name can only be String")
+        self.assertEqual(self.amity.add_person("Paul2", "Upendo", "STAFF", "N"),
+                         "Ooops! Name cannot contain a digit!",
+                         msg="Name can only be String")
+
+    def test_addind_person_with_number_as_name(self):
+        self.assertTrue(self.amity.add_person(2, "Upendo", "STAFF", "N")
+                        == "Name cannot be a number!")
 
     def test_AddingPeople_with_unrecognized_roles(self):
-        self.assertEqual("Role can only be STAFF or FELLOW",
-                         self.amity.add_person("John", "Member", "Y"))
+        self.assertEqual(self.amity.add_person("John", "Maasai", "Member", "Y"),
+                         "Role can only be STAFF or FELLOW")
 
     def test_Worong_accomodation_option(self):
-        self.assertEqual("Accomodation options are only Y or N",
-                         self.amity.add_person("Paul", "STAFF", "J"))
+        self.assertEqual(self.amity.add_person("Paul", "Upendo", "STAFF", "J"),
+                         "Accomodation options are only 'Y' or 'N'")
 
     def test_If_Staff_be_accomodated(self):
-        self.assertEqual(self.amity.add_person("Paul", "STAFF", "Y"),
+        self.assertEqual(self.amity.add_person("Paul", "Upendo", "STAFF", "Y"),
                          "Staff cannot have accomodation!")
 
-    def test_Adding_Fellow_with_accomodation(self):
-        self.assertEqual(self.amity.add_person("Paul", "FELLOW", "Y"),
-                         "Living_Space successfully allocated")
-
-    def test_Adding_Fellow_without_accomodation(self):
-        self.assertEqual(self.amity.add_person("Paul", "FELLOW", "N"),
-                         "Living_Space not allocated.")
-
-    # Room reallocation tests
+    """ Allocation and Reallocation"""
 
     def test_Reallocating_Person_without_a_room(self):
         self.assertEqual(self.amity.rellocate_person("UID002", "Hogwarts"),
