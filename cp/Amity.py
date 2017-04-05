@@ -38,7 +38,7 @@ class Amity():
 
         return (Rtype + " successfully created!")
 
-    def add_person(self, PersonName, Role, Accomodation="N):
+    def add_person(self, PersonName, Role, Accomodation="N"):
         self.PersonName = PersonName
         self.Role = Role
         if isinstance(PersonName, str) and Role in ("STAFF",

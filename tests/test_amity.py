@@ -3,9 +3,6 @@ sys.path.insert(0, '/Users/Upendo/Documents/CP1/CP1-amity-allocation')
 
 import unittest
 from cp.Amity import Amity
-from cp.Living import Living
-from cp.Rooms import Rooms
-from cp.Office import Office
 
 
 class Test_Amity_Class(unittest.TestCase):
