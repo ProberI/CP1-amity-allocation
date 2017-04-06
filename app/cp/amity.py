@@ -1,3 +1,6 @@
+import random
+
+
 class Amity():
 
     def __init__(self):
@@ -8,8 +11,9 @@ class Amity():
         self.rooms = []
         self.offices = []
         self.living_spaces = []
-        self.fellow = "John"
-        self.fellows = []
+        self.fellow_info = []
+        self.staff_info = []
+        self.first_name = ''
 
     def create_room(self, name, room_type):
         self.name = name
@@ -37,39 +41,53 @@ class Amity():
         return (self.room_type + " successfully created!")
 
     def add_person(self, First_name, Last_Name, Role, Accomodation="N"):
-
+        self.First_name = First_name
+        self.Last_Name = Last_Name
+        self.Role = Role
+        self.Accomodation = Accomodation
         try:
-            Person_name = First_name + " " + Last_Name
-            self.fellow = Person_name
+            Person_name = self.First_name + " " + self.Last_Name
+            self.first_name = Person_name
             self.all_people.append(Person_name)
             Person_id = self.genarate_user_ID()
             if any(char.isdigit() for char in Person_name):
                 return "Ooops! Name cannot contain a digit!"
             elif self.all_people.count(Person_name) > 1:
                 return ("Ooops! %s already exists in the system." % Person_name)
-            elif Role not in ("STAFF", "FELLOW"):
+            elif self.Role not in ("STAFF", "FELLOW"):
                 return "Role can only be STAFF or FELLOW"
-            elif Accomodation not in ("Y", "N"):
+            elif self.Accomodation not in ("Y", "N"):
                 return "Accomodation options are only 'Y' or 'N'"
-            elif Role == "STAFF" and Accomodation == "Y":
+            elif self.Role == "STAFF" and self.Accomodation == "Y":
                 return "Staff cannot have accomodation!"
             else:
-                self.fellows.append(dict([(Person_id, Person_name)]))
-                return self.fellows
+                if self.Role.upper() == "FELLOW":
+                    self.fellow_info.append(dict([(Person_id, Person_name)]))
+                elif self.Role.upper() == "STAFF":
+                    self.staff_info.append(dict([(Person_id, Person_name)]))
+            return "Person has been successfully added"
 
         except TypeError:
             return "Name cannot be a number!"
 
-    def genarate_user_ID(self, First_name="John"):
-        First_name = self.fellow
+    def genarate_user_ID(self):
         prefix = "UID"
-        suffix = self.all_people.index(First_name)
+        suffix = self.all_people.index(self.first_name)
         while suffix <= len(self.all_people):
-            Person_id = First_name + prefix + str(suffix)
+            Person_id = self.first_name + prefix + str(suffix)
             return Person_id
 
-    def allocate_room(self):
-        # return "Office and Living_space successfuly allocated"
+    def allocate_room_randomly(self, list_arg):
+        """
+        - Have people to be allocated in a list
+        - Randomly chooose a person from the list in a load_people
+        - If person chosen is already in the list pass and give message
+        - Append the person to list until list is full
+        - When list is full stop allocation and give room full msg
+        - Proceed to next face
+
+        """
+
         pass
 
     def rellocate_person(self, PersonID, Room_name):
