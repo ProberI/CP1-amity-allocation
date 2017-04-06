@@ -135,11 +135,10 @@ class Test_Amity_Class(unittest.TestCase):
                         valid roomName")
 
     def test_print_persons_in_a_room(self):
-        # Think logic
         self.amity.allocate_room()
         self.assertEqual(self.amity.print_room("VALHALLA"),
                          ['Paul Upendo', 'John Chang'])
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()

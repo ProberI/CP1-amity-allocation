@@ -1,6 +1,3 @@
-from app.cp.fellow import Fellow
-
-
 class Amity():
 
     def __init__(self):
@@ -11,7 +8,7 @@ class Amity():
         self.rooms = []
         self.offices = []
         self.living_spaces = []
-        self.fellow = Fellow()
+        self.fellow = "John"
         self.fellows = []
 
     def create_room(self, name, Rtype):
@@ -41,7 +38,7 @@ class Amity():
 
         try:
             Person_name = First_name + " " + Last_Name
-            self.fellow.Fellow_names = Person_name
+            self.fellow = Person_name
             self.all_people.append(Person_name)
             Person_id = self.genarate_user_ID()
             if any(char.isdigit() for char in Person_name):
@@ -55,18 +52,19 @@ class Amity():
             elif Role == "STAFF" and Accomodation == "Y":
                 return "Staff cannot have accomodation!"
             else:
-                self.fellows.append(dict([(Person_id, self.fellow.Fellow_names)]))
+                self.fellows.append(
+                    dict([(Person_id, Person_name)]))
                 return self.fellows
 
         except TypeError:
             return "Name cannot be a number!"
 
     def genarate_user_ID(self, First_name="John"):
-        First_name = self.fellow.Fellow_names
+        First_name = self.fellow
         prefix = "UID"
         suffix = self.all_people.index(First_name)
         while suffix <= len(self.all_people):
-            Person_id = First_name + prefix + str(suffix)
+            Person_id = prefix + str(suffix)
             return Person_id
 
     def allocate_room(self):
@@ -94,8 +92,3 @@ class Amity():
 
     def load_state(self):
         pass
-
-
-# amity = Amity()
-# amity.add_person("Paul", "Upendo", "STAFF", "")
-# print(Amity().fellow.get_attr())

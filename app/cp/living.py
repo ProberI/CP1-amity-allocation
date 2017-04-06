@@ -1,4 +1,4 @@
-from app.cp.rooms import Rooms
+from rooms import Rooms
 
 
 class Living(Rooms):
