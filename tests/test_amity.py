@@ -65,13 +65,22 @@ class Test_Amity_Class(unittest.TestCase):
                          "Ooops! Name cannot contain a digit!",
                          msg="Name can only be String")
 
+    def test_adding_existing_person(self):
+        self.amity.all_people.append("Paul Upendo")
+        self.assertTrue(self.amity.add_person("Paul", "Upendo", "FELLOW", "N") ==
+                        "Ooops! Paul Upendo already exists in the system.")
+
+    def test_person_ID_format(self):
+        self.assertTrue(self.amity.add_person("John", "Waria", "FELLOW", "Y") ==
+                        [{'John WariaUID0': 'John Waria'}])
+
     def test_addind_person_with_number_as_name(self):
         self.assertTrue(self.amity.add_person(2, "Upendo", "STAFF", "N")
                         == "Name cannot be a number!")
 
     def test_AddingPeople_with_unrecognized_roles(self):
-        self.assertEqual(self.amity.add_person("John", "Maasai", "Member", "Y"),
-                         "Role can only be STAFF or FELLOW")
+        self.assertTrue(self.amity.add_person("John", "Maasai", "Member", "Y")
+                        == "Role can only be STAFF or FELLOW")
 
     def test_Worong_accomodation_option(self):
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "STAFF", "J"),

@@ -1,5 +1,6 @@
 import sys
 sys.path.insert(0, '/Users/Upendo/Documents/CP1/CP1-amity-allocation')
+from cp.Fellow import Fellow
 
 
 class Amity():
@@ -12,6 +13,8 @@ class Amity():
         self.rooms = []
         self.offices = []
         self.living_spaces = []
+        self.fellow = Fellow()
+        self.fellows = []
 
     def create_room(self, name, Rtype):
         self.name = name
@@ -37,20 +40,36 @@ class Amity():
         return (Rtype + " successfully created!")
 
     def add_person(self, First_name, Last_Name, Role, Accomodation="N"):
+
         try:
             Person_name = First_name + " " + Last_Name
+            self.fellow.Fellow_names = Person_name
+            self.all_people.append(Person_name)
+            Person_id = self.genarate_user_ID()
             if any(char.isdigit() for char in Person_name):
                 return "Ooops! Name cannot contain a digit!"
+            elif self.all_people.count(Person_name) > 1:
+                return ("Ooops! %s already exists in the system." % Person_name)
+            elif Role not in ("STAFF", "FELLOW"):
+                return "Role can only be STAFF or FELLOW"
+            elif Accomodation not in ("Y", "N"):
+                return "Accomodation options are only 'Y' or 'N'"
+            elif Role == "STAFF" and Accomodation == "Y":
+                return "Staff cannot have accomodation!"
             else:
-                if Role not in ("STAFF", "FELLOW"):
-                    return "Role can only be STAFF or FELLOW"
-                elif Accomodation not in ("Y", "N"):
-                    return "Accomodation options are only 'Y' or 'N'"
-                elif Role == "STAFF" and Accomodation == "Y":
-                    return "Staff cannot have accomodation!"
+                self.fellows.append(dict([(Person_id, self.fellow.Fellow_names)]))
+                return self.fellows
 
-        except TypeError, e:
+        except TypeError:
             return "Name cannot be a number!"
+
+    def genarate_user_ID(self, First_name="John"):
+        First_name = self.fellow.Fellow_names
+        prefix = "UID"
+        suffix = self.all_people.index(First_name)
+        while suffix <= len(self.all_people):
+            Person_id = First_name + prefix + str(suffix)
+            return Person_id
 
     def allocate_room(self):
         # return "Office and Living_space successfuly allocated"
@@ -79,4 +98,6 @@ class Amity():
         pass
 
 
-#print(Amity().add_person("Paul", "Upendo", "STAFF", "Y"))
+# amity = Amity()
+# amity.add_person("Paul", "Upendo", "STAFF", "")
+# print(Amity().fellow.get_attr())
