@@ -64,14 +64,14 @@ class Test_Amity_Class(unittest.TestCase):
 
     def test_adding_existing_person(self):
         self.amity.all_people.append("Paul Upendo")
-        self.assertTrue(self.amity.add_person("Paul", "Upendo", "FELLOW", "N") ==
-                        "Ooops! Paul Upendo already exists in the system.")
+        self.assertTrue(self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
+                        == "Ooops! Paul Upendo already exists in the system.")
 
     def test_person_ID_format(self):
-        self.assertTrue(self.amity.add_person("John", "Waria", "FELLOW", "Y") ==
-                        [{'John WariaUID0': 'John Waria'}])
+        self.assertEqual(self.amity.add_person("John", "Waria", "FELLOW", "Y"),
+                         [{'John WariaUID0': 'John Waria'}])
 
-    def test_addind_person_with_number_as_name(self):
+    def test_adding_person_with_number_as_name(self):
         self.assertTrue(self.amity.add_person(2, "Upendo", "STAFF", "N")
                         == "Name cannot be a number!")
 
@@ -138,7 +138,3 @@ class Test_Amity_Class(unittest.TestCase):
         self.amity.allocate_room()
         self.assertEqual(self.amity.print_room("VALHALLA"),
                          ['Paul Upendo', 'John Chang'])
-
-
-if __name__ == '__main__':
-    unittest.main()

@@ -11,28 +11,30 @@ class Amity():
         self.fellow = "John"
         self.fellows = []
 
-    def create_room(self, name, Rtype):
+    def create_room(self, name, room_type):
         self.name = name
-        self.Rtype = Rtype
+        self.room_type = room_type
         each = self.name.split()
 
-        for rname in each:
-            self.rooms.append(rname)
+        for room_name in each:
+            self.rooms.append(room_name)
 
-            if self.rooms.count(rname) > 1:
-                return ("Room %s already exists!" % rname)
-            elif Rtype.upper() == "OFFICE" or Rtype.upper() == "O":
-                Rtype = "OFFICE"
-                self.offices.append(rname)
-                self.all_rooms.append(dict([(Rtype, rname)]))
-            elif Rtype.upper() == "LIVING_SPACE" or Rtype.upper() == "L":
-                Rtype = "LIVING_SPACE"
-                self.living_spaces.append(rname)
-                self.all_rooms.append(dict([(Rtype, rname)]))
+            if self.rooms.count(room_name) > 1:
+                return ("Room %s already exists!" % room_name)
+            elif self.room_type.upper() == "OFFICE" or self.room_type.upper()\
+                    == "O":
+                self.room_type = "OFFICE"
+                self.offices.append(room_name)
+                self.all_rooms.append(dict([(self.room_type, room_name)]))
+            elif self.room_type.upper() == "LIVING_SPACE" or \
+                    self.room_type.upper() == "L":
+                self.room_type = "LIVING_SPACE"
+                self.living_spaces.append(room_name)
+                self.all_rooms.append(dict([(self.room_type, room_name)]))
             else:
                 return "Room_Type can only be OFFICE or LIVING_SPACE"
 
-        return (Rtype + " successfully created!")
+        return (self.room_type + " successfully created!")
 
     def add_person(self, First_name, Last_Name, Role, Accomodation="N"):
 
@@ -52,8 +54,7 @@ class Amity():
             elif Role == "STAFF" and Accomodation == "Y":
                 return "Staff cannot have accomodation!"
             else:
-                self.fellows.append(
-                    dict([(Person_id, Person_name)]))
+                self.fellows.append(dict([(Person_id, Person_name)]))
                 return self.fellows
 
         except TypeError:
@@ -64,7 +65,7 @@ class Amity():
         prefix = "UID"
         suffix = self.all_people.index(First_name)
         while suffix <= len(self.all_people):
-            Person_id = prefix + str(suffix)
+            Person_id = First_name + prefix + str(suffix)
             return Person_id
 
     def allocate_room(self):
