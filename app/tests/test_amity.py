@@ -10,37 +10,26 @@ class Test_amity_class(unittest.TestCase):
     def tearDown(self):
         del self.amity
 
-    """
-    Tests for the create_room function in class Amity.
-    The tests validate input and output data and also see if
-    specified constraints are met and EdgeCases are handled. create_room
-    function takes the room_name and Room_Type as arguments.
-    """
-
     def test_creating_room_with_wrong_room_type(self):
         self.assertEqual(self.amity.create_room("Narnia", "Quiet_Room"),
                          "Room_Type can only be OFFICE or LIVING_SPACE",
                          msg="Room_Type can only be OFFICE or LIVING_SPACE")
-
-    def test_created_rooms_persisted(self):
-        self.amity.create_room("Hogwarts", "Office")
-        self.assertListEqual([{'OFFICE': 'Hogwarts'}], self.amity.all_rooms)
 
     def test_successful_office_creation(self):
         self.assertEqual(self.amity.create_room("Hogwarts", "Office"),
                          "OFFICE successfully created!")
 
     def test_successful_living_space_creation(self):
-        self.assertTrue(self.amity.create_room("Barmuda", "L") ==
-                        "LIVING_SPACE successfully created!")
+        self.assertEqual(self.amity.create_room("Barmuda", "L"),
+                         "LIVING_SPACE successfully created!")
 
     def test_creation_of_multiple_rooms_at_once(self):
         self.amity.create_room("Hogwarts Mombasa", "Office")
         self.assertListEqual(self.amity.offices, ['Hogwarts', 'Mombasa'])
 
     def test_living_space_isnt_created_when_office_is_specified(self):
-        self.assertNotEqual("LIVING_SPACE successfully created!",
-                            self.amity.create_room('Hogwarts', "O"))
+        self.assertEqual("OFFICE successfully created!",
+                         self.amity.create_room('Hogwarts', "O"))
 
     def test_office_isnt_created_when_office_is_specified(self):
         self.assertNotEqual("OFFICE successfully created!",
@@ -50,12 +39,6 @@ class Test_amity_class(unittest.TestCase):
         self.amity.rooms.append("Hogwarts")
         self.assertTrue(self.amity.create_room("Hogwarts", "O") ==
                         "Room Hogwarts already exists!")
-
-    """
-    Test Cases for add_person function.
-    The add person function takes PersonName,
-    Role plus Accomodation options.
-    """
 
     def test_adding_person_with_integers_as_name(self):
         self.assertEqual(self.amity.add_person("Paul2", "Upendo", "STAFF", "N"),
@@ -86,8 +69,8 @@ class Test_amity_class(unittest.TestCase):
                         == "Name cannot be a number!")
 
     def test_addingPeople_with_unrecognized_roles(self):
-        self.assertTrue(self.amity.add_person("John", "Maasai", "Member", "Y")
-                        == "Role can only be STAFF or FELLOW")
+        self.assertEqual(self.amity.add_person("John", "Maasai", "Member", "Y"),
+                         "Role can only be STAFF or FELLOW")
 
     def test_wrong_accomodation_option(self):
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "STAFF", "J"),
@@ -97,7 +80,7 @@ class Test_amity_class(unittest.TestCase):
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "STAFF", "Y"),
                          "Staff cannot have accomodation!")
 
-    """ Allocation and Reallocation"""
+    # Allocation and Reallocation tests
 
     def test_reallocating_person_without_a_room(self):
         self.assertEqual(self.amity.rellocate_person("UID002", "Hogwarts"),
