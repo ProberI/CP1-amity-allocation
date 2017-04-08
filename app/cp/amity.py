@@ -11,7 +11,7 @@ class Amity():
         self.rooms = []
         self.offices = []
         self.living_spaces = []
-        self.fellow_info = []
+        self.fellow_info = {}
         self.staff_info = []
         self.first_name = ''
 
@@ -62,7 +62,7 @@ class Amity():
                 return "Staff cannot have accomodation!"
             else:
                 if self.Role.upper() == "FELLOW":
-                    self.fellow_info.append(dict([(Person_id, Person_name)]))
+                    self.fellow_info = {Person_id: Person_name}
                 elif self.Role.upper() == "STAFF":
                     self.staff_info.append(dict([(Person_id, Person_name)]))
             return "Person has been successfully added"
@@ -87,30 +87,32 @@ class Amity():
         - Proceed to next face
 
         """
-        if self.Role.upper() == "FELLOW":
-            for fellow in self.fellow_info:
-                list_arg = self.fellow_info
-                selected_fellow = random.choice(list_arg)
-                if selected_fellow in self.allocations:
-                    return "This fellow has already been allocated a room"
-                else:
-                    for room in self.all_rooms:
-                        print(room)
-                        if room.keys() == ['OFFICE']:
-                            for room_nam in self.offices:
-                                room_nam = {room.values(): ()}
-                                if len(room_nam) < 6:
-                                    room_nam[room.values()].append(tuple(selected_fellow))
-                                    print(room_nam[room.values()])
-                                else:
-                                    return "Room is already full"
-                        elif room.keys() == "LIVING_SPACE":
-                            if len(room) < 4:
-                                room.append(selected_fellow)
-                            else:
-                                return "Living_space is already occupied"
-                if self.Role.upper() == "STAFF":
-                    pass
+        # if self.Role.upper() == "FELLOW":
+        #     for fellow in self.fellow_info:
+        #         list_arg = self.fellow_info.values()
+        #         print(list_arg)
+        #         selected_fellow = random.choice(list_arg)
+        #         if selected_fellow in self.allocations:
+        #             return "This fellow has already been allocated a room"
+        #         else:
+        #             for room in self.all_rooms:
+        #
+        #                 if room.keys() == ['OFFICE']:
+        #
+        #                     for room_nam in self.offices:
+        # 'append data to dict first then test for size'
+        #                         if len(room_nam) < 6:++++
+        #                             room_nam = {room.values(): selected_fellow}
+        #                             print(room_nam)
+        #                         else:
+        #                             return "Room is already full"
+        #                 elif room.keys() == "LIVING_SPACE":
+        #                     if len(room) < 4:
+        #                         room.append(selected_fellow)
+        #                     else:
+        #                         return "Living_space is already occupied"
+        #         if self.Role.upper() == "STAFF":
+        #             pass
 
     def rellocate_person(self, PersonID, Room_name):
         pass
