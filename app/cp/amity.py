@@ -1,5 +1,10 @@
 import random
 
+from app.cp.living import Living
+from app.cp.office import Office
+from app.cp.fellow import Fellow
+from app.cp.staff import Staff
+
 
 class Amity():
 
@@ -12,8 +17,7 @@ class Amity():
         self.offices = []
         self.living_spaces = []
         self.fellow_info = {}
-        self.staff_info = []
-        self.first_name = ''
+        self.staff_info = {}
 
     def create_room(self, name, room_type):
         self.name = name
@@ -28,13 +32,13 @@ class Amity():
             elif self.room_type.upper() == "OFFICE" or self.room_type.upper()\
                     == "O":
                 self.room_type = "OFFICE"
-                self.offices.append(room_name)
-                self.all_rooms.append(dict([(self.room_type, room_name)]))
+                new_office = self.offices.append(Office(room_name).get_name())
+                self.all_rooms.append(dict([(self.room_type, new_office)]))
             elif self.room_type.upper() == "LIVING_SPACE" or \
                     self.room_type.upper() == "L":
                 self.room_type = "LIVING_SPACE"
-                self.living_spaces.append(room_name)
-                self.all_rooms.append(dict([(self.room_type, room_name)]))
+                new_living_space = self.living_spaces.append(Living(room_name).get_name())
+                self.all_rooms.append(dict([(self.room_type, new_living_space)]))
             else:
                 return "Room_Type can only be OFFICE or LIVING_SPACE"
 
@@ -46,14 +50,13 @@ class Amity():
         self.Role = Role
         self.Accomodation = Accomodation
         try:
-            Person_name = self.First_name + " " + self.Last_Name
-            self.first_name = Person_name
-            self.all_people.append(Person_name)
+            self.person_name = (Fellow(self.First_name, self.Last_Name).get_name())
+            self.all_people.append(self.person_name)
             Person_id = self.genarate_user_ID()
-            if any(char.isdigit() for char in Person_name):
+            if any(char.isdigit() for char in self.person_name):
                 return "Ooops! Name cannot contain a digit!"
-            elif self.all_people.count(Person_name) > 1:
-                return ("Ooops! %s already exists in the system." % Person_name)
+            elif self.all_people.count(self.person_name) > 1:
+                return ("Ooops! %s already exists in the system." % self.person_name)
             elif self.Role not in ("STAFF", "FELLOW"):
                 return "Role can only be STAFF or FELLOW"
             elif self.Accomodation not in ("Y", "N"):
@@ -62,9 +65,9 @@ class Amity():
                 return "Staff cannot have accomodation!"
             else:
                 if self.Role.upper() == "FELLOW":
-                    self.fellow_info = {Person_id: Person_name}
+                    self.fellow_info = {Person_id: self.person_name}
                 elif self.Role.upper() == "STAFF":
-                    self.staff_info.append(dict([(Person_id, Person_name)]))
+                    self.staff_info = {Person_id: self.person_name}
             return "Person has been successfully added"
 
         except TypeError:
@@ -72,9 +75,9 @@ class Amity():
 
     def genarate_user_ID(self):
         prefix = "UID"
-        suffix = self.all_people.index(self.first_name)
+        suffix = self.all_people.index(self.person_name)
         while suffix <= len(self.all_people):
-            Person_id = self.first_name + prefix + str(suffix)
+            Person_id = self.person_name + prefix + str(suffix)
             return Person_id
 
     def allocate_room_randomly(self, list_arg=None):

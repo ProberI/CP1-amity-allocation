@@ -1,9 +1,8 @@
-from person import Person
+from app.cp.person import Person
 
 
 class Fellow(Person):
-    def __init__(self, Fellow_names="Paul"):
-        self.Fellow_names = Fellow_names
 
-    def get_attr(self):
-        return self.Fellow_names
+    def __init__(self, first_name, last_name):
+        super().__init__(first_name, last_name)
+        self.role = "FELLOW"

@@ -1,4 +1,6 @@
 class Rooms():
-    def room_space(self, room_name):
-        self.room_name = []
-        return self.room_name
+    def __init__(self, room_name):
+        self._room_name = room_name
+
+    def get_name(self):
+        return self._room_name

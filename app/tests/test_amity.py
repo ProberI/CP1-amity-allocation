@@ -1,4 +1,5 @@
 import unittest
+
 from app.cp.amity import Amity
 
 
@@ -56,12 +57,12 @@ class Test_amity_class(unittest.TestCase):
 
     def test_add_person_fellow_data_persisted(self):
         self.amity.add_person("John", "Waria", "FELLOW", "Y")
-        self.assertTrue([{'John WariaUID0': 'John Waria'}]
+        self.assertTrue({'John WariaUID0': 'John Waria'}
                         == self.amity.fellow_info)
 
     def test_add_person_staff_data_persisted(self):
         self.amity.add_person("John", "Waria", "STAFF", "N")
-        self.assertTrue([{'John WariaUID0': 'John Waria'}]
+        self.assertTrue({'John WariaUID0': 'John Waria'}
                         == self.amity.staff_info)
 
     def test_add_person_with_number_as_name(self):

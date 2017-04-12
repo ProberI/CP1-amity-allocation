@@ -1,5 +1,7 @@
-from person import Person
+from app.cp.person import Person
 
 
 class Staff(Person):
-    pass
+    def __init__(self, first_name, last_name):
+        super().__init__(first_name, last_name)
+        self.role = "STAFF"
