@@ -25,7 +25,7 @@ class Test_amity_class(unittest.TestCase):
                          "LIVING_SPACE successfully created!")
 
     def test_create_room_in_multiples(self):
-        self.amity.create_room("Office", "Hogwarts Mombasa")
+        self.amity.create_room("Office", "Hogwarts", "Mombasa")
         self.assertListEqual(self.amity.offices, ['Hogwarts', 'Mombasa'])
 
     def test_create_room_office_with_o_as_input(self):
@@ -57,8 +57,9 @@ class Test_amity_class(unittest.TestCase):
 
     def test_add_person_fellow_data_persisted(self):
         self.amity.add_person("John", "Waria", "FELLOW", "Y")
-        self.assertTrue({'John WariaUID0': 'John Waria'}
-                        == self.amity.fellow_info)
+        self.amity.add_person("Jon", "Mondo", "FELLOW", "Y")
+        self.assertTrue({'John WariaUID0': 'John Waria',
+                         'Jon MondoUID1': 'Jon Mondo'} == self.amity.fellow_info)
 
     def test_add_person_staff_data_persisted(self):
         self.amity.add_person("John", "Waria", "STAFF", "N")
@@ -95,6 +96,12 @@ class Test_amity_class(unittest.TestCase):
         self.assertEqual(self.amity.rellocate_person("UID001", "Narnia"),
                          "Oops sorry, this particular room name does not exist!")
 
+    def test_add_person_and_allocate_room(self):
+        self.amity.create_room("o", "Hogwarts")
+        #self.amity.create_room("l", "Narnia")
+        self.assertEqual(self.amity.add_person("Paul", "Upendo", "FELLOW", "Y"),
+                         "Office successfully allocated")
+
     def test_reallocate_preson_non_existent(self):
         self.assertEqual(self.amity.rellocate_person("XCDEE", "Narniaa"),
                          "Ooops, incorrect Person ID format or doesn't exist!")
@@ -109,10 +116,6 @@ class Test_amity_class(unittest.TestCase):
         self.assertTrue(self.amity.rellocate_person("STF001", "Egypt") ==
                         "Ooops Staff cannot be reallocated to a living_Space")
 
-    def test_allocate_room_randomly(self):
-        self.assertEqual(self.amity.allocate_room_randomly(),
-                         "Office and Living_space successfuly allocated")
-
     # Test load_people function
 
     def test_load_people(self):
@@ -123,7 +126,6 @@ class Test_amity_class(unittest.TestCase):
         self.assertTrue(self.amity.print_room("Kenya") == "Ooops, plesase enter\
                         valid roomName")
 
-    def test_print_rrom_occupants(self):
-        self.amity.allocate_room_randomly()
+    def test_print_room_occupants(self):
         self.assertEqual(self.amity.print_room("VALHALLA"),
                          ['Paul Upendo', 'John Chang'])
