@@ -10,6 +10,5 @@ class Office(Rooms):
         self.occupants = []
         if len(self.occupants) < self.room_capacity:
             self.occupants.append(occupant)
-            return "Office successfully allocated"
         else:
             return "Room Full"

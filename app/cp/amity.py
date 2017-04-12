@@ -33,7 +33,7 @@ class Amity():
             elif self.room_type.upper() == "LIVING_SPACE" or \
                     self.room_type.upper() == "L":
                 self.room_type = "LIVING_SPACE"
-                self.living_spaces.append(Living(room_name).get_room_name())
+                self.living_spaces.append(Living(room_name))
             else:
                 return "Room_Type can only be OFFICE or LIVING_SPACE"
         return (self.room_type + " successfully created!")
@@ -43,30 +43,33 @@ class Amity():
         self.Last_Name = Last_Name
         self.Role = Role
         self.Accomodation = Accomodation
-        # try:
-        self.person_name = (Fellow(self.First_name, self.Last_Name).get_name())
-        self.all_people.append(self.person_name)
-        Person_id = self.genarate_user_ID()
-        if any(char.isdigit() for char in self.person_name):
-            return "Ooops! Name cannot contain a digit!"
-        elif self.all_people.count(self.person_name) > 1:
-            return ("Ooops! %s already exists in the system." % self.person_name)
-        elif self.Role not in ("STAFF", "FELLOW"):
-            return "Role can only be STAFF or FELLOW"
-        elif self.Accomodation not in ("Y", "N"):
-            return "Accomodation options are only 'Y' or 'N'"
-        elif self.Role == "STAFF" and self.Accomodation == "Y":
-            return "Staff cannot have accomodation!"
-        else:
-            if self.Role.upper() == "FELLOW":
-                self.fellow_info[Person_id] = self.person_name
-                self.allocate_room_randomly()
-            elif self.Role.upper() == "STAFF":
-                self.staff_info[Person_id] = self.person_name
-        return "Person has been successfully added"
-        #
-        # except TypeError:
-        #     return "Name cannot be a number!"
+        try:
+            self.person_name = (Fellow(self.First_name,
+                                       self.Last_Name).get_name())
+            self.all_people.append(self.person_name)
+            Person_id = self.genarate_user_ID()
+            if any(char.isdigit() for char in self.person_name):
+                return "Ooops! Name cannot contain a digit!"
+            elif self.all_people.count(self.person_name) > 1:
+                return ("Ooops! %s already exists in the system."
+                        % self.person_name)
+            elif self.Role not in ("STAFF", "FELLOW"):
+                return "Role can only be STAFF or FELLOW"
+            elif self.Accomodation not in ("Y", "N"):
+                return "Accomodation options are only 'Y' or 'N'"
+            elif self.Role == "STAFF" and self.Accomodation == "Y":
+                return "Staff cannot have accomodation!"
+            else:
+                if self.Role.upper() == "FELLOW":
+                    self.fellow_info[Person_id] = self.person_name
+                    self.allocate_room_randomly()
+                elif self.Role.upper() == "STAFF":
+                    self.staff_info[Person_id] = self.person_name
+                    self.allocate_room_randomly()
+                return "Person has been successfully added and allocated room"
+
+        except TypeError:
+            return "Name cannot be a number!"
 
     def genarate_user_ID(self):
         prefix = "UID"
@@ -76,48 +79,33 @@ class Amity():
             return Person_id
 
     def allocate_room_randomly(self):
-        """
-        - Have people to be allocated in a list
-        - Randomly chooose a person from the list in a load_people
-        - If person chosen is already in the list pass and give message
-        - Append the person to list until list is full
-        - When list is full stop allocation and give room full msg
-        - Proceed to next face
-
-        """
         if self.Role == "FELLOW":
             for fellow in self.fellow_info.values():
-                fellow_id, selected_fellow = random.choice(list(self.fellow_info.items()))
+                fellow_id, selected_fellow = \
+                    random.choice(list(self.fellow_info.items()))
                 if selected_fellow in self.allocations:
                     return selected_fellow + " " +\
                         "fellow has already been allocated a room"
-                else:
-                    if self.Accomodation == "Y":
-                        for room in self.offices:
-                            room.add_occupants(selected_fellow)
-                return "Unsuccessful"
+                elif self.Accomodation == "Y":
+                    for room_office in self.offices:
+                        room_office.add_occupants(selected_fellow)
+                    for room_living in self.living_spaces:
+                        room_living.add_occupants(selected_fellow)
+                return "Ooops! allocation was Unsuccessful"
 
-        else:
-            return "No room allocated"
-
-            #             for room in self.all_rooms:
-            #
-            #                 if room.keys() == ['OFFICE']:
-            #
-            #                     for room_nam in self.offices:
-            # 'append data to dict first then test for size'
-            #                         if len(room_nam) < 6: ++++
-            #                             room_nam = {room.values(): selected_fellow}
-            #                             print(room_nam)
-            #                         else:
-            #                             return "Room is already full"
-            #                 elif room.keys() == "LIVING_SPACE":
-            #                     if len(room) < 4:
-            #                         room.append(selected_fellow)
-            #                     else:
-            #                         return "Living_space is already occupied"
-            #         if self.Role.upper() == "STAFF":
-            #             pass
+        elif self.Role == "STAFF":
+            for staff in self.staff_info.values():
+                staff_id, selected_staff = \
+                    random.choice(list(self.staff_info.items()))
+                if selected_staff in self.allocations:
+                    return selected_staff + " " +\
+                        "Staff has already been allocated a room"
+                elif self.Accomodation == "Y":
+                    return "Staff cannot have accomodation"
+                elif self.Accomodation == "N":
+                    for room_office in self.offices:
+                        room_office.add_occupants(selected_staff)
+                return "Ooops! allocation was Unsuccessful"
 
     def rellocate_person(self, PersonID, Room_name):
         pass

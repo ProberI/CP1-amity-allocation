@@ -1,6 +1,7 @@
 import unittest
 
 from app.cp.amity import Amity
+from app.cp.office import Office
 
 
 class Test_amity_class(unittest.TestCase):
@@ -26,7 +27,7 @@ class Test_amity_class(unittest.TestCase):
 
     def test_create_room_in_multiples(self):
         self.amity.create_room("Office", "Hogwarts", "Mombasa")
-        self.assertListEqual(self.amity.offices, ['Hogwarts', 'Mombasa'])
+        self.assertEqual(len(self.amity.offices), 2)
 
     def test_create_room_office_with_o_as_input(self):
         self.assertEqual("OFFICE successfully created!",
@@ -52,8 +53,11 @@ class Test_amity_class(unittest.TestCase):
                         == "Ooops! Paul Upendo already exists in the system.")
 
     def test_add_person(self):
-        self.assertEqual(self.amity.add_person("John", "Waria", "FELLOW", "Y"),
-                         'Person has been successfully added')
+        self.amity.create_room("o", "Hogwarts")
+        self.assertEqual(self.amity.add_person("John", "Waria", "STAFF", "N"),
+                         'Person has been successfully added and allocated room')
+        self.assertEqual(self.amity.add_person("Paul", "Upendo", "FELLOW", "Y"),
+                         'Person has been successfully added and allocated room')
 
     def test_add_person_fellow_data_persisted(self):
         self.amity.add_person("John", "Waria", "FELLOW", "Y")
@@ -95,12 +99,6 @@ class Test_amity_class(unittest.TestCase):
     def test_reallocate_preson_to_non_existent_room(self):
         self.assertEqual(self.amity.rellocate_person("UID001", "Narnia"),
                          "Oops sorry, this particular room name does not exist!")
-
-    def test_add_person_and_allocate_room(self):
-        self.amity.create_room("o", "Hogwarts")
-        #self.amity.create_room("l", "Narnia")
-        self.assertEqual(self.amity.add_person("Paul", "Upendo", "FELLOW", "Y"),
-                         "Office successfully allocated")
 
     def test_reallocate_preson_non_existent(self):
         self.assertEqual(self.amity.rellocate_person("XCDEE", "Narniaa"),
