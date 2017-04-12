@@ -12,34 +12,34 @@ class Test_amity_class(unittest.TestCase):
         del self.amity
 
     def test_create_room_with_wrong_room_type(self):
-        self.assertEqual(self.amity.create_room("Narnia", "Quiet_Room"),
+        self.assertEqual(self.amity.create_room("Quiet_Room", "Narnia"),
                          "Room_Type can only be OFFICE or LIVING_SPACE",
                          msg="Room_Type can only be OFFICE or LIVING_SPACE")
 
     def test_create_room_office(self):
-        self.assertEqual(self.amity.create_room("Hogwarts", "Office"),
+        self.assertEqual(self.amity.create_room("Office", "Hogwarts"),
                          "OFFICE successfully created!")
 
     def test_create_room_living_space(self):
-        self.assertEqual(self.amity.create_room("Barmuda", "L"),
+        self.assertEqual(self.amity.create_room("L", "Barmuda"),
                          "LIVING_SPACE successfully created!")
 
     def test_create_room_in_multiples(self):
-        self.amity.create_room("Hogwarts Mombasa", "Office")
+        self.amity.create_room("Office", "Hogwarts Mombasa")
         self.assertListEqual(self.amity.offices, ['Hogwarts', 'Mombasa'])
 
     def test_create_room_office_with_o_as_input(self):
         self.assertEqual("OFFICE successfully created!",
-                         self.amity.create_room('Hogwarts', "O"))
+                         self.amity.create_room("O", 'Hogwarts'))
 
     def test_create_room_living_space_with_l_as_input(self):
         self.assertEqual("LIVING_SPACE successfully created!",
-                         self.amity.create_room('Hogwarts', "L"))
+                         self.amity.create_room("L", 'Hogwarts'))
 
     def test_create_room_duplicates(self):
         self.amity.rooms.append("Hogwarts")
-        self.assertTrue(self.amity.create_room("Hogwarts", "O") ==
-                        "Room Hogwarts already exists!")
+        self.assertEqual(self.amity.create_room("O", "Hogwarts"),
+                         "Room Hogwarts already exists!")
 
     def test_add_person_with_digit_in_name(self):
         self.assertEqual(self.amity.add_person("Paul2", "Upendo", "STAFF", "N"),

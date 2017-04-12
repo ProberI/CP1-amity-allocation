@@ -19,12 +19,11 @@ class Amity():
         self.fellow_info = {}
         self.staff_info = {}
 
-    def create_room(self, name, room_type):
+    def create_room(self, room_type, *name):
         self.name = name
         self.room_type = room_type
-        each = self.name.split()
 
-        for room_name in each:
+        for room_name in name:
             self.rooms.append(room_name)
 
             if self.rooms.count(room_name) > 1:
