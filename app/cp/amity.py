@@ -1,3 +1,4 @@
+import sys
 import random
 
 from app.cp.living import Living
@@ -47,7 +48,7 @@ class Amity():
             self.person_name = (Fellow(self.First_name,
                                        self.Last_Name).get_name())
             self.all_people.append(self.person_name)
-            Person_id = self.genarate_user_ID()
+            self.Person_id = self.genarate_user_ID()
             if any(char.isdigit() for char in self.person_name):
                 return "Ooops! Name cannot contain a digit!"
             elif self.all_people.count(self.person_name) > 1:
@@ -60,12 +61,9 @@ class Amity():
             elif self.Role == "STAFF" and self.Accomodation == "Y":
                 return "Staff cannot have accomodation!"
             else:
-                if self.Role.upper() == "FELLOW":
-                    self.fellow_info[Person_id] = self.person_name
-                    self.allocate_room_randomly()
-                elif self.Role.upper() == "STAFF":
-                    self.staff_info[Person_id] = self.person_name
-                    self.allocate_room_randomly()
+                self.fellow_info[self.Person_id] = self.person_name
+                self.staff_info[self.Person_id] = self.person_name
+                self.allocate_room_randomly()
                 return "Person has been successfully added and allocated room"
 
         except TypeError:
@@ -108,7 +106,21 @@ class Amity():
                 return "Ooops! allocation was Unsuccessful"
 
     def rellocate_person(self, PersonID, Room_name):
-        pass
+        """
+         -- check if personID or person exists
+         -- *check if person was previously not allocated
+         -- check if room exists
+         -- work on edgecases
+         -- Reallocate
+        """
+        if PersonID not in self.staff_info.keys() or\
+                PersonID not in self.fellow_info.keys():
+            return "Ooops, invalid employee_id please try again."
+        elif Room_name not in self.offices or\
+                Room_name not in self.living_spaces:
+            return "Oops sorry, this particular room does not exist!"
+        else:
+            return "Success"
 
     def load_people(self, file_name):
         pass
@@ -128,8 +140,3 @@ class Amity():
 
     def load_state(self):
         pass
-
-
-amity = Amity()
-amity.create_room("o", "Hogwarts")
-print(amity.add_person("Paul", "Upendo", "FELLOW", "Y"))
