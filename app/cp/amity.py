@@ -110,6 +110,7 @@ class Amity():
 
     def rellocate_person(self, Person_name, Room_name):
         self.Room_name = Room_name
+        self.Person_name = Person_name
         """
          -- check if personID or person exists
          -- *check if person was previously not allocated
@@ -120,30 +121,23 @@ class Amity():
                 - pop that element
                 - add it to the new room instance
         """
-        if Person_name not in self.staff_info.values() or\
-                Person_name not in self.fellow_info.values():
-            return "Ooops, invalid employee_name please try again."
-        elif self.Room_name not in self.all_rooms:
-            return "Oops sorry, this particular room does not exist!"
-        else:
-            if Person_name in self.staff_info.values() or\
-                    Person_name in self.fellow_info.values():
-                for current_room in self.offices:
-                    if Person_name in current_room.get_occupants():
-                        current_room.occupants.remove(Person_name)
-                        for self.Room_name in self.offices:
-                            self.Room_name.add_occupants(Person_name)
+        for room_selected in self.offices:
+            self.Room_name == room_selected.get_room_name()
+            if self.Room_name in self.all_rooms:
+                if len(room_selected.occupants) == 6:
+                    return "Ooops!Office occupied. Please try another"
+                elif self.Person_name not in self.fellow_info.values() or\
+                        self.Person_name not in self.staff_info.values():
+                    return "Ooops, invalid employee_name please try again."
+                else:
+                    for rooms in self.offices:
+                        if self.Person_name in rooms.occupants:
+                            rooms.occupants.remove(self.Person_name)
+                        room_selected.occupants.append(self.Person_name)
+                    return "Success"
 
-                return "Success"
-            elif Person_name not in self.staff_info.values():
-                for current_room in self.living_spaces:
-                    if Person_name in current_room.get_occupants():
-                        current_room.occupants.remove(Person_name)
-                        for self.Room_name in self.living_spaces:
-                            self.Room_name.add_occupants(Person_name)
-                return "Success"
             else:
-                return "Ooops! cannot reallocate STAFF to living_space"
+                return "Oops sorry, this particular room does not exist!"
 
     def load_people(self, file_name):
         pass

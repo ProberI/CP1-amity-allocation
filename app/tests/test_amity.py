@@ -87,8 +87,7 @@ class Test_amity_class(unittest.TestCase):
                          "Staff cannot have accomodation!")
 
     def test_reallocate_person(self):
-        self.amity.create_room("o", "Narnia")
-        self.amity.create_room("o", "Hogwarts")
+        self.amity.create_room("o", "Hogwarts", "Narnia")
         self.amity.create_room("l", "Dojo")
         self.amity.add_person("Paul", "Upendo", "FELLOW", "Y")
         self.assertEqual(self.amity.rellocate_person("Paul Upendo", "Hogwarts"),

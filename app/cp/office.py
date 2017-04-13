@@ -8,6 +8,7 @@ class Office(Rooms):
         self.occupants = []
 
     def add_occupants(self, occupant):
+
         if len(self.occupants) < self.room_capacity:
             self.occupants.append(occupant)
         else:
