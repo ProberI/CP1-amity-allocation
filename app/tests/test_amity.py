@@ -86,38 +86,38 @@ class Test_amity_class(unittest.TestCase):
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "STAFF", "Y"),
                          "Staff cannot have accomodation!")
 
-    # Allocation and Reallocation tests
-
     def test_reallocate_person(self):
         self.amity.create_room("o", "Narnia")
+        self.amity.create_room("o", "Hogwarts")
         self.amity.create_room("l", "Dojo")
         self.amity.add_person("Paul", "Upendo", "FELLOW", "Y")
-        self.assertEqual(self.amity.rellocate_person("Paul UpendoUID0", "Narnia"),
+        self.assertEqual(self.amity.rellocate_person("Paul Upendo", "Hogwarts"),
                          "Success")
 
     def test_reallocate_preson_to_non_existent_room(self):
         self.amity.create_room("o", "Narnia")
         self.amity.add_person("Paul", "Upendo", "STAFF", "N")
-        self.assertEqual(self.amity.rellocate_person("Paul UpendoUID0", "Chania"),
+        self.assertEqual(self.amity.rellocate_person("Paul Upendo", "Chania"),
                          "Oops sorry, this particular room does not exist!")
 
     def test_reallocate_person_who_is_not_in_system(self):
         self.amity.create_room("o", "Narnia")
         self.amity.add_person("Paul", "Upendo", "STAFF", "N")
         self.assertEqual(self.amity.rellocate_person("XCDEE", "Narnia"),
-                         "Ooops, invalid employee_id please try again.")
+                         "Ooops, invalid employee_name please try again.")
 
     def test_reallocate_person_to_same_room(self):
         self.amity.create_room("o", "Narnia")
         self.amity.add_person("Paul", "Upendo", "STAFF", "N")
-        self.assertEqual(self.amity.rellocate_person("Paul UpendoUID0", "Narnia"),
+        self.assertEqual(self.amity.rellocate_person("Paul Upendo", "Narnia"),
                          "Ooops Upendo is already allocated to Narnia. No changes made")
 
     def test_reallocate_person_staff_to_living_space(self):
+        self.amity.create_room("o", "Hogwarts")
         self.amity.create_room("l", "Egypt")
         self.amity.add_person("Paul", "Upendo", "STAFF", "N")
-        self.assertTrue(self.amity.rellocate_person("Paul UpendoUID0", "Egypt") ==
-                        "Ooops Staff cannot be reallocated to a living_Space")
+        self.assertEqual(self.amity.rellocate_person("Paul Upendo", "Egypt"),
+                         "Ooops! cannot reallocate STAFF to living_space")
 
     # Test load_people function
 
