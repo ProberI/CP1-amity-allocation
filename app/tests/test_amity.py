@@ -93,7 +93,7 @@ class Test_amity_class(unittest.TestCase):
         self.assertEqual(self.amity.rellocate_person("Paul Upendo", "Hogwarts"),
                          "Success")
 
-    def test_reallocate_preson_to_non_existent_room(self):
+    def test_reallocate_person_to_non_existent_room(self):
         self.amity.create_room("o", "Narnia")
         self.amity.add_person("Paul", "Upendo", "STAFF", "N")
         self.assertEqual(self.amity.rellocate_person("Paul Upendo", "Chania"),
