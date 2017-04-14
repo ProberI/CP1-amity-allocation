@@ -138,7 +138,6 @@ class Amity():
                                     rooms.occupants.remove(self.Person_name)
                                     room_selected.add_occupants(self.Person_name)
                                 return "Success"
-
             else:
                 for room_selected in self.living_spaces:
                     if self.Room_name == room_selected.get_room_name():
