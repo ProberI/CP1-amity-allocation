@@ -162,8 +162,24 @@ class Amity():
         elif self.Person_name in self.staff_info.values() and\
                 self.Room_name in self.living_s_names:
             return "Ooops! cannot reallocate STAFF to living_space"
-        else:
-            pass
+
+        elif self.Person_name in r.occupants and r.room_capacity == 4:
+            r.occupants.remove(self.Person_name)
+            if rooms == self.Room_name:
+                rooms.add_occupants(self.Person_name)
+                # if self.Person_name in rooms.occupants:
+                #     return "Ooops already allocated here. No changes made"
+                # else:
+            return "Success"
+
+        elif self.Person_name in r.occupants and r.room_capacity == 6:
+            r.occupants.remove(self.Person_name)
+            if _Room_name == self.Room_name:
+                _Room_name.add_occupants(self.Person_name)
+                # if self.Person_name in _Room_name.occupants:
+                #     return "Ooops already allocated here. No changes made"
+                # else:
+            return "success"
 
             # for _Room_name in self.offices:
             #     print(_Room_name.occupants)
