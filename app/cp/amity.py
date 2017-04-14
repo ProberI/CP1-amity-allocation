@@ -150,7 +150,7 @@ class Amity():
         for r in self.allocations:
             print("allocated", r.get_room_name())
         for s in self.unallocated:
-            print("unallocated", s.get_room_name())
+            print("Unallocated", s.get_room_name())
 
         if self.Room_name not in self.all_rooms:
             return "Oops sorry, this particular room does not exist!"
