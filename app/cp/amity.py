@@ -170,8 +170,8 @@ class Amity():
     def load_people(self, file_name):
         file_name = 'app/cp/names.txt'
         f = open(file_name, mode='r', encoding='utf-8')
-        f.readlines()
-        return "Data successfully loaded"
+        # for line in f.readlines():
+        return "Data successfull loaded"
 
     def print_allocations(self):
         pass
@@ -180,8 +180,12 @@ class Amity():
         pass
 
     def print_room(self, room_name):
-        # print(room_name)
-        pass
+        self.room_name = room_name
+        if self.room_name not in self.all_rooms:
+            return "Ooops, please enter valid room name"
+        for allocated_rooms in self.allocations:
+            if allocated_rooms.get_room_name() == self.room_name:
+                return allocated_rooms.get_occupants()
 
     def save_state(self, db_name):
         pass
