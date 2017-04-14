@@ -134,16 +134,7 @@ class Amity():
         self.Person_name = Person_name
         self.office_names = []
         self.living_s_names = []
-        """
-         -- check if personID or person exists
-         -- *check if person was previously not allocated
-         -- check if room exists
-         -- work on edgecases
-         -- Reallocate:
-                - Go to occupants list where personId exists
-                - pop that element
-                - add it to the new room instance
-        """
+
         for _Room_name in self.offices:
             self.office_names.append(_Room_name.get_room_name())
 
@@ -163,26 +154,24 @@ class Amity():
                 self.Room_name in self.living_s_names:
             return "Ooops! cannot reallocate STAFF to living_space"
 
-        elif self.Person_name in r.occupants and r.room_capacity == 4:
+        elif self.Room_name == r.get_room_name() and r.room_capacity == 4:
             r.occupants.remove(self.Person_name)
             if rooms == self.Room_name:
                 rooms.add_occupants(self.Person_name)
-                # if self.Person_name in rooms.occupants:
-                #     return "Ooops already allocated here. No changes made"
-                # else:
-            return "Success"
+                return "Success"
 
-        elif self.Person_name in r.occupants and r.room_capacity == 6:
+        elif self.Room_name == r.get_room_name() and r.room_capacity == 6:
             r.occupants.remove(self.Person_name)
+
             if _Room_name == self.Room_name:
                 _Room_name.add_occupants(self.Person_name)
-                # if self.Person_name in _Room_name.occupants:
-                #     return "Ooops already allocated here. No changes made"
-                # else:
-            return "success"
+                return "success"
 
     def load_people(self, file_name):
-        pass
+        file_name = 'app/cp/names.txt'
+        f = open(file_name, mode='r', encoding='utf-8')
+        f.readlines()
+        return "Data successfully loaded"
 
     def print_allocations(self):
         pass

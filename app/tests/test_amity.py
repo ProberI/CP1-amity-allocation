@@ -126,7 +126,8 @@ class Test_amity_class(unittest.TestCase):
     # Test load_people function
 
     def test_load_people(self):
-        self.assertEqual(self.amity.load_people("Names.txt"),
+        file_name = 'app/cp/names.txt'
+        self.assertEqual(self.amity.load_people(file_name),
                          "Data successfully loaded")
 
     def test_print_room_non_existent(self):
