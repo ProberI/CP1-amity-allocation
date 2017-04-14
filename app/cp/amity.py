@@ -181,43 +181,6 @@ class Amity():
                 # else:
             return "success"
 
-            # for _Room_name in self.offices:
-            #     print(_Room_name.occupants)
-            #     if self.Room_name in self.all_rooms:
-            #         for room_selected in self.offices:
-            #             self.Room_name == room_selected.get_room_name()
-            #             if self.Room_name in self.all_rooms:
-            #                 if len(room_selected.occupants) == 6:
-            #                     return "Ooops!Office occupied. Please try another"
-            #                 elif self.Person_name not in self.fellow_info.values() or\
-            #                         self.Person_name not in self.staff_info.values():
-            #                     return "Ooops, invalid employee_name please try again."
-            #                 else:
-            #                     for rooms in self.offices:
-            #                         if self.Person_name in rooms.occupants:
-            #                             rooms.occupants.remove(self.Person_name)
-            #                             room_selected.add_occupants(self.Person_name)
-            #                         return "Success"
-            #
-            #     else:
-            #         for room_selected in self.living_spaces:
-            #             if self.Room_name == room_selected.get_room_name():
-            #                 if self.Room_name in self.all_rooms:
-            #                     if len(room_selected.occupants) == 4:
-            #                         return "Ooops! Living_space Occupied. Plaese try another"
-            #                     elif self.Person_name in self.staff_info.values():
-            #                         return "Ooops! cannot reallocate STAFF to living_space"
-            #                     elif self.Person_name not in self.fellow_info.values():
-            #                         return "Ooops, invalid employee_name please try again."
-            #                     else:
-            #                         for rooms in self.living_spaces:
-            #                             if self.Person_name in rooms.occupants:
-            #                                 rooms.occupants.remove(self.Person_name)
-            #                                 room_selected.add_occupants(self.Person_name)
-            #                             return "Success"
-            #     if self.Room_name not in _Room_name.get_room_name():
-            #         return "Oops sorry, this particular room does not exist!"
-
     def load_people(self, file_name):
         pass
 
