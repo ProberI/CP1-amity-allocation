@@ -59,7 +59,7 @@ class Test_amity_class(unittest.TestCase):
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "FELLOW", "Y"),
                          'Person has been successfully added and allocated room')
 
-    def test_add_person_fellow_data_persisted(self):
+    def test_add_person_generatedID_in(self):
         self.amity.add_person("John", "Waria", "FELLOW", "Y")
         self.amity.add_person("Jon", "Mondo", "FELLOW", "Y")
         self.assertTrue({'John WariaUID0': 'John Waria',
@@ -106,10 +106,10 @@ class Test_amity_class(unittest.TestCase):
                          "Ooops, invalid employee_name please try again.")
 
     def test_reallocate_person_to_same_room(self):
-        self.amity.create_room("o", "Narnia")
+        self.amity.create_room("o", "Hogwarts", "Narnia")
         self.amity.add_person("Paul", "Upendo", "STAFF", "N")
         self.assertEqual(self.amity.rellocate_person("Paul Upendo", "Narnia"),
-                         "Ooops Upendo is already allocated to Narnia. No changes made")
+                         "Ooops already allocated here. No changes made")
 
     def test_reallocate_person_staff_to_living_space(self):
         self.amity.create_room("o", "Hogwarts")

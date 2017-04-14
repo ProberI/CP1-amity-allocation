@@ -12,7 +12,7 @@ class Amity():
     def __init__(self):
         self.all_people = []
         self.allocations = []
-        self.unallocated_people = []
+        self.unallocated = []
         self.rooms = []
         self.offices = []
         self.living_spaces = []
@@ -84,33 +84,54 @@ class Amity():
             for fellow in self.fellow_info.values():
                 fellow_id, selected_fellow = \
                     random.choice(list(self.fellow_info.items()))
-                if selected_fellow in self.allocations:
-                    return selected_fellow + " " +\
-                        "fellow has already been allocated a room"
-                elif self.Accomodation == "Y":
+                if self.Accomodation == "Y":
                     for room_office in self.offices:
-                        room_office.add_occupants(selected_fellow)
+                        chosen_office = random.choice(self.offices)
+                        chosen_office.add_occupants(selected_fellow)
+                        if len(room_office.occupants) > 0:
+                            self.allocations.append(room_office)
+                        else:
+                            self.unallocated.append(room_office)
+
                     for room_living in self.living_spaces:
-                        room_living.add_occupants(selected_fellow)
+                        chosen_living_space = random.choice(self.living_spaces)
+                        chosen_living_space.add_occupants(selected_fellow)
+                        if len(room_living.occupants) > 0:
+                            self.allocations.append(room_living)
+                        else:
+                            self.unallocated.append(room_living)
+                elif self.Accomodation == "N":
+                    for room_office in self.offices:
+                        chosen_office = random.choice(self.offices)
+                        chosen_office.add_occupants(selected_fellow)
+                        if len(room_office.occupants) > 0:
+                            self.allocations.append(room_office)
+                        else:
+                            self.unallocated.append(room_office)
+
                 return "Ooops! allocation was Unsuccessful"
 
         elif self.Role == "STAFF":
             for staff in self.staff_info.values():
                 staff_id, selected_staff = \
                     random.choice(list(self.staff_info.items()))
-                if selected_staff in self.allocations:
-                    return selected_staff + " " +\
-                        "Staff has already been allocated a room"
-                elif self.Accomodation == "Y":
+                if self.Accomodation == "Y":
                     return "Staff cannot have accomodation"
                 elif self.Accomodation == "N":
                     for room_office in self.offices:
-                        room_office.add_occupants(selected_staff)
+                        chosen_office = random.choice(self.offices)
+                        chosen_office.add_occupants(selected_staff)
+                        if len(room_office.occupants) > 0:
+                            self.allocations.append(room_office)
+                        else:
+                            self.unallocated.append(room_office)
                 return "Ooops! allocation was Unsuccessful"
 
     def rellocate_person(self, Person_name, Room_name):
         self.Room_name = Room_name
         self.Person_name = Person_name
+        self.office_names = []
+        self.living_s_names = []
         """
          -- check if personID or person exists
          -- *check if person was previously not allocated
@@ -122,40 +143,60 @@ class Amity():
                 - add it to the new room instance
         """
         for _Room_name in self.offices:
+            self.office_names.append(_Room_name.get_room_name())
 
-            if self.Room_name == _Room_name.get_room_name():
-                for room_selected in self.offices:
-                    self.Room_name == room_selected.get_room_name()
-                    if self.Room_name in self.all_rooms:
-                        if len(room_selected.occupants) == 6:
-                            return "Ooops!Office occupied. Please try another"
-                        elif self.Person_name not in self.fellow_info.values() or\
-                                self.Person_name not in self.staff_info.values():
-                            return "Ooops, invalid employee_name please try again."
-                        else:
-                            for rooms in self.offices:
-                                if self.Person_name in rooms.occupants:
-                                    rooms.occupants.remove(self.Person_name)
-                                    room_selected.add_occupants(self.Person_name)
-                                return "Success"
-            else:
-                for room_selected in self.living_spaces:
-                    if self.Room_name == room_selected.get_room_name():
-                        if self.Room_name in self.all_rooms:
-                            if len(room_selected.occupants) == 4:
-                                return "Ooops! Living_space Occupied. Plaese try another"
-                            elif self.Person_name in self.staff_info.values():
-                                return "Ooops! cannot reallocate STAFF to living_space"
-                            elif self.Person_name not in self.fellow_info.values():
-                                return "Ooops, invalid employee_name please try again."
-                            else:
-                                for rooms in self.living_spaces:
-                                    if self.Person_name in rooms.occupants:
-                                        rooms.occupants.remove(self.Person_name)
-                                        room_selected.add_occupants(self.Person_name)
-                                    return "Success"
-            if self.Room_name not in _Room_name.get_room_name():
-                return "Oops sorry, this particular room does not exist!"
+        for rooms in self.living_spaces:
+            self.living_s_names.append(rooms.get_room_name())
+        for r in self.allocations:
+            print("allocated", r.get_room_name())
+        for s in self.unallocated:
+            print("unallocated", s.get_room_name())
+
+        if self.Room_name not in self.all_rooms:
+            return "Oops sorry, this particular room does not exist!"
+        elif self.Person_name not in self.fellow_info.values() or\
+                self.Person_name not in self.staff_info.values():
+            return "Ooops, invalid employee_name please try again."
+        elif self.Person_name in self.staff_info.values() and\
+                self.Room_name in self.living_s_names:
+            return "Ooops! cannot reallocate STAFF to living_space"
+
+            # for _Room_name in self.offices:
+            #     print(_Room_name.occupants)
+            #     if self.Room_name in self.all_rooms:
+            #         for room_selected in self.offices:
+            #             self.Room_name == room_selected.get_room_name()
+            #             if self.Room_name in self.all_rooms:
+            #                 if len(room_selected.occupants) == 6:
+            #                     return "Ooops!Office occupied. Please try another"
+            #                 elif self.Person_name not in self.fellow_info.values() or\
+            #                         self.Person_name not in self.staff_info.values():
+            #                     return "Ooops, invalid employee_name please try again."
+            #                 else:
+            #                     for rooms in self.offices:
+            #                         if self.Person_name in rooms.occupants:
+            #                             rooms.occupants.remove(self.Person_name)
+            #                             room_selected.add_occupants(self.Person_name)
+            #                         return "Success"
+            #
+            #     else:
+            #         for room_selected in self.living_spaces:
+            #             if self.Room_name == room_selected.get_room_name():
+            #                 if self.Room_name in self.all_rooms:
+            #                     if len(room_selected.occupants) == 4:
+            #                         return "Ooops! Living_space Occupied. Plaese try another"
+            #                     elif self.Person_name in self.staff_info.values():
+            #                         return "Ooops! cannot reallocate STAFF to living_space"
+            #                     elif self.Person_name not in self.fellow_info.values():
+            #                         return "Ooops, invalid employee_name please try again."
+            #                     else:
+            #                         for rooms in self.living_spaces:
+            #                             if self.Person_name in rooms.occupants:
+            #                                 rooms.occupants.remove(self.Person_name)
+            #                                 room_selected.add_occupants(self.Person_name)
+            #                             return "Success"
+            #     if self.Room_name not in _Room_name.get_room_name():
+            #         return "Oops sorry, this particular room does not exist!"
 
     def load_people(self, file_name):
         pass
