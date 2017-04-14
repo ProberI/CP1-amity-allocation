@@ -80,30 +80,32 @@ class Amity():
             return Person_id
 
     def allocate_room_randomly(self):
+
         if self.Role == "FELLOW":
             for fellow in self.fellow_info.values():
                 fellow_id, selected_fellow = \
                     random.choice(list(self.fellow_info.items()))
                 if self.Accomodation == "Y":
+                    chosen_office = random.choice(self.offices)
+                    chosen_office.add_occupants(selected_fellow)
                     for room_office in self.offices:
-                        chosen_office = random.choice(self.offices)
-                        chosen_office.add_occupants(selected_fellow)
                         if len(room_office.occupants) > 0:
                             self.allocations.append(room_office)
                         else:
                             self.unallocated.append(room_office)
 
+                    chosen_living_space = random.choice(self.living_spaces)
+                    chosen_living_space.add_occupants(selected_fellow)
                     for room_living in self.living_spaces:
-                        chosen_living_space = random.choice(self.living_spaces)
-                        chosen_living_space.add_occupants(selected_fellow)
                         if len(room_living.occupants) > 0:
                             self.allocations.append(room_living)
                         else:
                             self.unallocated.append(room_living)
                 elif self.Accomodation == "N":
+
+                    chosen_office = random.choice(self.offices)
+                    chosen_office.add_occupants(selected_fellow)
                     for room_office in self.offices:
-                        chosen_office = random.choice(self.offices)
-                        chosen_office.add_occupants(selected_fellow)
                         if len(room_office.occupants) > 0:
                             self.allocations.append(room_office)
                         else:
@@ -118,9 +120,9 @@ class Amity():
                 if self.Accomodation == "Y":
                     return "Staff cannot have accomodation"
                 elif self.Accomodation == "N":
+                    chosen_office = random.choice(self.offices)
+                    chosen_office.add_occupants(selected_staff)
                     for room_office in self.offices:
-                        chosen_office = random.choice(self.offices)
-                        chosen_office.add_occupants(selected_staff)
                         if len(room_office.occupants) > 0:
                             self.allocations.append(room_office)
                         else:
@@ -148,9 +150,9 @@ class Amity():
         for rooms in self.living_spaces:
             self.living_s_names.append(rooms.get_room_name())
         for r in self.allocations:
-            print("allocated", r.get_room_name())
+            print("allocated", r.get_room_name(), r.occupants)
         for s in self.unallocated:
-            print("Unallocated", s.get_room_name())
+            print("Unallocated", s.get_room_name(), s.occupants)
 
         if self.Room_name not in self.all_rooms:
             return "Oops sorry, this particular room does not exist!"
@@ -160,6 +162,8 @@ class Amity():
         elif self.Person_name in self.staff_info.values() and\
                 self.Room_name in self.living_s_names:
             return "Ooops! cannot reallocate STAFF to living_space"
+        else:
+            pass
 
             # for _Room_name in self.offices:
             #     print(_Room_name.occupants)

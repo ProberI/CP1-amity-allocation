@@ -53,19 +53,24 @@ class Test_amity_class(unittest.TestCase):
                         == "Ooops! Paul Upendo already exists in the system.")
 
     def test_add_person(self):
-        self.amity.create_room("o", "Hogwarts")
+        self.amity.create_room("o", "Hogwarts", "Valhalla")
+        self.amity.create_room("l", "Dojo")
         self.assertEqual(self.amity.add_person("John", "Waria", "STAFF", "N"),
                          'Person has been successfully added and allocated room')
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "FELLOW", "Y"),
                          'Person has been successfully added and allocated room')
 
     def test_add_person_generatedID_in(self):
+        self.amity.create_room("o", "Hogwarts", "Valhalla")
+        self.amity.create_room("l", "Dojo")
         self.amity.add_person("John", "Waria", "FELLOW", "Y")
         self.amity.add_person("Jon", "Mondo", "FELLOW", "Y")
         self.assertTrue({'John WariaUID0': 'John Waria',
                          'Jon MondoUID1': 'Jon Mondo'} == self.amity.fellow_info)
 
     def test_add_person_staff_data_persisted(self):
+        self.amity.create_room("o", "Hogwarts", "Valhalla")
+        self.amity.create_room("l", "Dojo")
         self.amity.add_person("John", "Waria", "STAFF", "N")
         self.assertTrue({'John WariaUID0': 'John Waria'}
                         == self.amity.staff_info)
