@@ -182,7 +182,13 @@ class Amity():
             return "Data successfull loaded"
 
     def print_allocations(self):
-        pass
+        for allocated_rooms in self.allocations:
+            print("======================\n"
+                  + str(allocated_rooms.get_room_name()) + "\n"
+                  + "-------------------\n"
+                  + str(allocated_rooms.get_occupants()) + "\n"
+                  + "=====================\n")
+        return "Success"
 
     def print_unallocated(self):
         pass
