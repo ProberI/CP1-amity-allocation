@@ -124,6 +124,8 @@ class Test_amity_class(unittest.TestCase):
                          "Ooops! cannot reallocate STAFF to living_space")
 
     def test_load_people(self):
+        self.amity.create_room("o", "Hogwarts")
+        self.amity.create_room("l", "Egypt")
         file_name = 'app/cp/names.txt'
         self.assertEqual(self.amity.load_people(file_name),
                          "Data successfull loaded")
@@ -132,11 +134,10 @@ class Test_amity_class(unittest.TestCase):
         self.amity.create_room("o", "VALHALLA")
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
         self.amity.add_person("John", "Chang", "STAFF", "N")
-        self.assertEqual(self.amity.print_room("Kenya"), "Ooops, please enter valid room name")
+        self.assertEqual(self.amity.print_room("Kenya"),
+                         "Ooops, please enter valid room name")
 
     def test_print_room_occupants(self):
         self.amity.create_room("o", "VALHALLA")
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
-        self.amity.add_person("John", "Chang", "STAFF", "N")
-        self.assertEqual(self.amity.print_room("VALHALLA"),
-                         ['Paul Upendo', 'John Chang'])
+        self.assertEqual(self.amity.print_room("VALHALLA"), ['Paul Upendo'])
