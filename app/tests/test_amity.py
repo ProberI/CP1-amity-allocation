@@ -141,3 +141,8 @@ class Test_amity_class(unittest.TestCase):
         self.amity.create_room("o", "VALHALLA")
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
         self.assertEqual(self.amity.print_room("VALHALLA"), ['Paul Upendo'])
+
+    def test_print_allocations(self):
+        self.amity.create_room("o", "VALHALLA")
+        self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
+        self.assertEqual(self.amity.print_allocations(), "Success")
