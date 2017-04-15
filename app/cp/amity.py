@@ -170,8 +170,16 @@ class Amity():
     def load_people(self, file_name):
         file_name = 'app/cp/names.txt'
         f = open(file_name, mode='r', encoding='utf-8')
-        # for line in f.readlines():
-        return "Data successfull loaded"
+        for line in f.readlines():
+            data = line.split()
+            first_name = data[0]
+            last_name = data[1]
+            role = data[2]
+            accomodation = data[3]
+            if role.upper() == "STAFF":
+                accomodation = "N"
+            self.add_person(first_name, last_name, role, accomodation)
+            return "Data successfull loaded"
 
     def print_allocations(self):
         pass
