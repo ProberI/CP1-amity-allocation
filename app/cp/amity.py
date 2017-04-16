@@ -1,10 +1,10 @@
 import sys
 import random
 
-from living import Living
-from office import Office
-from fellow import Fellow
-from staff import Staff
+from cp.living import Living
+from cp.office import Office
+from cp.fellow import Fellow
+from cp.staff import Staff
 
 
 class Amity():

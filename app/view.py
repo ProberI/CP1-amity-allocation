@@ -21,8 +21,10 @@ Options:
 
 import sys
 import cmd
+
 from docopt import docopt, DocoptExit
-from amity import Amity
+
+from cp.amity import Amity
 
 
 def docopt_cmd(func):
@@ -105,11 +107,6 @@ class App(cmd.Cmd):
         """Usage: print_room <room_name>"""
         room_name = arg['<room_name>']
         amity.print_room(room_name)
-
-
-# Options:
-#     --baud=<n>  Baudrate [default: 9600]
-#
 
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""

@@ -1,4 +1,4 @@
-from person import Person
+from cp.person import Person
 
 
 class Fellow(Person):

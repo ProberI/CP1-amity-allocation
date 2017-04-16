@@ -1,4 +1,4 @@
-from rooms import Rooms
+from cp.rooms import Rooms
 
 
 class Office(Rooms):

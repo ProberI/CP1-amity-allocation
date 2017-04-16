@@ -1,7 +1,6 @@
 import unittest
 
-from app.cp.amity import Amity
-from app.cp.office import Office
+from cp.amity import Amity
 
 
 class Test_amity_class(unittest.TestCase):
