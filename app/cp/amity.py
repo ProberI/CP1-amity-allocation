@@ -1,10 +1,10 @@
 import sys
 import random
 
-from app.cp.living import Living
-from app.cp.office import Office
-from app.cp.fellow import Fellow
-from app.cp.staff import Staff
+from living import Living
+from office import Office
+from fellow import Fellow
+from staff import Staff
 
 
 class Amity():
@@ -168,7 +168,7 @@ class Amity():
                 return "success"
 
     def load_people(self, file_name):
-        file_name = 'app/cp/names.txt'
+        file_name = 'names.txt'
         f = open(file_name, mode='r', encoding='utf-8')
         for line in f.readlines():
             data = line.split()
