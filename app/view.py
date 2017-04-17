@@ -21,8 +21,12 @@ Options:
 
 import sys
 import cmd
+import time
 
 from docopt import docopt, DocoptExit
+
+from termcolor import colored, cprint
+from pyfiglet import figlet_format, Figlet
 
 from cp.amity import Amity
 
@@ -37,7 +41,7 @@ def docopt_cmd(func):
             # The DocoptExit is thrown when the args do not match.
             # We print a message to the user and the usage block.
 
-            print('Invalid Command!')
+            print('Invalid Command!\n')
             print(e)
             return
 
@@ -55,10 +59,15 @@ def docopt_cmd(func):
     return fn
 
 
+def app_header():
+    cprint("=================================================", 'blue')
+
+
 class App(cmd.Cmd):
-    intro = 'Welcome to Amitié!' \
-        + ' (Type help for a list of commands.)'
-    prompt = '(Amitié) '
+    intro = 'Welcome to Amitié!' + ' (Type help for a list of commands.)'
+    custom_prompt = colored('Amitié ', 'green', attrs=[
+        'bold']) + colored('-->', 'grey', attrs=['bold', 'blink'])
+    prompt = custom_prompt
     file = None
 
     @docopt_cmd
@@ -75,36 +84,42 @@ class App(cmd.Cmd):
 
         first_name = arg['<first_name>']
         last_name = arg['<last_name>']
-        role = arg['<role>'],
+        role = arg['<role>']
         accomodation = arg['<accomodation>']
         amity.add_person(first_name, last_name, role, accomodation)
 
     @docopt_cmd
     def do_reallocate_person(self, arg):
-        """Usage: reallocate_person <full_names> <room_name>"""
-        person_name = arg['full_names']
+        """Usage: reallocate_person <First_name> <Last_name> <room_name>"""
+
+        First_name = arg['<First_name>']
+        Last_name = arg['<Last_name>']
         room_name = arg['<room_name>']
-        amity.reallocate_person(person_name, room_name)
+        amity.reallocate_person(First_name, Last_name, room_name)
 
     @docopt_cmd
     def do_load_people(self, arg):
         """Usage: load_people <file_name>"""
+
         file_name = arg['<file_name>']
         amity.load_people(file_name)
 
     @docopt_cmd
     def do_print_allocations(self, arg):
         """Usage: print_allocations [--file_name]"""
+
         amity.print_allocations()
 
     @docopt_cmd
     def do_print_unallocated(self, arg):
         """Usage: unallocated [--file_name]"""
+
         amity.print_unallocated()
 
     @docopt_cmd
     def do_print_room(self, arg):
         """Usage: print_room <room_name>"""
+
         room_name = arg['<room_name>']
         amity.print_room(room_name)
 
@@ -118,6 +133,7 @@ class App(cmd.Cmd):
 opt = docopt(__doc__, sys.argv[1:])
 
 if opt['--interactive']:
+    app_header()
     amity = Amity()
     App().cmdloop()
 
