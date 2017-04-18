@@ -1,4 +1,5 @@
 import sys
+
 import random
 
 from termcolor import colored, cprint
