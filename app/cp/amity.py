@@ -2,7 +2,15 @@ import sys
 
 import random
 
+import string
+
 from termcolor import colored, cprint
+
+# from sqlalchemy import create_engine
+#
+# from sqlalchemy.orm import sessionmaker
+#
+# from cp.model import Amity_employees, Amity_rooms
 
 from cp.living import Living
 from cp.office import Office
@@ -29,30 +37,29 @@ class Amity():
             - Use load state to verify is room already exists.
         """
         self.room_type = room_type
-
         for room_name in name:
             self.rooms.append(room_name)
             if self.rooms.count(room_name) > 1:
-                err_msg = cprint(("Room %s already exists!\n" % room_name),
-                                 'red', attrs=['bold'])
+                err_msg = "Room %s already exists!" % room_name
+                print(colored(err_msg + "\n", 'red', attrs=['bold']))
                 return err_msg
             elif self.room_type.upper() == "OFFICE" or self.room_type.upper()\
                     == "O":
                 self.room_type = "OFFICE"
                 self.offices.append(Office(room_name))
                 self.all_rooms.append(Office(room_name).get_room_name())
-            elif self.room_type.upper() == "LIVING_SPACE" or \
+            elif self.room_type.upper() == "LIVING_SPACE" or\
                     self.room_type.upper() == "L":
                 self.room_type = "LIVING_SPACE"
                 self.living_spaces.append(Living(room_name))
                 self.all_rooms.append(Living(room_name).get_room_name())
             else:
-                err_msg = cprint("Room_Type can only be OFFICE or LIVING_SPACE\n",
-                                 'red', attrs=['bold'])
-                return err_msg
+                print(colored("Room_Type can only be OFFICE or LIVING_SPACE\n",
+                              'red', attrs=['bold']))
+                return "Room_Type can only be OFFICE or LIVING_SPACE"
 
-        msg = cprint((self.room_type + " " + room_name + " successfully created!\n"),
-                     'yellow', attrs=['bold'])
+        msg = (self.room_type + " " + room_name + " successfully created!")
+        print(colored(msg + "\n", 'yellow', attrs=['bold']))
         return msg
 
     def add_person(self, First_name, Last_Name, Role, Accomodation="N"):
@@ -63,39 +70,46 @@ class Amity():
         try:
             self.person_name = (Fellow(self.First_name,
                                        self.Last_Name).get_name())
-            self.all_people.append(self.person_name)
             self.Person_id = self.genarate_user_ID()
+            self.all_people.append(self.person_name)
             if any(char.isdigit() for char in self.person_name):
-                return cprint("Ooops! Name cannot contain a digit!", 'red',
-                              attrs=['bold'])
+                print (colored("Ooops! Name cannot contain a digit!\n", 'red',
+                               attrs=['bold']))
+                return "Ooops! Name cannot contain a digit!"
+
             elif self.all_people.count(self.person_name) > 1:
-                return cprint(("Ooops! %s already exists in the system."
-                               % self.person_name), 'red', attrs=['bold'])
+                print (colored(("Ooops! %s already exists in the system.\n"
+                                % self.person_name), 'red', attrs=['bold']))
+                return "Ooops! %s already exists in the system." % self.person_name
+
             elif self.Role not in ("STAFF", "FELLOW"):
-                return cprint("Role can only be STAFF or FELLOW", 'red',
-                              attrs=['bold'])
+                print (colored("Role can only be STAFF or FELLOW\n", 'red',
+                               attrs=['bold']))
+                return "Role can only be STAFF or FELLOW"
             elif self.Accomodation not in ("Y", "N"):
-                return cprint("Accomodation options are only 'Y' or 'N'", 'red',
-                              attrs=['bold'])
+                print (colored("Accomodation options are only 'Y' or 'N'\n", 'red',
+                               attrs=['bold']))
+                return "Accomodation options are only 'Y' or 'N'"
             elif self.Role == "STAFF" and self.Accomodation == "Y":
-                return cprint("Staff cannot have accomodation!", 'red',
-                              attrs=['bold'])
+                print (colored("Staff cannot have accomodation!\n", 'red',
+                               attrs=['bold']))
+                return "Staff cannot have accomodation!"
             else:
                 self.fellow_info[self.Person_id] = self.person_name
                 self.staff_info[self.Person_id] = self.person_name
                 self.allocate_room_randomly()
-                return cprint("Person has been successfully added and allocated room\n",
-                              'yellow', attrs=['bold'])
+                print(colored("Person has been successfully added an allocated room\n",
+                              'yellow', attrs=['bold']))
+                return "Person has been successfully added and allocated room"
 
         except TypeError:
-            return cprint("Name cannot be a number!", 'red', attrs=['bold'])
+            print (colored("Name cannot be a number!\n", 'red', attrs=['bold']))
+            return "Name cannot be a number!"
 
     def genarate_user_ID(self):
-        prefix = "UID"
-        suffix = self.all_people.index(self.person_name)
-        while suffix <= len(self.all_people):
-            Person_id = self.person_name + prefix + str(suffix)
-            return Person_id
+        person_id = ''.join([random.choice(string.ascii_uppercase)
+                             for n in range(5)])
+        return person_id
 
     def allocate_room_randomly(self):
         """
@@ -138,8 +152,9 @@ class Amity():
             for staff in self.staff_info.values():
                 staff_id, selected_staff = random.choice(list(self.staff_info.items()))
                 if self.Accomodation == "Y":
-                    return cprint("Staff cannot have accomodation", 'red',
-                                  attrs=['bold'])
+                    print(colored("Staff cannot have accomodation", 'red',
+                                  attrs=['bold']))
+                    return "Staff cannot have accomodation"
                 elif self.Accomodation == "N":
                     chosen_office = random.choice(self.offices)
                     chosen_office.add_occupants(selected_staff)
@@ -172,28 +187,34 @@ class Amity():
             print("Unallocated", s.get_room_name(), s.occupants)
 
         if self.Room_name not in self.all_rooms:
-            return cprint("Oops sorry, this particular room does not exist!",
-                          'red', attrs=['bold'])
+            print(colored("Oops sorry, this particular room does not exist!",
+                          'red', attrs=['bold']))
+            return "Oops sorry, this particular room does not exist!"
         elif self.Person_name not in self.fellow_info.values() or\
                 self.Person_name not in self.staff_info.values():
-            return cprint("Ooops, invalid employee_name please try again.", 'red',
-                          attrs=['bold'])
+            print(colored("Ooops, invalid employee_name please try again.", 'red',
+                          attrs=['bold']))
+            return "Ooops, invalid employee_name please try again."
         elif self.Person_name in self.staff_info.values() and\
                 self.Room_name in self.living_s_names:
+            print(colored("Ooops! cannot reallocate STAFF to living_space", 'red',
+                          attrs=['bold']))
             return "Ooops! cannot reallocate STAFF to living_space"
 
         elif self.Room_name == r.get_room_name() and r.room_capacity == 4:
             r.occupants.remove(self.Person_name)
             if rooms == self.Room_name:
                 rooms.add_occupants(self.Person_name)
-                return cprint("Success", 'blue', attrs=['bold'])
+                print(colored("Success", 'blue', attrs=['bold']))
+                return "Success"
 
         elif self.Room_name == r.get_room_name() and r.room_capacity == 6:
             r.occupants.remove(self.Person_name)
 
             if _Room_name == self.Room_name:
                 _Room_name.add_occupants(self.Person_name)
-                return cprint("Success", 'blue', attrs=['bold'])
+                print(colored("Success", 'blue', attrs=['bold']))
+                return "Success"
 
     def load_people(self, file_name):
         """
@@ -212,7 +233,8 @@ class Amity():
                 accomodation = "N"
             self.add_person(first_name, last_name, role, accomodation)
             self.print_allocations()
-            return cprint("Data successfull loaded", 'yellow', attrs=['bold'])
+            print(colored("Data successfull loaded", 'yellow', attrs=['bold']))
+            return "Data successfull loaded"
 
     def print_allocations(self):
         for allocated_rooms in self.allocations:
@@ -221,7 +243,8 @@ class Amity():
                   + "-------------------\n"
                   + str(allocated_rooms.get_occupants()) + "\n"
                   + "=====================\n")
-        return cprint("Success\n", 'yellow', attrs=['bold'])
+        print(colored("Success\n", 'yellow', attrs=['bold']))
+        return "Success"
 
     def print_unallocated(self):
         pass
@@ -233,15 +256,25 @@ class Amity():
         """
         self.room_name = room_name
         if self.room_name not in self.all_rooms:
-            return cprint("Ooops, please enter valid room name\n", 'red',
-                          attrs=['bold'])
+            print(colored("Ooops, please enter valid room name", 'red',
+                          attrs=['bold']))
+            return "Ooops, please enter valid room name"
         for allocated_rooms in self.allocations:
             if allocated_rooms.get_room_name() == self.room_name:
                 return cprint(allocated_rooms.get_occupants(), 'white',
                               attrs=['bold'])
 
-    def save_state(self, db_name):
-        pass
+    # def save_state(self, db_name):
+    #     engine = create_engine(db_name)
+    #     Base.metadata.bind = engine
+    #
+    #     DBSession = sessionmaker(bind=engine)
+    #     session = DBSession()
+    #
+    #     new_employee = Employees()
+    #     new_employee.Emp_Id = self.Person_id
+    #     new_employee.first_name = self.fellow_info.person_name
+    #     # new_employee.last_name =
 
     def load_state(self):
         pass
