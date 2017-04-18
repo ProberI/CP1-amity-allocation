@@ -4,7 +4,7 @@ Amitié is an interactive commandline application to help you allocate rooms to
 Andela Employees randomly and efficiently.
 
 Usage:
-    Amitié create_room <room_type> <room_name>
+    Amitié create_room <room_type> <room_name>...
     Amitié add_person <first_name> <last_name> <role> <accomodation>
     Amitié reallocate_person <full_names> <room_name>
     Amitié load_people <file_name>
@@ -72,7 +72,7 @@ class App(cmd.Cmd):
 
     @docopt_cmd
     def do_create_room(self, arg):
-        """Usage: create_room <room_type> <room_name>"""
+        """Usage: create_room <room_type> <room_name>..."""
 
         room_type = arg['<room_type>']
         room_name = arg['<room_name>']
