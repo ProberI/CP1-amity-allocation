@@ -34,7 +34,8 @@ class Amity():
         for room_name in name:
             self.rooms.append(room_name)
             if self.rooms.count(room_name) > 1:
-                err_msg = cprint(("Room %s already exists!\n" % room_name), 'red', attrs=['bold'])
+                err_msg = cprint(("Room %s already exists!\n" % room_name),
+                                 'red', attrs=['bold'])
                 return err_msg
             elif self.room_type.upper() == "OFFICE" or self.room_type.upper()\
                     == "O":
