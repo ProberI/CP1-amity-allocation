@@ -6,6 +6,7 @@ class Living(Rooms):
         super().__init__(room_name)
         self.room_capacity = 4
         self.occupants = []
+        self.Rm_type = "LIVING_SPACE"
 
     def add_occupants(self, occupant):
 

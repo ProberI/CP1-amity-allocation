@@ -5,6 +5,7 @@ class Office(Rooms):
     def __init__(self, room_name):
         super().__init__(room_name)
         self.room_capacity = 6
+        self.Rm_type = "OFFICE"
         self.occupants = []
 
     def add_occupants(self, occupant):

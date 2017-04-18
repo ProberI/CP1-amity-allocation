@@ -11,8 +11,10 @@ Usage:
     Amitié print_allocations [--file_name]
     Amitié unallocated [--file_name]
     Amitié print_room <room_name>
+    Amitié save_state <db_name>
     Amitié (-i | --interactive)
     Amitié (-h | --help | --version)
+
 
 Options:
     -i, --interactive  Interactive Mode
@@ -122,6 +124,12 @@ class App(cmd.Cmd):
 
         room_name = arg['<room_name>']
         amity.print_room(room_name)
+
+    @docopt_cmd
+    def do_save_state(self, arg):
+        """Usage: save_state <db_name>"""
+        db_name = arg['<db_name>']
+        amity.save_state(db_name)
 
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""

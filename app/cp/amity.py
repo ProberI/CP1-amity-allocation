@@ -6,13 +6,16 @@ import string
 
 from termcolor import colored, cprint
 
-# from sqlalchemy import create_engine
-#
-# from sqlalchemy.orm import sessionmaker
-#
-# from cp.model import Amity_employees, Amity_rooms
+from sqlalchemy import create_engine
+
+from sqlalchemy.orm import sessionmaker
+
+from cp import model
+
+from cp.model import Employees, _Rooms, Base
 
 from cp.living import Living
+from cp.rooms import Rooms
 from cp.office import Office
 from cp.fellow import Fellow
 from cp.staff import Staff
@@ -37,28 +40,29 @@ class Amity():
             - Use load state to verify is room already exists.
         """
         self.room_type = room_type
-        for room_name in name:
-            self.rooms.append(room_name)
-            if self.rooms.count(room_name) > 1:
-                err_msg = "Room %s already exists!" % room_name
+        for self.room_name in name:
+
+            self.rooms.append(self.room_name)
+            if self.rooms.count(self.room_name) > 1:
+                err_msg = "Room %s already exists!" % self.room_name
                 print(colored(err_msg + "\n", 'red', attrs=['bold']))
                 return err_msg
             elif self.room_type.upper() == "OFFICE" or self.room_type.upper()\
                     == "O":
                 self.room_type = "OFFICE"
-                self.offices.append(Office(room_name))
-                self.all_rooms.append(Office(room_name).get_room_name())
+                self.offices.append(Office(self.room_name))
+                self.all_rooms.append(Office(self.room_name).get_room_name())
             elif self.room_type.upper() == "LIVING_SPACE" or\
                     self.room_type.upper() == "L":
                 self.room_type = "LIVING_SPACE"
-                self.living_spaces.append(Living(room_name))
-                self.all_rooms.append(Living(room_name).get_room_name())
+                self.living_spaces.append(Living(self.room_name))
+                self.all_rooms.append(Living(self.room_name).get_room_name())
             else:
                 print(colored("Room_Type can only be OFFICE or LIVING_SPACE\n",
                               'red', attrs=['bold']))
                 return "Room_Type can only be OFFICE or LIVING_SPACE"
 
-        msg = (self.room_type + " " + room_name + " successfully created!")
+        msg = (self.room_type + " " + self.room_name + " successfully created!")
         print(colored(msg + "\n", 'yellow', attrs=['bold']))
         return msg
 
@@ -264,17 +268,42 @@ class Amity():
                 return cprint(allocated_rooms.get_occupants(), 'white',
                               attrs=['bold'])
 
-    # def save_state(self, db_name):
-    #     engine = create_engine(db_name)
-    #     Base.metadata.bind = engine
-    #
-    #     DBSession = sessionmaker(bind=engine)
-    #     session = DBSession()
-    #
-    #     new_employee = Employees()
-    #     new_employee.Emp_Id = self.Person_id
-    #     new_employee.first_name = self.fellow_info.person_name
-    #     # new_employee.last_name =
+    def save_state(self, db_name):
+        """
+        TODO
+            - Enable Db to save multiple rooms
+        """
+        if db_name == '':
+            db_name = 'amity'
+        else:
+            self.db_name = db_name
+            model.create_db(self.db_name)
+            engine = create_engine('sqlite:///' + db_name + '.db')
+            Base.metadata.bind = engine
+
+            DBSession = sessionmaker(bind=engine)
+            session = DBSession()
+            self.new_room = _Rooms()
+            if self.room_type == "OFFICE":
+                for room in self.offices:
+                    self.new_room.Room_name = room.get_room_name()
+                    self.new_room.Room_type = room.Rm_type
+                    session.add(self.new_room)
+                    session.commit()
+            if self.room_type == "LIVING_SPACE":
+                for room in self.living_spaces:
+                    self.new_room.Room_name = room.get_room_name()
+                    self.new_room.Room_type = room.Rm_type
+                    session.add(self.new_room)
+                    session.commit()
+
+                # new_employee = Employees()
+                # new_employee.Emp_Id = self.Person_id
+                # new_employee.first_name = self. first_nam
+                # new_employee.last_name = self.Last_Name
+                # new_employee.role = self.Role
+                # session.add(new_employee)
+                # session.commit()
 
     def load_state(self):
         pass
