@@ -7,7 +7,7 @@ install:
 addons:
     code_climate:
         repo_token: d2c720a6af56c89c672b69b9d16962da52b1e0611c33f19e8a15b048457b2d62
-script: 
-    - nosetests --with-coverage 
+script:
+    - cd app/
+    - nosetests --with-coverage
 cache: pip
-
