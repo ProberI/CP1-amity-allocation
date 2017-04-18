@@ -26,7 +26,7 @@ class Rooms(Base):
     Occupants = Column(String(300))
 
 
-def create_db(self, db_name):
+def create_db(db_name):
     engine = create_engine(db_name)
 
 
