@@ -26,7 +26,6 @@ class Amity():
     def create_room(self, room_type, name):
         """
         TODO
-            - Make docopt accept multiple room_names
             - Use load state to verify is room already exists.
         """
         self.room_type = room_type
