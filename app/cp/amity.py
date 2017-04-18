@@ -23,13 +23,12 @@ class Amity():
         self.staff_info = {}
         self.all_rooms = []
 
-    def create_room(self, room_type, *name):
+    def create_room(self, room_type, name):
         """
         TODO
             - Make docopt accept multiple room_names
             - Use load state to verify is room already exists.
         """
-        self.name = name
         self.room_type = room_type
 
         for room_name in name:
