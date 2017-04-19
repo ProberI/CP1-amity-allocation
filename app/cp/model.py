@@ -14,13 +14,13 @@ Base = declarative_base()
 
 class Employees(Base):
     __tablename__ = 'Amity_employees'
-    Emp_Id = Column(String(250), primary_key=True)
-    first_name = Column(String(250))
-    last_name = Column(String(250))
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    Emp_Id = Column(String(250))
+    Person_name = Column(String(350))
     role = Column(String(250))
 
 
-class _Rooms(Base):
+class All_rooms(Base):
     __tablename__ = "Amity_rooms"
     id = Column(Integer, primary_key=True, autoincrement=True)
     Room_name = Column(String(250))
@@ -28,9 +28,8 @@ class _Rooms(Base):
 
 
 def create_db(db_name):
-    # db_name = 'amity'
     engine = create_engine('sqlite:///' + db_name + '.db')
     Base.metadata.create_all(engine)
 
 
-# create_db('amity')
+create_db('amity')
