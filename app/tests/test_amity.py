@@ -153,3 +153,11 @@ class Test_amity_class(unittest.TestCase):
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
         self.assertEqual(self.amity.print_allocations(),
                          "Success")
+
+    def test_save_state(self):
+
+        self.amity.create_room("o", ["VALHALLA", "Mombasa"])
+        self.amity.create_room("L", ["Dojo"])
+        self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
+        self.amity.add_person("Pau", "Upend", "STAFF", "N")
+        self.assertEqual(self.amity.save_state("Try"), "Data saved successfully")
