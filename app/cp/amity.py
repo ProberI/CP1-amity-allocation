@@ -122,6 +122,7 @@ class Amity():
         """
         TODO
             - Check if no rooms are available and raise an error
+            - Prevent allocation of person to multiple rooms
         """
 
         if self.Role == "FELLOW":
@@ -130,28 +131,14 @@ class Amity():
                 if self.Accomodation == "Y":
                     chosen_office = random.choice(self.offices)
                     chosen_office.add_occupants(selected_fellow)
-                    for room_office in self.offices:
-                        if len(room_office.occupants) > 0:
-                            self.allocations.append(room_office)
-                        else:
-                            self.unallocated.append(room_office)
 
                     chosen_living_space = random.choice(self.living_spaces)
                     chosen_living_space.add_occupants(selected_fellow)
-                    for room_living in self.living_spaces:
-                        if len(room_living.occupants) > 0:
-                            self.allocations.append(room_living)
-                        else:
-                            self.unallocated.append(room_living)
+
                 elif self.Accomodation == "N":
 
                     chosen_office = random.choice(self.offices)
                     chosen_office.add_occupants(selected_fellow)
-                    for room_office in self.offices:
-                        if len(room_office.occupants) > 0:
-                            self.allocations.append(room_office)
-                        else:
-                            self.unallocated.append(room_office)
 
                 return "Ooops! allocation was Unsuccessful"
 
@@ -165,11 +152,7 @@ class Amity():
                 elif self.Accomodation == "N":
                     chosen_office = random.choice(self.offices)
                     chosen_office.add_occupants(selected_staff)
-                    for room_office in self.offices:
-                        if len(room_office.occupants) > 0:
-                            self.allocations.append(room_office)
-                        else:
-                            self.unallocated.append(room_office)
+
                 return "Ooops! allocation was Unsuccessful"
 
     def reallocate_person(self, First_name, Last_name, Room_name):
@@ -224,10 +207,6 @@ class Amity():
                 return "Success"
 
     def load_people(self, file_name):
-        """
-        TODO
-            - Let add_person loop through file data >> only one person is added
-        """
         file_name = 'cp/names.txt'
         f = open(file_name, mode='r', encoding='utf-8')
         for line in f.readlines():
@@ -235,26 +214,37 @@ class Amity():
             first_name = data[0]
             last_name = data[1]
             role = data[2]
-            accomodation = data[3]
             if role.upper() == "STAFF":
                 accomodation = "N"
+            else:
+                accomodation = data[3]
+
             self.add_person(first_name, last_name, role, accomodation)
-            self.print_allocations()
-            print(colored("Data successfull loaded", 'yellow', attrs=['bold']))
-            return "Data successfull loaded"
+
+        self.print_allocations()
+        print(colored("Data successfull loaded", 'yellow', attrs=['bold']))
+        return "Data successfull loaded"
 
     def print_allocations(self):
-        """
-        TODO
-            - Prevent multiple prints of same room_name
-        """
+        for room_office in self.offices:
+            if len(room_office.occupants) > 0:
+                self.allocations.append(room_office)
+            else:
+                self.unallocated.append(room_office)
+
+        for room_living in self.living_spaces:
+            if len(room_living.occupants) > 0:
+                self.allocations.append(room_living)
+            else:
+                self.unallocated.append(room_living)
+
         for allocated_rooms in self.allocations:
             print("======================\n"
                   + str(allocated_rooms.get_room_name()) + "\n"
                   + "-------------------\n"
                   + str(allocated_rooms.get_occupants()) + "\n"
                   + "=====================\n")
-        print(colored("Success\n", 'yellow', attrs=['bold']))
+            print(colored("Success\n", 'yellow', attrs=['bold']))
         return "Success"
 
     def print_unallocated(self):

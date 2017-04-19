@@ -129,7 +129,7 @@ class Test_amity_class(unittest.TestCase):
                          "Ooops! cannot reallocate STAFF to living_space")
 
     def test_load_people(self):
-        self.amity.create_room("o", ["Hogwarts"])
+        self.amity.create_room("o", ["Hogwarts", "Mombasa"])
         self.amity.create_room("l", ["Egypt"])
         file_name = 'app/cp/names.txt'
         self.assertEqual(self.amity.load_people(file_name),
