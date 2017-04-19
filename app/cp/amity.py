@@ -12,7 +12,7 @@ from sqlalchemy.orm import sessionmaker
 
 from cp import model
 
-from cp.model import Employees, _Rooms, Base
+from cp.model import Employees, All_rooms, Base
 
 from cp.living import Living
 from cp.rooms import Rooms
@@ -66,10 +66,10 @@ class Amity():
         print(colored(msg + "\n", 'yellow', attrs=['bold']))
         return msg
 
-    def add_person(self, First_name, Last_Name, Role, Accomodation="N"):
+    def add_person(self, First_name, Last_Name, role, Accomodation="N"):
         self.First_name = First_name
         self.Last_Name = Last_Name
-        self.Role = Role
+        self.Role = role
         self.Accomodation = Accomodation
         try:
             self.person_name = (Fellow(self.First_name,
@@ -99,8 +99,11 @@ class Amity():
                                attrs=['bold']))
                 return "Staff cannot have accomodation!"
             else:
-                self.fellow_info[self.Person_id] = self.person_name
-                self.staff_info[self.Person_id] = self.person_name
+                if self.Role == "FELLOW":
+                    self.fellow_info[self.Person_id] = self.person_name
+                elif self.Role == "STAFF":
+                    self.staff_info[self.Person_id] = self.person_name
+
                 self.allocate_room_randomly()
                 print(colored("Person has been successfully added an allocated room\n",
                               'yellow', attrs=['bold']))
@@ -194,7 +197,7 @@ class Amity():
             print(colored("Oops sorry, this particular room does not exist!",
                           'red', attrs=['bold']))
             return "Oops sorry, this particular room does not exist!"
-        elif self.Person_name not in self.fellow_info.values() or\
+        elif self.Person_name not in self.fellow_info.values() and\
                 self.Person_name not in self.staff_info.values():
             print(colored("Ooops, invalid employee_name please try again.", 'red',
                           attrs=['bold']))
@@ -241,6 +244,10 @@ class Amity():
             return "Data successfull loaded"
 
     def print_allocations(self):
+        """
+        TODO
+            - Prevent multiple prints of same room_name
+        """
         for allocated_rooms in self.allocations:
             print("======================\n"
                   + str(allocated_rooms.get_room_name()) + "\n"
@@ -269,10 +276,6 @@ class Amity():
                               attrs=['bold'])
 
     def save_state(self, db_name):
-        """
-        TODO
-            - Enable Db to save multiple rooms
-        """
         if db_name == '':
             db_name = 'amity'
         else:
@@ -283,27 +286,38 @@ class Amity():
 
             DBSession = sessionmaker(bind=engine)
             session = DBSession()
-            self.new_room = _Rooms()
-            if self.room_type == "OFFICE":
-                for room in self.offices:
-                    self.new_room.Room_name = room.get_room_name()
-                    self.new_room.Room_type = room.Rm_type
-                    session.add(self.new_room)
-                    session.commit()
-            if self.room_type == "LIVING_SPACE":
-                for room in self.living_spaces:
-                    self.new_room.Room_name = room.get_room_name()
-                    self.new_room.Room_type = room.Rm_type
-                    session.add(self.new_room)
-                    session.commit()
 
-                # new_employee = Employees()
-                # new_employee.Emp_Id = self.Person_id
-                # new_employee.first_name = self. first_nam
-                # new_employee.last_name = self.Last_Name
-                # new_employee.role = self.Role
-                # session.add(new_employee)
-                # session.commit()
+            if self.room_type == "OFFICE" or self.room_type == "LIVING_SPACE":
+                for room in self.offices:
+                    self.new_room = All_rooms()
+                    self.new_room.Room_name = room.get_room_name()
+                    self.new_room.Room_type = room.Rm_type
+                    session.add(self.new_room)
+
+                for room in self.living_spaces:
+                    self.new_room = All_rooms()
+                    self.new_room.Room_name = room.get_room_name()
+                    self.new_room.Room_type = room.Rm_type
+                    session.add(self.new_room)
+
+            if self.room_type == "FELLOW" or self.Role == "STAFF":
+                for person_id, name in self.fellow_info.items():
+                    self.new_person = Employees()
+                    self.new_person.Emp_Id = person_id
+                    self.new_person.Person_name = name
+                    self.new_person.role = "FELLOW"
+                    session.add(self.new_person)
+
+                for staff_id, staff_name in self.staff_info.items():
+                    self.new_person = Employees()
+                    self.new_person.Emp_Id = staff_id
+                    self.new_person.Person_name = staff_name
+                    self.new_person.role = "STAFF"
+                    session.add(self.new_person)
+
+        session.commit()
+        print(colored("Data saved successfuly", 'blue', attrs=['bold']))
+        return "Data saved successfully"
 
     def load_state(self):
         pass
