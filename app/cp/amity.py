@@ -35,13 +35,8 @@ class Amity():
         self.all_rooms = []
 
     def create_room(self, room_type, name):
-        """
-        TODO
-            - Use load state to verify is room already exists.
-        """
         self.room_type = room_type
         for self.room_name in name:
-
             self.rooms.append(self.room_name)
             if self.rooms.count(self.room_name) > 1:
                 err_msg = "Room %s already exists!" % self.room_name
@@ -266,6 +261,11 @@ class Amity():
                               attrs=['bold'])
 
     def save_state(self, db_name):
+        """
+        TODO
+            - Check if db exists
+            - Check if record exists don't add it
+        """
         if db_name == '':
             db_name = 'amity'
         else:
@@ -275,39 +275,48 @@ class Amity():
             Base.metadata.bind = engine
 
             DBSession = sessionmaker(bind=engine)
-            session = DBSession()
+            self.session = DBSession()
 
             if self.room_type == "OFFICE" or self.room_type == "LIVING_SPACE":
                 for room in self.offices:
                     self.new_room = All_rooms()
                     self.new_room.Room_name = room.get_room_name()
                     self.new_room.Room_type = room.Rm_type
-                    session.add(self.new_room)
+                    self.session.add(self.new_room)
 
                 for room in self.living_spaces:
                     self.new_room = All_rooms()
                     self.new_room.Room_name = room.get_room_name()
                     self.new_room.Room_type = room.Rm_type
-                    session.add(self.new_room)
+                    self.session.add(self.new_room)
 
-            if self.room_type == "FELLOW" or self.Role == "STAFF":
+            if self.Role == "FELLOW" or self.Role == "STAFF":
                 for person_id, name in self.fellow_info.items():
                     self.new_person = Employees()
                     self.new_person.Emp_Id = person_id
                     self.new_person.Person_name = name
                     self.new_person.role = "FELLOW"
-                    session.add(self.new_person)
+                    self.session.add(self.new_person)
 
                 for staff_id, staff_name in self.staff_info.items():
                     self.new_person = Employees()
                     self.new_person.Emp_Id = staff_id
                     self.new_person.Person_name = staff_name
                     self.new_person.role = "STAFF"
-                    session.add(self.new_person)
+                    self.session.add(self.new_person)
 
-        session.commit()
+        self.session.commit()
         print(colored("Data saved successfuly", 'blue', attrs=['bold']))
         return "Data saved successfully"
 
     def load_state(self):
-        pass
+        try:
+            room_data = ([str(x[0])for x in self.session.query(All_rooms.Room_name).all()])
+            person_data = ([str(x[0])for x in self.session.query(Employees.Person_name).all()])
+            for rum in room_data:
+                self.rooms.append(rum)
+            for Person in person_data:
+                self.all_people.append(Person)
+            return "success"
+        except:
+            return "No database"

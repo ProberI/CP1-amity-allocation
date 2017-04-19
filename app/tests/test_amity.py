@@ -26,19 +26,20 @@ class Test_amity_class(unittest.TestCase):
                          "LIVING_SPACE Barmuda successfully created!")
 
     def test_create_room_in_multiples(self):
-        self.amity.create_room("Office", ["Hogwarts", "Mombasa"])
+        self.amity.create_room("Office", ["Hogwart", "Mombasa"])
         self.assertEqual(len(self.amity.offices), 2)
 
     def test_create_room_office_with_o_as_input(self):
-        self.assertEqual("OFFICE Hogwarts successfully created!",
-                         self.amity.create_room("O", ['Hogwarts']))
+        self.assertEqual("OFFICE Hgwarts successfully created!",
+                         self.amity.create_room("O", ['Hgwarts']))
 
     def test_create_room_living_space_with_l_as_input(self):
-        self.assertEqual("LIVING_SPACE Hogwarts successfully created!",
-                         self.amity.create_room("L", ['Hogwarts']))
+        self.assertEqual("LIVING_SPACE Hogwrts successfully created!",
+                         self.amity.create_room("L", ['Hogwrts']))
 
     def test_create_room_duplicates(self):
-        self.amity.rooms.append("Hogwarts")
+        self.amity.create_room("O", ["Hogwarts"])
+        self.amity.load_state()
         self.assertEqual(self.amity.create_room("O", ["Hogwarts"]),
                          "Room Hogwarts already exists!")
 
@@ -47,14 +48,16 @@ class Test_amity_class(unittest.TestCase):
                          "Ooops! Name cannot contain a digit!")
 
     def test_add_person_duplicate(self):
-        self.amity.create_room("o", ["Hogwarts", "Valhalla"])
-        self.amity.create_room("l", ["Dojo"])
+        self.amity.create_room("o", ["Mara", "Uganda"])
+        self.amity.create_room("l", ["Doj"])
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
+        self.amity.save_state('Try')
+        self.amity.load_state()
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "FELLOW", "N"),
                          "Ooops! Paul Upendo already exists in the system.")
 
     def test_add_person(self):
-        self.amity.create_room("o", ["Hogwarts", "Valhalla"])
+        self.amity.create_room("o", ["ogwarts", "Valhal"])
         self.amity.create_room("l", ["Dojo"])
         self.assertEqual(self.amity.add_person("John", "Waria", "STAFF", "N"),
                          'Person has been successfully added and allocated room')
@@ -63,7 +66,7 @@ class Test_amity_class(unittest.TestCase):
 
     @unittest.expectedFailure  # Id is randomly generated
     def test_add_person_generatedID_in(self):
-        self.amity.create_room("o", ["Hogwarts", "Valhalla"])
+        self.amity.create_room("o", ["Hogwars", "Valhalla"])
         self.amity.create_room("l", ["Dojo"])
         self.amity.add_person("John", "Waria", "FELLOW", "Y")
         self.amity.add_person("Jon", "Mondo", "FELLOW", "Y")
@@ -155,9 +158,9 @@ class Test_amity_class(unittest.TestCase):
                          "Success")
 
     def test_save_state(self):
-
         self.amity.create_room("o", ["VALHALLA", "Mombasa"])
         self.amity.create_room("L", ["Dojo"])
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
         self.amity.add_person("Pau", "Upend", "STAFF", "N")
         self.assertEqual(self.amity.save_state("Try"), "Data saved successfully")
+        self.assertEqual(self.amity.load_state(), "success")
