@@ -136,6 +136,7 @@ class App(cmd.Cmd):
         db_name = arg['<db_name>']
         amity.save_state(db_name)
 
+    @classmethod
     @docopt_cmd
     def do_get_id(self, arg):
         """Usage: get_person_id <f_name> <l_name>"""
@@ -150,6 +151,7 @@ class App(cmd.Cmd):
         db_name = arg['<db_name>']
         amity.load_state(db_name)
 
+    @classmethod
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
 
