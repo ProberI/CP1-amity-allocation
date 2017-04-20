@@ -112,7 +112,8 @@ class Amity():
             print (colored("Name cannot be a number!\n", 'red', attrs=['bold']))
             return "Name cannot be a number!"
 
-    def genarate_user_ID(self):
+    @staticmethod
+    def genarate_user_ID():
         person_id = ''.join([random.choice(string.ascii_uppercase)
                              for n in range(5)])
         return person_id

@@ -71,6 +71,7 @@ class App(cmd.Cmd):
     prompt = custom_prompt
     file = None
 
+    @classmethod
     @docopt_cmd
     def do_create_room(self, arg):
         """Usage: create_room <room_type> <room_name>..."""
@@ -79,6 +80,7 @@ class App(cmd.Cmd):
         room_name = arg['<room_name>']
         amity.create_room(room_type, room_name)
 
+    @classmethod
     @docopt_cmd
     def do_add_person(self, arg):
         """Usage: add_person <first_name> <last_name> <role> <accomodation>"""
@@ -89,6 +91,7 @@ class App(cmd.Cmd):
         accomodation = arg['<accomodation>']
         amity.add_person(first_name, last_name, role, accomodation)
 
+    @classmethod
     @docopt_cmd
     def do_reallocate_person(self, arg):
         """Usage: reallocate_person <emp_id> <room_name>"""
@@ -96,6 +99,7 @@ class App(cmd.Cmd):
         room_name = arg['<room_name>']
         amity.reallocate_person(emp_id, room_name)
 
+    @classmethod
     @docopt_cmd
     def do_load_people(self, arg):
         """Usage: load_people <file_name>"""
@@ -103,18 +107,21 @@ class App(cmd.Cmd):
         file_name = arg['<file_name>']
         amity.load_people(file_name)
 
+    @classmethod
     @docopt_cmd
     def do_print_allocations(self, arg):
         """Usage: print_allocations [--file_name]"""
 
         amity.print_allocations()
 
+    @classmethod
     @docopt_cmd
     def do_print_unallocated(self, arg):
         """Usage: unallocated [--file_name]"""
 
         amity.print_unallocated()
 
+    @classmethod
     @docopt_cmd
     def do_print_room(self, arg):
         """Usage: print_room <room_name>"""
@@ -122,6 +129,7 @@ class App(cmd.Cmd):
         room_name = arg['<room_name>']
         amity.print_room(room_name)
 
+    @classmethod
     @docopt_cmd
     def do_save_state(self, arg):
         """Usage: save_state <db_name>"""
@@ -135,6 +143,7 @@ class App(cmd.Cmd):
         l_name = arg['<l_name>']
         amity.get_person_id(f_name, l_name)
 
+    @classmethod
     @docopt_cmd
     def do_load_state(self, arg):
         """Usage: load_state <db_name>"""
