@@ -97,38 +97,33 @@ class Test_amity_class(unittest.TestCase):
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "STAFF", "Y"),
                          "Staff cannot have accomodation!")
 
-    @unittest.skip("Still to implement")
     def test_reallocate_person(self):
-        self.amity.create_room("o", ["Hogwarts", "Narnia"])
-        self.amity.create_room("l", ["Dojo"])
-        self.amity.add_person("Paul", "Upendo", "FELLOW", "Y")
-        self.assertEqual(self.amity.reallocate_person("Paul", "Upendo", "Hogwarts"),
+        self.amity.create_room("o", ["Narnia", "Hogwarts"])
+        self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
+        person_id = self.amity.get_person_id("Paul", "Upendo")
+        print(person_id)
+        self.assertEqual(self.amity.reallocate_person(person_id, "Narnia"),
                          "Success")
 
     def test_reallocate_person_to_non_existent_room(self):
         self.amity.create_room("o", ["Narnia"])
         self.amity.add_person("Paul", "Upendo", "STAFF", "N")
-        self.assertEqual(self.amity.reallocate_person("Paul", "Upendo", "Chania"),
+        person_id = self.amity.get_person_id("Paul", "Upendo")
+        self.assertEqual(self.amity.reallocate_person(person_id, "Chania"),
                          "Oops sorry, this particular room does not exist!")
 
     def test_reallocate_person_who_is_not_in_system(self):
         self.amity.create_room("o", ["Narnia"])
         self.amity.add_person("Paul", "Upendo", "STAFF", "N")
-        self.assertEqual(self.amity.reallocate_person("XCDEE", "BBB", "Narnia"),
+        self.assertEqual(self.amity.reallocate_person("XCCDF",  "Narnia"),
                          "Ooops, invalid employee_name please try again.")
-
-    @unittest.skip("Still to implement")
-    def test_reallocate_person_to_same_room(self):
-        self.amity.create_room("o", ["Hogwarts", "Narnia"])
-        self.amity.add_person("Paul", "Upendo", "STAFF", "N")
-        self.assertEqual(self.amity.reallocate_person("Paul", "Upendo", "Narnia"),
-                         "Ooops already allocated here. No changes made")
 
     def test_reallocate_person_staff_to_living_space(self):
         self.amity.create_room("o", ["Hogwarts"])
         self.amity.create_room("l", ["Egypt"])
         self.amity.add_person("Paul", "Upendo", "STAFF", "N")
-        self.assertEqual(self.amity.reallocate_person("Paul", "Upendo", "Egypt"),
+        person_id = self.amity.get_person_id("Paul", "Upendo")
+        self.assertEqual(self.amity.reallocate_person(person_id, "Egypt"),
                          "Ooops! cannot reallocate STAFF to living_space")
 
     def test_load_people(self):
@@ -164,3 +159,10 @@ class Test_amity_class(unittest.TestCase):
         self.amity.add_person("Pau", "Upend", "STAFF", "N")
         self.assertEqual(self.amity.save_state("Try"), "Data saved successfully")
         self.assertEqual(self.amity.load_state(), "success")
+
+    def test_get_person_id(self):
+        self.amity.create_room("o", ["VALHALLA", "Mombasa"])
+        self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
+        self.assertEqual(self.amity.get_person_id("Paul", "Upendo"),
+                         self.amity.get_person_id("Paul", "Upendo"))
+        self.assertEqual(self.amity.get_person_id("Pal", "Upeno"), "Fail")
