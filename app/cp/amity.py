@@ -1,9 +1,9 @@
-import sys
 import random
 import string
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import exc
 from model.model import Employees, All_rooms, Base
 from model import model
 
@@ -12,7 +12,6 @@ from tabulate import tabulate
 
 
 from cp.living import Living
-from cp.rooms import Rooms
 from cp.office import Office
 from cp.fellow import Fellow
 from cp.staff import Staff
@@ -126,34 +125,32 @@ class Amity():
         """
 
         if self.Role.upper() == "FELLOW":
-            for fellow in self.fellow_info.values():
-                fellow_id, selected_fellow = random.choice(list(self.fellow_info.items()))
-                if self.Accomodation.upper() == "Y":
-                    chosen_office = random.choice(self.offices)
-                    chosen_office.add_occupants(selected_fellow)
+            selected_fellow = random.choice(list(self.fellow_info.values()))
+            if self.Accomodation.upper() == "Y":
+                chosen_office = random.choice(self.offices)
+                chosen_office.add_occupants(selected_fellow)
 
-                    chosen_living_space = random.choice(self.living_spaces)
-                    chosen_living_space.add_occupants(selected_fellow)
+                chosen_living_space = random.choice(self.living_spaces)
+                chosen_living_space.add_occupants(selected_fellow)
 
-                elif self.Accomodation.upper() == "N":
+            elif self.Accomodation.upper() == "N":
 
-                    chosen_office = random.choice(self.offices)
-                    chosen_office.add_occupants(selected_fellow)
+                chosen_office = random.choice(self.offices)
+                chosen_office.add_occupants(selected_fellow)
 
-                return "Ooops! allocation was Unsuccessful"
+            return "Ooops! allocation was Unsuccessful"
 
         elif self.Role.upper() == "STAFF":
-            for staff in self.staff_info.values():
-                staff_id, selected_staff = random.choice(list(self.staff_info.items()))
-                if self.Accomodation.upper() == "Y":
-                    print(colored("Staff cannot have accomodation", 'red',
-                                  attrs=['bold']))
-                    return "Staff cannot have accomodation"
-                elif self.Accomodation.upper() == "N":
-                    chosen_office = random.choice(self.offices)
-                    chosen_office.add_occupants(selected_staff)
+            selected_staff = random.choice(list(self.staff_info.values()))
+            if self.Accomodation.upper() == "Y":
+                print(colored("Staff cannot have accomodation", 'red',
+                              attrs=['bold']))
+                return "Staff cannot have accomodation"
+            elif self.Accomodation.upper() == "N":
+                chosen_office = random.choice(self.offices)
+                chosen_office.add_occupants(selected_staff)
 
-                return "Ooops! allocation was Unsuccessful"
+            return "Ooops! allocation was Unsuccessful"
 
     def reallocate_person(self, employee_id, new_room):
 
@@ -161,7 +158,7 @@ class Amity():
             print(colored("Oops sorry, this particular room does not exist!",
                           'red', attrs=['bold']))
             return "Oops sorry, this particular room does not exist!"
-        elif employee_id not in self.staff_info.keys() and employee_id not \
+        elif employee_id not in self.staff_info.keys() and employee_id not\
                 in self.fellow_info.keys():
             print(self.staff_info.keys())
             print(self.fellow_info.keys())
@@ -177,35 +174,35 @@ class Amity():
                             office.occupants.remove(fellow_name)
                         if office.get_room_name() == new_room:
                             office.add_occupants(fellow_name)
-                    cprint("Success", 'blue', attrs=['bold'])
-                    return "Success"
+                        cprint("Success", 'blue', attrs=['bold'])
+                        return "Success"
 
                     for living in self.living_spaces:
                         if f_name in office.get_occupants():
                             living.occupants.remove(f_name)
                         if living.get_room_name() == new_room:
                             living.add_occupants(f_name)
-                    cprint("Success", 'blue', attrs=['bold'])
-                    return "Success"
+                        cprint("Success", 'blue', attrs=['bold'])
+                        return "Success"
                 else:
                     cprint("Invalid Id. Please Use get_id command", 'red',
                            attrs=['bold'])
                     return "Invalid Id. Please Use get_id command"
 
             for staff_id, staff_name in self.staff_info.items():
-
-                for living in self.living_spaces:
-                    if new_room == living.get_room_name():
-                        cprint("Ooops! cannot reallocate STAFF to living_space",
-                               'red', attrs=['bold'])
-                        return "Ooops! cannot reallocate STAFF to living_space"
-                for office in self.offices:
-                    if staff_name in office.get_occupants():
-                        office.occupants.remove(staff_name)
-                    if office.get_room_name() == new_room:
-                        office.add_occupants(staff_name)
-                cprint("Success", 'blue', attrs=['bold'])
-                return "Success"
+                if staff_id == employee_id:
+                    for living in self.living_spaces:
+                        if new_room == living.get_room_name():
+                            cprint("Ooops! cannot reallocate STAFF to living_space",
+                                   'red', attrs=['bold'])
+                            return "Ooops! cannot reallocate STAFF to living_space"
+                    for office in self.offices:
+                        if staff_name in office.get_occupants():
+                            office.occupants.remove(staff_name)
+                        if office.get_room_name() == new_room:
+                            office.add_occupants(staff_name)
+                    cprint("Success", 'blue', attrs=['bold'])
+                    return "Success"
 
     def load_people(self, file_name):
         file_name = 'cp/names.txt'
@@ -272,51 +269,55 @@ class Amity():
             - Check if db exists
             - Check if record exists don't add it
         """
-        if db_name == '':
-            db_name = 'amity'
-        else:
-            self.db_name = db_name
-            model.create_db(self.db_name)
+        self.db_name = db_name
+        model.create_db(self.db_name)
+        engine = create_engine('sqlite:///model/' + self.db_name + '.db')
+        Base.metadata.bind = engine
+
+        DBSession = sessionmaker(bind=engine)
+        self.session = DBSession()
+
+        if self.room_type == "OFFICE" or self.room_type == "LIVING_SPACE":
+            for room in self.offices:
+                self.new_room = All_rooms()
+                self.new_room.Room_name = room.get_room_name()
+                self.new_room.Room_type = room.Rm_type
+                self.session.add(self.new_room)
+
+            for room in self.living_spaces:
+                self.new_room = All_rooms()
+                self.new_room.Room_name = room.get_room_name()
+                self.new_room.Room_type = room.Rm_type
+                self.session.add(self.new_room)
+
+        if self.Role == "FELLOW" or self.Role == "STAFF":
+            for person_id, name in self.fellow_info.items():
+                self.new_person = Employees()
+                self.new_person.Emp_Id = person_id
+                self.new_person.Person_name = name
+                self.new_person.role = "FELLOW"
+                self.session.add(self.new_person)
+
+            for staff_id, staff_name in self.staff_info.items():
+                self.new_person = Employees()
+                self.new_person.Emp_Id = staff_id
+                self.new_person.Person_name = staff_name
+                self.new_person.role = "STAFF"
+                self.session.add(self.new_person)
+
+        self.session.commit()
+        print(colored("Data saved successfuly", 'blue', attrs=['bold']))
+        return "Data saved successfully"
+
+    def load_state(self, db_name):
+
+        try:
             engine = create_engine('sqlite:///model/' + db_name + '.db')
             Base.metadata.bind = engine
 
             DBSession = sessionmaker(bind=engine)
             self.session = DBSession()
 
-            if self.room_type == "OFFICE" or self.room_type == "LIVING_SPACE":
-                for room in self.offices:
-                    self.new_room = All_rooms()
-                    self.new_room.Room_name = room.get_room_name()
-                    self.new_room.Room_type = room.Rm_type
-                    self.session.add(self.new_room)
-
-                for room in self.living_spaces:
-                    self.new_room = All_rooms()
-                    self.new_room.Room_name = room.get_room_name()
-                    self.new_room.Room_type = room.Rm_type
-                    self.session.add(self.new_room)
-
-            if self.Role == "FELLOW" or self.Role == "STAFF":
-                for person_id, name in self.fellow_info.items():
-                    self.new_person = Employees()
-                    self.new_person.Emp_Id = person_id
-                    self.new_person.Person_name = name
-                    self.new_person.role = "FELLOW"
-                    self.session.add(self.new_person)
-
-                for staff_id, staff_name in self.staff_info.items():
-                    self.new_person = Employees()
-                    self.new_person.Emp_Id = staff_id
-                    self.new_person.Person_name = staff_name
-                    self.new_person.role = "STAFF"
-                    self.session.add(self.new_person)
-
-        self.session.commit()
-        print(colored("Data saved successfuly", 'blue', attrs=['bold']))
-        return "Data saved successfully"
-
-    def load_state(self):
-        try:
             room_data = ([str(x[0])for x in self.session.query(All_rooms.Room_name).all()])
             person_data = ([str(x[0])for x in self.session.query(Employees.Person_name).all()])
             for rum in room_data:
@@ -324,7 +325,8 @@ class Amity():
             for Person in person_data:
                 self.all_people.append(Person)
             return "success"
-        except:
+        except exc.SQLAlchemyError as error:
+            print(error)
             return "No database"
 
     def get_person_id(self, first_name, last_name):

@@ -39,7 +39,7 @@ class Test_amity_class(unittest.TestCase):
 
     def test_create_room_duplicates(self):
         self.amity.create_room("O", ["Hogwarts"])
-        self.amity.load_state()
+        self.amity.load_state('Try')
         self.assertEqual(self.amity.create_room("O", ["Hogwarts"]),
                          "Room Hogwarts already exists!")
 
@@ -51,8 +51,7 @@ class Test_amity_class(unittest.TestCase):
         self.amity.create_room("o", ["Mara", "Uganda"])
         self.amity.create_room("l", ["Doj"])
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
-        self.amity.save_state('Try')
-        self.amity.load_state()
+        self.amity.load_state('Try')
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "FELLOW", "N"),
                          "Ooops! Paul Upendo already exists in the system.")
 
@@ -158,7 +157,7 @@ class Test_amity_class(unittest.TestCase):
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
         self.amity.add_person("Pau", "Upend", "STAFF", "N")
         self.assertEqual(self.amity.save_state("Try"), "Data saved successfully")
-        self.assertEqual(self.amity.load_state(), "success")
+        self.assertEqual(self.amity.load_state('Try'), "success")
 
     def test_get_person_id(self):
         self.amity.create_room("o", ["VALHALLA", "Mombasa"])
