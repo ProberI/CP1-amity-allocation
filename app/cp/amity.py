@@ -1,18 +1,15 @@
 import sys
-
 import random
-
 import string
 
-from termcolor import colored, cprint
-
 from sqlalchemy import create_engine
-
 from sqlalchemy.orm import sessionmaker
-
+from cp.model import Employees, All_rooms, Base
 from cp import model
 
-from cp.model import Employees, All_rooms, Base
+from termcolor import colored, cprint
+from tabulate import tabulate
+
 
 from cp.living import Living
 from cp.rooms import Rooms
@@ -150,55 +147,56 @@ class Amity():
 
                 return "Ooops! allocation was Unsuccessful"
 
-    def reallocate_person(self, First_name, Last_name, Room_name):
-        """
-        TODO
-            -Verify and solve reallocation
-            -Make realloactions work
-        """
-        self.Room_name = Room_name
-        self.Person_name = First_name + " " + Last_name
-        self.office_names = []
-        self.living_s_names = []
+    def reallocate_person(self, employee_id, new_room):
 
-        for _Room_name in self.offices:
-            self.office_names.append(_Room_name.get_room_name())
-
-        for rooms in self.living_spaces:
-            self.living_s_names.append(rooms.get_room_name())
-        for r in self.allocations:
-            print("allocated", r.get_room_name(), r.occupants)
-        for s in self.unallocated:
-            print("Unallocated", s.get_room_name(), s.occupants)
-
-        if self.Room_name not in self.all_rooms:
+        if new_room not in self.all_rooms:
             print(colored("Oops sorry, this particular room does not exist!",
                           'red', attrs=['bold']))
             return "Oops sorry, this particular room does not exist!"
-        elif self.Person_name not in self.fellow_info.values() and\
-                self.Person_name not in self.staff_info.values():
+        elif employee_id not in self.staff_info.keys() and employee_id not \
+                in self.fellow_info.keys():
+            print(self.staff_info.keys())
+            print(self.fellow_info.keys())
             print(colored("Ooops, invalid employee_name please try again.", 'red',
                           attrs=['bold']))
             return "Ooops, invalid employee_name please try again."
-        elif self.Person_name in self.staff_info.values() and\
-                self.Room_name in self.living_s_names:
-            print(colored("Ooops! cannot reallocate STAFF to living_space", 'red',
-                          attrs=['bold']))
-            return "Ooops! cannot reallocate STAFF to living_space"
+        else:
 
-        elif self.Room_name == r.get_room_name() and r.room_capacity == 4:
-            r.occupants.remove(self.Person_name)
-            if rooms == self.Room_name:
-                rooms.add_occupants(self.Person_name)
-                print(colored("Success", 'blue', attrs=['bold']))
-                return "Success"
+            for fellow_id, fellow_name in self.fellow_info.items():
+                if fellow_id == employee_id:
+                    for office in self.offices:
+                        if fellow_name in office.get_occupants():
+                            office.occupants.remove(fellow_name)
+                        if office.get_room_name() == new_room:
+                            office.add_occupants(fellow_name)
+                    cprint("Success", 'blue', attrs=['bold'])
+                    return "Success"
 
-        elif self.Room_name == r.get_room_name() and r.room_capacity == 6:
-            r.occupants.remove(self.Person_name)
+                    for living in self.living_spaces:
+                        if f_name in office.get_occupants():
+                            living.occupants.remove(f_name)
+                        if living.get_room_name() == new_room:
+                            living.add_occupants(f_name)
+                    cprint("Success", 'blue', attrs=['bold'])
+                    return "Success"
+                else:
+                    cprint("Invalid Id. Please Use get_id command", 'red',
+                           attrs=['bold'])
+                    return "Invalid Id. Please Use get_id command"
 
-            if _Room_name == self.Room_name:
-                _Room_name.add_occupants(self.Person_name)
-                print(colored("Success", 'blue', attrs=['bold']))
+            for staff_id, staff_name in self.staff_info.items():
+
+                for living in self.living_spaces:
+                    if new_room == living.get_room_name():
+                        cprint("Ooops! cannot reallocate STAFF to living_space",
+                               'red', attrs=['bold'])
+                        return "Ooops! cannot reallocate STAFF to living_space"
+                for office in self.offices:
+                    if staff_name in office.get_occupants():
+                        office.occupants.remove(staff_name)
+                    if office.get_room_name() == new_room:
+                        office.add_occupants(staff_name)
+                cprint("Success", 'blue', attrs=['bold'])
                 return "Success"
 
     def load_people(self, file_name):
@@ -221,25 +219,25 @@ class Amity():
         return "Data successfull loaded"
 
     def print_allocations(self):
+        table_room_data = []
+        table_people_data = []
         for room_office in self.offices:
-            if len(room_office.occupants) > 0:
-                self.allocations.append(room_office)
-            else:
-                self.unallocated.append(room_office)
+            self.allocations.append(room_office)
 
         for room_living in self.living_spaces:
-            if len(room_living.occupants) > 0:
-                self.allocations.append(room_living)
-            else:
-                self.unallocated.append(room_living)
+            self.allocations.append(room_living)
 
         for allocated_rooms in self.allocations:
-            print("======================\n"
-                  + str(allocated_rooms.get_room_name()) + "\n"
-                  + "-------------------\n"
-                  + str(allocated_rooms.get_occupants()) + "\n"
-                  + "=====================\n")
-            print(colored("Success\n", 'yellow', attrs=['bold']))
+            table_room_data.append(allocated_rooms.get_room_name())
+            table_people_data.append(allocated_rooms.get_occupants())
+
+        print('\n' + tabulate({
+            'Room_name': table_room_data,
+            'Occupants': table_people_data
+        }, headers="keys",
+            tablefmt="fancy_grid") + '\n')
+
+        print(colored("Success\n", 'yellow', attrs=['bold']))
         return "Success"
 
     def print_unallocated(self):
@@ -320,3 +318,23 @@ class Amity():
             return "success"
         except:
             return "No database"
+
+    def get_person_id(self, first_name, last_name):
+        """
+        TODO
+            - Add to docopt
+        """
+        full_name = first_name + " " + last_name
+        for person_id, person_name in self.fellow_info.items():
+            if person_name == full_name:
+                print(colored(person_id, 'yellow', attrs=['bold']))
+                return person_id
+            else:
+                return "Fail"
+
+        for person_id, person_name in self.staff_info.items():
+            if person_name == full_name:
+                print(colored(person_id, 'yellow', attrs=['bold']))
+                return person_id
+            else:
+                return "Fail"
