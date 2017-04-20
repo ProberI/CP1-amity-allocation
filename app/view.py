@@ -12,7 +12,7 @@ Usage:
     Amitié unallocated [--file_name]
     Amitié print_room <room_name>
     Amitié save_state <db_name>
-    Amitié load_state
+    Amitié load_state <db_name>
     Amitié (-i | --interactive)
     Amitié (-h | --help | --version)
 
@@ -137,8 +137,9 @@ class App(cmd.Cmd):
 
     @docopt_cmd
     def do_load_state(self, arg):
-        """Usage: load_state """
-        amity.load_state()
+        """Usage: load_state <db_name>"""
+        db_name = arg['<db_name>']
+        amity.load_state(db_name)
 
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
