@@ -4,8 +4,8 @@ import string
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from cp.model import Employees, All_rooms, Base
-from cp import model
+from model.model import Employees, All_rooms, Base
+from model import model
 
 from termcolor import colored, cprint
 from tabulate import tabulate
@@ -269,7 +269,7 @@ class Amity():
         else:
             self.db_name = db_name
             model.create_db(self.db_name)
-            engine = create_engine('sqlite:///' + db_name + '.db')
+            engine = create_engine('sqlite:///model/' + db_name + '.db')
             Base.metadata.bind = engine
 
             DBSession = sessionmaker(bind=engine)

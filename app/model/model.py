@@ -1,8 +1,6 @@
 import os
-
 import sys
 
-import time
 
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
@@ -28,7 +26,7 @@ class All_rooms(Base):
 
 
 def create_db(db_name):
-    engine = create_engine('sqlite:///' + db_name + '.db')
+    engine = create_engine('sqlite:///model/' + db_name + '.db')
     Base.metadata.create_all(engine)
 
 
