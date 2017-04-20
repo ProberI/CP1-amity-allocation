@@ -6,7 +6,7 @@ Andela Employees randomly and efficiently.
 Usage:
     Amitié create_room <room_type> <room_name>...
     Amitié add_person <first_name> <last_name> <role> <accomodation>
-    Amitié reallocate_person <full_names> <room_name>
+    Amitié reallocate_person <emp_id> <room_name>
     Amitié load_people <file_name>
     Amitié print_allocations [--file_name]
     Amitié unallocated [--file_name]
@@ -92,12 +92,10 @@ class App(cmd.Cmd):
 
     @docopt_cmd
     def do_reallocate_person(self, arg):
-        """Usage: reallocate_person <First_name> <Last_name> <room_name>"""
-
-        First_name = arg['<First_name>']
-        Last_name = arg['<Last_name>']
+        """Usage: reallocate_person <emp_id> <room_name>"""
+        emp_id = arg['<emp_id>']
         room_name = arg['<room_name>']
-        amity.reallocate_person(First_name, Last_name, room_name)
+        amity.reallocate_person(emp_id, room_name)
 
     @docopt_cmd
     def do_load_people(self, arg):
@@ -130,6 +128,13 @@ class App(cmd.Cmd):
         """Usage: save_state <db_name>"""
         db_name = arg['<db_name>']
         amity.save_state(db_name)
+
+    @docopt_cmd
+    def do_get_id(self, arg):
+        """Usage: get_person_id <f_name> <l_name>"""
+        f_name = arg['<f_name>']
+        l_name = arg['<l_name>']
+        amity.get_person_id(f_name, l_name)
 
     def do_quit(self, arg):
         """Quits out of Interactive Mode."""
