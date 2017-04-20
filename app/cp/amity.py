@@ -63,9 +63,17 @@ class Amity():
         self.Last_Name = Last_Name
         self.Role = role
         self.Accomodation = Accomodation
+        self.person_name = ''
         try:
-            self.person_name = (Fellow(self.First_name,
-                                       self.Last_Name).get_name())
+            if self.Role.upper() == "FELLOW":
+                p_name = (Fellow(self.First_name,
+                                 self.Last_Name).get_name())
+                self.person_name = p_name
+            elif self.Role.upper() == "STAFF":
+                p_name = (Staff(self.First_name,
+                                self.Last_Name).get_name())
+                self.person_name = p_name
+
             self.Person_id = self.genarate_user_ID()
             self.all_people.append(self.person_name)
             if any(char.isdigit() for char in self.person_name):
@@ -78,22 +86,22 @@ class Amity():
                                 % self.person_name), 'red', attrs=['bold']))
                 return "Ooops! %s already exists in the system." % self.person_name
 
-            elif self.Role not in ("STAFF", "FELLOW"):
+            elif self.Role.upper() not in ("STAFF", "FELLOW"):
                 print (colored("Role can only be STAFF or FELLOW\n", 'red',
                                attrs=['bold']))
                 return "Role can only be STAFF or FELLOW"
-            elif self.Accomodation not in ("Y", "N"):
+            elif self.Accomodation.upper() not in ("Y", "N"):
                 print (colored("Accomodation options are only 'Y' or 'N'\n", 'red',
                                attrs=['bold']))
                 return "Accomodation options are only 'Y' or 'N'"
-            elif self.Role == "STAFF" and self.Accomodation == "Y":
+            elif self.Role.upper() == "STAFF" and self.Accomodation.upper() == "Y":
                 print (colored("Staff cannot have accomodation!\n", 'red',
                                attrs=['bold']))
                 return "Staff cannot have accomodation!"
             else:
-                if self.Role == "FELLOW":
+                if self.Role.upper() == "FELLOW":
                     self.fellow_info[self.Person_id] = self.person_name
-                elif self.Role == "STAFF":
+                elif self.Role.upper() == "STAFF":
                     self.staff_info[self.Person_id] = self.person_name
 
                 self.allocate_room_randomly()
@@ -117,31 +125,31 @@ class Amity():
             - Prevent allocation of person to multiple rooms
         """
 
-        if self.Role == "FELLOW":
+        if self.Role.upper() == "FELLOW":
             for fellow in self.fellow_info.values():
                 fellow_id, selected_fellow = random.choice(list(self.fellow_info.items()))
-                if self.Accomodation == "Y":
+                if self.Accomodation.upper() == "Y":
                     chosen_office = random.choice(self.offices)
                     chosen_office.add_occupants(selected_fellow)
 
                     chosen_living_space = random.choice(self.living_spaces)
                     chosen_living_space.add_occupants(selected_fellow)
 
-                elif self.Accomodation == "N":
+                elif self.Accomodation.upper() == "N":
 
                     chosen_office = random.choice(self.offices)
                     chosen_office.add_occupants(selected_fellow)
 
                 return "Ooops! allocation was Unsuccessful"
 
-        elif self.Role == "STAFF":
+        elif self.Role.upper() == "STAFF":
             for staff in self.staff_info.values():
                 staff_id, selected_staff = random.choice(list(self.staff_info.items()))
-                if self.Accomodation == "Y":
+                if self.Accomodation.upper() == "Y":
                     print(colored("Staff cannot have accomodation", 'red',
                                   attrs=['bold']))
                     return "Staff cannot have accomodation"
-                elif self.Accomodation == "N":
+                elif self.Accomodation.upper() == "N":
                     chosen_office = random.choice(self.offices)
                     chosen_office.add_occupants(selected_staff)
 
