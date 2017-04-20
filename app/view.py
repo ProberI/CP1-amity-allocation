@@ -24,12 +24,10 @@ Options:
 
 import sys
 import cmd
-import time
 
 from docopt import docopt, DocoptExit
 
 from termcolor import colored, cprint
-from pyfiglet import figlet_format, Figlet
 
 from cp.amity import Amity
 
