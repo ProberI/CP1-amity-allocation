@@ -30,8 +30,8 @@ class Test_amity_class(unittest.TestCase):
         self.assertEqual(len(self.amity.offices), 2)
 
     def test_create_room_office_with_o_as_input(self):
-        self.assertEqual("OFFICE Hgwarts successfully created!",
-                         self.amity.create_room("O", ['Hgwarts']))
+        self.assertEqual("OFFICE Hogwarts successfully created!",
+                         self.amity.create_room("O", ['Hogwarts']))
 
     def test_create_room_living_space_with_l_as_input(self):
         self.assertEqual("LIVING_SPACE Hogwrts successfully created!",
@@ -39,11 +39,11 @@ class Test_amity_class(unittest.TestCase):
 
     def test_create_room_duplicates(self):
         self.amity.create_room("O", ["Hogwarts"])
-        self.amity.load_state('Try')
         self.assertEqual(self.amity.create_room("O", ["Hogwarts"]),
                          "Room Hogwarts already exists!")
 
     def test_add_person_with_digit_in_name(self):
+        self.amity.create_room("o", ["Narnia"])
         self.assertEqual(self.amity.add_person("Paul2", "Upendo", "STAFF", "N"),
                          "Ooops! Name cannot contain a digit!")
 
@@ -59,9 +59,9 @@ class Test_amity_class(unittest.TestCase):
         self.amity.create_room("o", ["ogwarts", "Valhal"])
         self.amity.create_room("l", ["Dojo"])
         self.assertEqual(self.amity.add_person("John", "Waria", "STAFF", "N"),
-                         'Person has been successfully added and allocated room')
+                         "Person has been successfully added.")
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "FELLOW", "Y"),
-                         "Person has been successfully added and allocated room")
+                         "Person has been successfully added.")
 
     @unittest.expectedFailure  # Id is randomly generated
     def test_add_person_generatedID_in(self):
@@ -81,18 +81,22 @@ class Test_amity_class(unittest.TestCase):
                         == self.amity.staff_info)
 
     def test_add_person_with_number_as_name(self):
+        self.amity.create_room("o", ["Narnia"])
         self.assertTrue(self.amity.add_person(2, "Upendo", "STAFF", "N")
                         == "Name cannot be a number!")
 
     def test_add_person_with_unrecognized_roles(self):
+        self.amity.create_room("o", ["Narnia"])
         self.assertEqual(self.amity.add_person("John", "Maasai", "Member", "Y"),
                          "Role can only be STAFF or FELLOW")
 
     def test_add_person_with_wrong_accomodation_option(self):
+        self.amity.create_room("o", ["Narnia"])
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "STAFF", "J"),
                          "Accomodation options are only 'Y' or 'N'")
 
     def test_add_person_staff_accomodation_options(self):
+        self.amity.create_room("o", ["Narnia"])
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "STAFF", "Y"),
                          "Staff cannot have accomodation!")
 
@@ -142,6 +146,7 @@ class Test_amity_class(unittest.TestCase):
     def test_print_room(self):
         self.amity.create_room("o", ["VALHALLA"])
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
+        self.amity.add_person("Paul", "Kay", "FELLOW", "N")
         self.assertEqual(self.amity.print_room("VALHALLA"),
                          cprint(['Paul Upendo'], 'white', attrs=['bold']))
 
@@ -150,6 +155,15 @@ class Test_amity_class(unittest.TestCase):
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
         self.assertEqual(self.amity.print_allocations(),
                          "Success")
+
+    def test_print_allocations_without_rooms(self):
+        self.assertEqual(self.amity.print_allocations(),
+                         "Ooops! No rooms created yet")
+
+    # def test_print_allocations_without_person_data(self):
+    #     self.amity.create_room("o", ["Hogwarts"])
+    #     self.assertEqual(self.amity.print_allocations(),
+    #                      "No occupants in Hogwarts")
 
     def test_save_state(self):
         self.amity.create_room("o", ["VALHALLA", "Mombasa"])
@@ -161,7 +175,8 @@ class Test_amity_class(unittest.TestCase):
 
     def test_get_person_id(self):
         self.amity.create_room("o", ["VALHALLA", "Mombasa"])
-        self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
+        self.amity.add_person("Paul", "Upendo", "STAFF", "N")
         self.assertEqual(self.amity.get_person_id("Paul", "Upendo"),
                          self.amity.get_person_id("Paul", "Upendo"))
-        self.assertEqual(self.amity.get_person_id("Pal", "Upeno"), "Fail")
+        self.assertEqual(self.amity.get_person_id("Pal", "Upeno"),
+                         "Ooops! Pal Upeno does not exist")
