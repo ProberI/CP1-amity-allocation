@@ -23,20 +23,16 @@ class Amity():
         self.all_people = []
         self.allocations = []
         self.unallocated = []
-        self.rooms = []
         self.offices = []
         self.living_spaces = []
         self.fellow_info = {}
         self.staff_info = {}
         self.all_rooms = []
+        global my_person_id
 
     def create_room(self, room_type, name):
         self.room_type = room_type
         for room_name in name:
-            """
-            TODO
-                -Check whether room exists before appending to any variable
-            """
             if self.room_type.upper() not in ("LIVING_SPACE", "LIVING", "OFFICE",
                                               "O", "L"):
                 print(colored("Room_Type can only be OFFICE or LIVING_SPACE\n",
@@ -401,7 +397,6 @@ class Amity():
 
     def get_person_id(self, first_name, last_name):
         full_name = first_name + " " + last_name
-        global my_person_id
         if full_name in self.fellow_info.values():
             for person_id, person_name in self.fellow_info.items():
                 if person_name == full_name:
