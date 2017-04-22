@@ -21,6 +21,8 @@ class Amity():
 
     def __init__(self):
         self.all_people = []
+        self.all_office_names = []
+        self.all_living_names = []
         self.allocations = []
         self.unallocated = []
         self.offices = []
@@ -35,26 +37,24 @@ class Amity():
         for room_name in name:
             if self.room_type.upper() not in ("LIVING_SPACE", "LIVING", "OFFICE",
                                               "O", "L"):
-                print(colored("Room_Type can only be OFFICE or LIVING_SPACE\n",
-                              'red', attrs=['bold']))
-                return "Room_Type can only be OFFICE or LIVING_SPACE"
-            elif self.all_rooms.count(room_name) >= 1:
+
+                return (colored("Room_Type can only be OFFICE or LIVING_SPACE\n",
+                                'red', attrs=['bold']))
+            elif self.all_rooms.count(room_name.upper()) >= 1:
                 err_msg = "Room %s already exists!" % room_name
-                print(colored(err_msg + "\n", 'red', attrs=['bold']))
-                return err_msg
-            elif (self.room_type.upper() == "OFFICE" or self.room_type.upper()
-                    == "O"):
+                return (colored(err_msg + "\n", 'red', attrs=['bold']))
+            elif (self.room_type.upper() in ["OFFICE", "O"]):
                 self.room_type = "OFFICE"
-                self.offices.append(Office(room_name))
-                self.all_rooms.append(room_name)
-            elif (self.room_type.upper() == "LIVING_SPACE" or
-                    self.room_type.upper() == "L"):
+                self.offices.append(Office(room_name.upper()))
+                self.all_office_names.append(room_name.upper())
+                self.all_rooms.append(room_name.upper())
+            elif (self.room_type.upper() in ["LIVING_SPACE", "L", "LIVING"]):
                 self.room_type = "LIVING_SPACE"
-                self.living_spaces.append(Living(room_name))
-                self.all_rooms.append(room_name)
+                self.living_spaces.append(Living(room_name.upper()))
+                self.all_living_names.append(room_name.upper())
+                self.all_rooms.append(room_name.upper())
         msg = (self.room_type + " " + room_name + " successfully created!")
-        print(colored(msg + "\n", 'yellow', attrs=['bold']))
-        return msg
+        return (colored(msg + "\n", 'green', attrs=['bold']))
 
     def add_person(self, First_name, Last_Name, role, Accomodation="N"):
         self.First_name = First_name
@@ -65,64 +65,45 @@ class Amity():
                    r'''(''', r''')''', r'''{''', r'''}''', r'''[''', r''']''',
                    r'''^''', r'''~''', r'''*''', r'''?''', r''':''', r'''"''',
                    r''';''']
-        if not self.all_rooms:
-            print("Ooops! Please create rooms first")
-            return "Ooops! Please create rooms first"
+
         try:
             self.person_name = First_name + " " + Last_Name
-            if (self.Role.upper() == "FELLOW"and self.Accomodation.upper() == "Y"
-                    and not self.living_spaces):
-                cprint("Ooops! you need to have accomodation spaces", 'red',
-                       attrs=['bold'])
-                return "Ooops! you need to have accomodation spaces"
-            elif any(char.isdigit() for char in self.person_name):
-                print (colored("Ooops! Name cannot contain a digit!\n", 'red',
-                               attrs=['bold']))
-                return "Ooops! Name cannot contain a digit!"
+            if any(char.isdigit() for char in self.person_name):
+                return (colored("Ooops! Name cannot contain a digit!\n", 'red',
+                                attrs=['bold']))
             elif any(char in special for char in self.person_name):
-                print (colored("Ooops! Name cannot contain a special character!\n",
-                               'red', attrs=['bold']))
-                return "Ooops! Name cannot contain a special character!"
+                return (colored("Ooops! Name cannot contain a special character!\n",
+                                'red', attrs=['bold']))
 
             elif self.Role.upper() not in ("STAFF", "FELLOW"):
-                print (colored("Role can only be STAFF or FELLOW\n", 'red',
-                               attrs=['bold']))
-                return "Role can only be STAFF or FELLOW"
+                return (colored("Role can only be STAFF or FELLOW\n", 'red',
+                                attrs=['bold']))
 
             elif self.Accomodation.upper() not in ("Y", "N"):
-                print (colored("Accomodation options are only 'Y' or 'N'\n", 'red',
-                               attrs=['bold']))
-                return "Accomodation options are only 'Y' or 'N'"
+                return (colored("Accomodation options are only 'Y' or 'N'\n",
+                                'red', attrs=['bold']))
 
-            elif self.Role.upper() == "STAFF" and self.Accomodation.upper() == "Y":
-                print (colored("Staff cannot have accomodation!\n", 'red',
-                               attrs=['bold']))
-                return "Staff cannot have accomodation!"
-
-            elif self.all_people.count(self.person_name) >= 1:
-                print (colored(("Ooops! %s already exists in the system.\n"
-                                % self.person_name), 'red', attrs=['bold']))
-                return "Ooops! %s already exists in the system." % self.person_name
+            elif self.all_people.count(self.person_name.upper()) >= 1:
+                return (colored(("Ooops! %s already exists in the system.\n"
+                                 % self.person_name), 'red', attrs=['bold']))
 
             else:
                 if self.Role.upper() == "FELLOW":
                     self.Person_id = self.genarate_user_ID()
                     person_name = (Fellow(self.First_name, self.Last_Name).get_name())
-                    self.fellow_info[self.Person_id] = person_name
-                    self.all_people.append(self.person_name)
+                    self.fellow_info[self.Person_id] = person_name.upper()
+                    self.all_people.append(self.person_name.upper())
                 elif self.Role.upper() == "STAFF":
                     self.Person_id = self.genarate_user_ID()
                     person_name = (Staff(self.First_name, self.Last_Name).get_name())
-                    self.staff_info[self.Person_id] = person_name
-                    self.all_people.append(self.person_name)
+                    self.staff_info[self.Person_id] = person_name.upper()
+                    self.all_people.append(self.person_name.upper())
                 self.allocate_room_randomly()
-                print(colored("Person has been successfully added.\n",
-                              'yellow', attrs=['bold']))
-                return "Person has been successfully added."
+                return colored("Person has been successfully added\n", 'green',
+                               attrs=['bold'])
 
         except TypeError:
-            print (colored("Name cannot be a number!\n", 'red', attrs=['bold']))
-            return "Name cannot be a number!"
+            return (colored("Name cannot be a number!\n", 'red', attrs=['bold']))
 
     @staticmethod
     def genarate_user_ID():
@@ -132,114 +113,207 @@ class Amity():
 
     def allocate_room_randomly(self):
         if self.Role.upper() == "FELLOW":
-            selected_fellow = random.choice(list(self.fellow_info.values()))
-            if self.Accomodation.upper() == "Y":
-                chosen_office = random.choice(self.offices)
-                if selected_fellow not in chosen_office.occupants:
-                    chosen_office.add_occupants(selected_fellow)
-                    cprint(("%s allocated." % selected_fellow), 'blue',
-                           attrs=['bold'])
-                else:
-                    pass
 
-                chosen_living_space = random.choice(self.living_spaces)
-                if selected_fellow not in chosen_living_space.occupants:
-                    chosen_living_space.add_occupants(selected_fellow)
-                    cprint(("%s allocated." % selected_fellow), 'blue',
-                           attrs=['bold'])
+            for fellow in self.fellow_info.values():
+                listt = []
+                listt.append(fellow)
+            selected_fellow = random.choice(listt)
+
+            if self.Accomodation.upper() == "Y":
+                if self.offices:
+                    for office in self.offices:
+                        if selected_fellow not in office.occupants:
+                            chosen_office = random.choice(self.offices)
+                    chosen_office.add_occupants(selected_fellow)
+
+                    if selected_fellow in chosen_office.get_occupants():
+                        cprint("Office allocated.\n", 'green', attrs=['bold'])
+                    else:
+                        cprint("Office not allocated\n", 'yellow', attrs=['bold'])
+                        if selected_fellow not in self.unallocated:
+                            self.unallocated.append(selected_fellow)
+                        else:
+                            pass
                 else:
-                    pass
+                    if selected_fellow not in self.allocations:
+                        cprint("Office not allocated. Please create office\n",
+                               'yellow', attrs=['bold'])
+                        self.unallocated.append(selected_fellow)
+                    else:
+                        pass
+
+                if self.living_spaces:
+                    for living in self.living_spaces:
+                        if selected_fellow not in living.occupants:
+                            chosen_living_space = random.choice(self.living_spaces)
+                    chosen_living_space.add_occupants(selected_fellow)
+
+                    if selected_fellow in chosen_living_space.get_occupants():
+                        cprint("Living_space allocated.\n", 'green', attrs=['bold'])
+                    else:
+                        cprint("Living_space not allocated\n", 'yellow', attrs=['bold'])
+                        if selected_fellow not in self.unallocated:
+                            self.unallocated.append(selected_fellow)
+                        else:
+                            pass
+                else:
+                    if selected_fellow not in self.unallocated:
+                        self.unallocated.append(selected_fellow)
+                        cprint("Living_space not allocated.Please create living_space\n",
+                               'yellow', attrs=['bold'])
+                    else:
+                        pass
 
             elif self.Accomodation.upper() == "N":
-
-                chosen_office = random.choice(self.offices)
-                if selected_fellow not in chosen_office.occupants:
+                if self.offices:
+                    for office in self.offices:
+                        if selected_fellow not in office.occupants:
+                            chosen_office = random.choice(self.offices)
                     chosen_office.add_occupants(selected_fellow)
-                    cprint(("%s allocated."
-                            % selected_fellow), 'blue', attrs=['bold'])
+
+                    if selected_fellow in chosen_office.get_occupants():
+                        cprint("Office allocated.\n", 'green', attrs=['bold'])
+                    else:
+                        cprint("Office not allocated\n", 'yellow', attrs=['bold'])
+                        if selected_fellow not in self.unallocated:
+                            self.unallocated.append(selected_fellow)
+                        else:
+                            pass
                 else:
-                    pass
+                    if selected_fellow not in self.unallocated:
+                        self.unallocated.append(selected_fellow)
+                        cprint("Office not allocated. Please create office\n",
+                               'yellow', attrs=['bold'])
+                    else:
+                        pass
 
         elif self.Role.upper() == "STAFF":
-            selected_staff = random.choice(list(self.staff_info.values()))
+            for staff in self.staff_info.values():
+                staff_list = []
+                staff_list.append(staff)
+            selected_staff = random.choice(staff_list)
+
             if self.Accomodation.upper() == "Y":
-                print(colored("Staff cannot have accomodation", 'red',
-                              attrs=['bold']))
-                return "Staff cannot have accomodation"
+                if self.offices:
+                    for office in self.offices:
+                        if selected_staff not in office.occupants:
+                            chosen_office = random.choice(self.offices)
+                    chosen_office.add_occupants(selected_staff)
+                    if selected_staff in chosen_office.get_occupants():
+                        cprint("Office allocated.\n", 'green', attrs=['bold'])
+                        cprint("Living_space cannot allocated be to staff\n", 'red',
+                               attrs=['bold'])
+                    else:
+                        cprint("Office not allocated\n", 'yellow', attrs=['bold'])
+                        if selected_staff not in self.unallocated:
+                            self.unallocated.append(selected_staff)
+                        else:
+                            pass
+                else:
+                    if selected_staff not in self.unallocated:
+                        self.unallocated.append(selected_staff)
+                        cprint("Office not allocated. Please create office\n",
+                               'yellow', attrs=['bold'])
+                        cprint("Living_space cannot allocated be to staff\n", 'red',
+                               attrs=['bold'])
+                    else:
+                        pass
+
             elif self.Accomodation.upper() == "N":
-                chosen_office = random.choice(self.offices)
-            if selected_staff not in chosen_office.occupants:
-                chosen_office.add_occupants(selected_staff)
-                cprint(("%s allocated." % selected_staff), 'blue',
-                       attrs=['bold'])
-            else:
-                pass
+                if self.offices:
+                    for office in self.offices:
+                        if selected_staff not in office.occupants:
+                            chosen_office = random.choice(self.offices)
+                    chosen_office.add_occupants(selected_staff)
+                    if selected_staff in chosen_office.get_occupants():
+                        cprint("Office allocated.\n", 'green', attrs=['bold'])
+                    else:
+                        cprint("Office not allocated\n", 'yellow', attrs=['bold'])
+                        if selected_staff not in self.unallocated:
+                            self.unallocated.append(selected_staff)
+                        else:
+                            pass
+                else:
+                    if selected_staff not in self.unallocated:
+                        self.unallocated.append(selected_staff)
+                        cprint("Office not allocated. Please create office\n",
+                               'yellow', attrs=['bold'])
+                    else:
+                        pass
+        if self.offices:
+            for office in self.offices:
+                if office.occupants:
+                    self.allocations.append(office)
+        elif self.living_spaces:
+            for living in self.living_spaces:
+                if living.occupants:
+                    self.allocations.append(living)
 
     def reallocate_person(self, employee_id, new_room):
-        if(employee_id not in self.staff_info.keys() and employee_id not
-                in self.fellow_info.keys() and new_room not in self.all_rooms):
+        if(employee_id.upper() not in self.staff_info.keys() and employee_id.upper() not
+                in self.fellow_info.keys() and new_room.upper() not in self.all_rooms):
+            return (colored("Ooops!Can't reallocate with no rooms and people.",
+                            'red', attrs=['bold']))
 
-            print(colored("Ooops, please input data to continue.", 'red',
-                          attrs=['bold']))
-            return "Ooops, please input data to continue."
-
-        elif new_room not in self.all_rooms:
-            print(colored("Oops sorry, this particular room does not exist!",
-                          'red', attrs=['bold']))
-            return "Oops sorry, this particular room does not exist!"
-        elif (employee_id not in self.staff_info.keys() and employee_id not
+        elif new_room.upper() not in self.all_rooms:
+            return (colored("Oops sorry, this particular room does not exist!",
+                            'red', attrs=['bold']))
+        elif (employee_id.upper() not in self.staff_info.keys() and employee_id.upper() not
                 in self.fellow_info.keys()):
-
-            print(colored("Ooops, invalid employee_name please try again.", 'red',
-                          attrs=['bold']))
-            return "Ooops, invalid employee_name please try again."
-        if (employee_id not in self.staff_info.keys() and employee_id not
-                in self.fellow_info.keys() and new_room not in self.all_rooms):
-
-            print(colored("Ooops, please input data to continue.", 'red',
-                          attrs=['bold']))
-            return "Ooops, please input data to continue."
+            return (colored("Ooops, invalid employee_id please try again.", 'red',
+                            attrs=['bold']))
         else:
+            if employee_id.upper() in self.fellow_info.keys():
+                msg = 'Ooops! cannot reallocate person to same room\n'
+                if new_room.upper() in self.all_office_names:
+                    for fellow_id, fellow_name in self.fellow_info.items():
+                        if fellow_id == employee_id.upper():
+                            for office in self.offices:
+                                if fellow_name in office.get_occupants():
+                                    if new_room.upper() in office.get_room_name():
+                                        return colored(msg, 'red', attrs=['bold'])
+                                    else:
+                                        office.occupants.remove(fellow_name)
+                                if new_room.upper() in office.get_room_name():
+                                    office.add_occupants(fellow_name)
+                                    self.allocations.append(office)
+                    return colored("Success", 'green', attrs=['bold'])
 
-            for fellow_id, fellow_name in self.fellow_info.items():
-                if fellow_id == employee_id:
-                    for office in self.offices:
-                        if fellow_name in office.get_occupants():
-                            office.occupants.remove(fellow_name)
-                        if office.get_room_name() == new_room:
-                            office.add_occupants(fellow_name)
-                            self.allocations.append(office)
-                        cprint("Success", 'blue', attrs=['bold'])
-                        return "Success"
+                elif new_room.upper() in self.all_living_names:
+                    msg = 'Ooops! cannot reallocate person to same room\n'
+                    for fellow_id, fellow_name in self.fellow_info.items():
+                        if fellow_id == employee_id.upper():
+                            for living in self.living_spaces:
+                                if fellow_name in living.get_occupants():
+                                    if new_room.upper() in living.get_room_name():
+                                        return colored(msg, 'red', attrs=['bold'])
+                                    else:
+                                        living.occupants.remove(fellow_name)
+                                if new_room.upper() in living.get_room_name():
+                                    living.add_occupants(fellow_name)
+                                    self.allocations.append(living)
+                    return colored("Success", 'green', attrs=['bold'])
 
-                    for living in self.living_spaces:
-                        if f_name in office.get_occupants():
-                            living.occupants.remove(f_name)
-                            self.allocations.remove(living)
-                        if living.get_room_name() == new_room:
-                            living.add_occupants(f_name)
-                            self.allocations.append(living)
-                        cprint("Success", 'blue', attrs=['bold'])
-                        return "Success"
-                else:
-                    cprint("Invalid Id. Please Use get_id command", 'red',
-                           attrs=['bold'])
-                    return "Invalid Id. Please Use get_id command"
+            if employee_id.upper() in self.staff_info.keys():
+                err_msg = 'Ooops! cannot reallocate person to same room\n'
+                msg = "Ooops!cannot reallocate STAFF to living_space\n"
+                for staff_id, staff_name in self.staff_info.items():
+                    if staff_id == employee_id.upper():
+                        for living in self.living_spaces:
+                            if new_room.upper() == living.get_room_name():
+                                return colored(msg, 'red', attrs=['bold'])
 
-            for staff_id, staff_name in self.staff_info.items():
-                if staff_id == employee_id:
-                    for living in self.living_spaces:
-                        if new_room == living.get_room_name():
-                            cprint("Ooops! cannot reallocate STAFF to living_space",
-                                   'red', attrs=['bold'])
-                            return "Ooops! cannot reallocate STAFF to living_space"
-                    for office in self.offices:
-                        if staff_name in office.get_occupants():
-                            office.occupants.remove(staff_name)
-                        if office.get_room_name() == new_room:
-                            office.add_occupants(staff_name)
-                    cprint("Success", 'blue', attrs=['bold'])
-                    return "Success"
+                        for office in self.offices:
+                            if staff_name in office.get_occupants():
+
+                                if new_room.upper() in office.get_room_name():
+                                    return colored(err_msg, 'red', attrs=['bold'])
+                                else:
+                                    office.occupants.remove(staff_name)
+                            if new_room.upper() in office.get_room_name():
+                                office.add_occupants(staff_name)
+                                self.allocations.append(office)
+                return colored("Success", 'green', attrs=['bold'])
 
     def load_people(self, file_name):
         file_name = 'cp/names.txt'
@@ -254,7 +328,7 @@ class Amity():
             else:
                 accomodation = data[3]
 
-            self.add_person(first_name, last_name, role, accomodation)
+            print(self.add_person(first_name, last_name, role, accomodation))
 
         self.print_allocations()
         print(colored("Data successfull loaded", 'yellow', attrs=['bold']))
@@ -263,60 +337,71 @@ class Amity():
     def print_allocations(self):
         table_room_data = []
         table_people_data = []
-        if not self.offices and not self.living_spaces:
-            cprint("Ooops! No rooms created yet\n", 'red', attrs=['bold'])
-            return "Ooops! No rooms created yet"
+        table_room_type = []
+        if not self.all_rooms:
+            return colored("Ooops! No rooms created yet\n", 'red', attrs=['bold'])
         else:
             for room_office in self.offices:
                 if not room_office.occupants:
                     cprint("No occupants in %s" % room_office.get_room_name(),
                            'red', attrs=['bold'])
-                    if room_office in self.allocations:
-                        self.allocations.remove(room_office)
+                elif room_office in self.allocations and not room_office.occupants:
+                    self.allocations.remove(room_office)
                 elif room_office.occupants:
                     self.allocations.append(room_office)
 
             for room_living in self.living_spaces:
                 if not room_living.occupants:
-                    cprint("No occupants in %s" % room_office.get_room_name(),
+                    cprint("No occupants in %s" % room_living.get_room_name(),
                            'red', attrs=['bold'])
-                    if room_living in self.allocations:
-                        self.allocations.remove(room_office)
-                else:
+                elif room_living in self.allocations and not room_living.occupants:
+                    self.allocations.remove(room_living)
+                elif room_living.occupants:
                     self.allocations.append(room_living)
 
             for allocated_rooms in self.allocations:
                 if allocated_rooms.get_room_name() not in table_room_data:
-                    table_room_data.append(allocated_rooms.get_room_name())
-                    table_people_data.append(allocated_rooms.get_occupants())
+                    if allocated_rooms.occupants:
+                        table_room_data.append(allocated_rooms.get_room_name())
+                        table_room_type.append(allocated_rooms.Rm_type)
+                        table_people_data.append(allocated_rooms.get_occupants())
 
             print('\n' + tabulate({
                 'Room_name': table_room_data,
+                'Room_type': table_room_type,
                 'Occupants': table_people_data
             }, headers="keys",
                 tablefmt="fancy_grid") + '\n')
 
-        print(colored("Success\n", 'yellow', attrs=['bold']))
-        return "Success"
+        return (colored("Success\n", 'green', attrs=['bold']))
 
     def print_unallocated(self):
-        pass
+        print('\n' + tabulate({
+            'UNALLOCATED PEOPLE': self.unallocated}, headers='keys',
+            tablefmt="fancy_grid") + '\n')
+        return "Success"
 
     def print_room(self, room_name):
-        """
-        TODO
-            - If room is empty give a message
-        """
-        self.room_name = room_name
-        if self.room_name not in self.all_rooms:
-            print(colored("Ooops, please enter valid room name", 'red',
-                          attrs=['bold']))
-            return "Ooops, please enter valid room name"
+        if room_name.upper() not in self.all_rooms:
+            return(colored("Ooops, this room does not exist", 'red',
+                           attrs=['bold']))
+        elif self.offices or self.living_spaces:
+            for room in self.offices:
+                if room_name.upper() in room.get_room_name() and not room.occupants:
+                    return colored("Ooops!%s is empty\n" % room_name, 'yellow',
+                                   attrs=['bold'])
+            for room in self.living_spaces:
+                if room_name.upper() in room.get_room_name() and not room.occupants:
+                    return colored("Ooops!%s is empty\n" % room_name, 'yellow',
+                                   attrs=['bold'])
+        if self.allocations:
+            for rooms in self.allocations:
+                if room_name.upper() in rooms.get_room_name():
+                    occupants = rooms.get_occupants()
+            cprint(occupants, 'white',
+                   attrs=['bold'])
 
-        for allocated_rooms in self.allocations:
-            if allocated_rooms.get_room_name() == self.room_name:
-                return cprint(allocated_rooms.get_occupants(), 'white',
-                              attrs=['bold'])
+        return colored("\nSuccessfull print.", 'green', attrs=['bold'])
 
     def save_state(self, db_name):
         """
@@ -397,15 +482,15 @@ class Amity():
 
     def get_person_id(self, first_name, last_name):
         full_name = first_name + " " + last_name
-        if full_name in self.fellow_info.values():
+        if full_name.upper() in self.fellow_info.values():
             for person_id, person_name in self.fellow_info.items():
-                if person_name == full_name:
+                if person_name == full_name.upper():
                     my_person_id = person_id
             print(colored(my_person_id, 'yellow', attrs=['bold']))
             return my_person_id
-        elif full_name in self.staff_info.values():
+        elif full_name.upper() in self.staff_info.values():
             for person_id, person_name in self.staff_info.items():
-                if person_name == full_name:
+                if person_name == full_name.upper():
                     my_person_id = person_id
             print(colored(my_person_id, 'yellow', attrs=['bold']))
             return my_person_id
