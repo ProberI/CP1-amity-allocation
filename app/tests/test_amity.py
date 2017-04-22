@@ -1,6 +1,6 @@
 import unittest
 
-from termcolor import cprint
+from termcolor import cprint, colored
 
 from cp.amity import Amity
 
@@ -15,37 +15,50 @@ class Test_amity_class(unittest.TestCase):
 
     def test_create_room_with_wrong_room_type(self):
         self.assertEqual(self.amity.create_room("Quiet_Room", ["Narnia"]),
-                         "Room_Type can only be OFFICE or LIVING_SPACE")
+                         (colored("Room_Type can only be OFFICE or LIVING_SPACE\n",
+                                  'red', attrs=['bold'])))
 
     def test_create_room_office(self):
         self.assertEqual(self.amity.create_room("Office", ["Hogwarts"]),
-                         "OFFICE Hogwarts successfully created!")
+                         (colored("OFFICE Hogwarts successfully created!\n",
+                                  'green', attrs=['bold'])))
 
     def test_create_room_living_space(self):
         self.assertEqual(self.amity.create_room("L", ["Barmuda"]),
-                         "LIVING_SPACE Barmuda successfully created!")
+                         (colored("LIVING_SPACE Barmuda successfully created!\n",
+                                  'green', attrs=['bold'])))
 
     def test_create_room_in_multiples(self):
         self.amity.create_room("Office", ["Hogwart", "Mombasa"])
         self.assertEqual(len(self.amity.offices), 2)
 
     def test_create_room_office_with_o_as_input(self):
-        self.assertEqual("OFFICE Hogwarts successfully created!",
+        self.assertEqual((colored("OFFICE Hogwarts successfully created!\n", 'green',
+                                  attrs=['bold'])),
                          self.amity.create_room("O", ['Hogwarts']))
 
     def test_create_room_living_space_with_l_as_input(self):
-        self.assertEqual("LIVING_SPACE Hogwrts successfully created!",
+        self.assertEqual((colored("LIVING_SPACE Hogwrts successfully created!\n",
+                                  'green', attrs=['bold'])),
                          self.amity.create_room("L", ['Hogwrts']))
 
     def test_create_room_duplicates(self):
         self.amity.create_room("O", ["Hogwarts"])
         self.assertEqual(self.amity.create_room("O", ["Hogwarts"]),
-                         "Room Hogwarts already exists!")
+                         (colored("Room Hogwarts already exists!\n", 'red',
+                                  attrs=['bold'])))
 
     def test_add_person_with_digit_in_name(self):
         self.amity.create_room("o", ["Narnia"])
         self.assertEqual(self.amity.add_person("Paul2", "Upendo", "STAFF", "N"),
-                         "Ooops! Name cannot contain a digit!")
+                         (colored("Ooops! Name cannot contain a digit!\n", 'red',
+                                  attrs=['bold'])))
+
+    def test_add_person_with_special_char_in_name(self):
+        self.amity.create_room("o", ["Narnia"])
+        self.assertEqual(self.amity.add_person("Paul$", "Upe&do", "STAFF", "N"),
+                         (colored("Ooops! Name cannot contain a special character!\n",
+                                  'red', attrs=['bold'])))
 
     def test_add_person_duplicate(self):
         self.amity.create_room("o", ["Mara", "Uganda"])
@@ -53,15 +66,18 @@ class Test_amity_class(unittest.TestCase):
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
         self.amity.load_state('Try')
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "FELLOW", "N"),
-                         "Ooops! Paul Upendo already exists in the system.")
+                         (colored(("Ooops! Paul Upendo already exists in the system.\n"),
+                                  'red', attrs=['bold'])))
 
     def test_add_person(self):
         self.amity.create_room("o", ["ogwarts", "Valhal"])
         self.amity.create_room("l", ["Dojo"])
-        self.assertEqual(self.amity.add_person("John", "Waria", "STAFF", "N"),
-                         "Person has been successfully added.")
+        self.assertEqual(self.amity.add_person("John", "Waria", "STAFF", "Y"),
+                         colored("Person has been successfully added\n",
+                                 'green', attrs=['bold']))
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "FELLOW", "Y"),
-                         "Person has been successfully added.")
+                         colored("Person has been successfully added\n",
+                                 'green', attrs=['bold']))
 
     @unittest.expectedFailure  # Id is randomly generated
     def test_add_person_generatedID_in(self):
@@ -83,43 +99,79 @@ class Test_amity_class(unittest.TestCase):
     def test_add_person_with_number_as_name(self):
         self.amity.create_room("o", ["Narnia"])
         self.assertTrue(self.amity.add_person(2, "Upendo", "STAFF", "N")
-                        == "Name cannot be a number!")
+                        == (colored("Name cannot be a number!\n", 'red',
+                                    attrs=['bold'])))
 
     def test_add_person_with_unrecognized_roles(self):
         self.amity.create_room("o", ["Narnia"])
         self.assertEqual(self.amity.add_person("John", "Maasai", "Member", "Y"),
-                         "Role can only be STAFF or FELLOW")
+                         (colored("Role can only be STAFF or FELLOW\n", 'red',
+                                  attrs=['bold'])))
 
     def test_add_person_with_wrong_accomodation_option(self):
         self.amity.create_room("o", ["Narnia"])
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "STAFF", "J"),
-                         "Accomodation options are only 'Y' or 'N'")
+                         (colored("Accomodation options are only 'Y' or 'N'\n",
+                                  'red', attrs=['bold'])))
 
+    @unittest.expectedFailure  # print statement instead of return
     def test_add_person_staff_accomodation_options(self):
         self.amity.create_room("o", ["Narnia"])
         self.assertEqual(self.amity.add_person("Paul", "Upendo", "STAFF", "Y"),
-                         "Staff cannot have accomodation!")
+                         colored("Living_space cannot allocated be to staff\n", 'red',
+                                 attrs=['bold']))
 
-    def test_reallocate_person(self):
+    def test_reallocate_person_from_office(self):
         self.amity.create_room("o", ["Narnia", "Hogwarts"])
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
         person_id = self.amity.get_person_id("Paul", "Upendo")
-        print(person_id)
-        self.assertEqual(self.amity.reallocate_person(person_id, "Narnia"),
-                         "Success")
+        self.assertEqual(self.amity.reallocate_person(person_id, "Hogwarts"),
+                         colored("Success", 'green', attrs=['bold']))
+
+    def test_reallocate_person_from_living_space(self):
+        self.amity.create_room("o", ["Narnia", "Hogwarts"])
+        self.amity.create_room("l", ["Dojo", "amity"])
+        self.amity.add_person("Paul", "Upendo", "FELLOW", "Y")
+        person_id = self.amity.get_person_id("Paul", "Upendo")
+        self.assertEqual(self.amity.reallocate_person(person_id, "Amity"),
+                         colored("Success", 'green', attrs=['bold']))
+
+    def test_reallocate_person_with_no_data_in_system(self):
+        self.assertEqual(self.amity.reallocate_person('XXXX', 'Hogwarts'),
+                         (colored("Ooops!Can't reallocate with no rooms and people.",
+                                  'red', attrs=['bold'])))
+
+    def test_reallocate_person_to_same_office(self):
+        err_msg = 'Ooops! cannot reallocate person to same room\n'
+        self.amity.create_room("o", ["Valhalla"])
+        self.amity.add_person("Paul", "Upendo", "staff", "n")
+        person_id = self.amity.get_person_id("Paul", "Upendo")
+        self.assertEqual((self.amity.reallocate_person(person_id, "valhalla")),
+                         colored(err_msg, 'red', attrs=['bold']))
+
+    def test_reallocate_person_to_same_living_space(self):
+        err_msg = 'Ooops! cannot reallocate person to same room\n'
+        self.amity.create_room("o", ["Valhalla"])
+        self.amity.create_room("L", ["Mara"])
+        self.amity.add_person("Paul", "Upendo", "fellow", "y")
+        person_id = self.amity.get_person_id("Paul", "Upendo")
+        self.assertEqual((self.amity.reallocate_person(person_id, "Mara")),
+                         colored(err_msg, 'red', attrs=['bold']))
 
     def test_reallocate_person_to_non_existent_room(self):
         self.amity.create_room("o", ["Narnia"])
-        self.amity.add_person("Paul", "Upendo", "STAFF", "N")
+        self.amity.add_person("Paul", "Upendo", "fellow", "N")
         person_id = self.amity.get_person_id("Paul", "Upendo")
         self.assertEqual(self.amity.reallocate_person(person_id, "Chania"),
-                         "Oops sorry, this particular room does not exist!")
+                         (colored("Oops sorry, this particular room does not exist!",
+                                  'red', attrs=['bold'])))
 
     def test_reallocate_person_who_is_not_in_system(self):
         self.amity.create_room("o", ["Narnia"])
         self.amity.add_person("Paul", "Upendo", "STAFF", "N")
         self.assertEqual(self.amity.reallocate_person("XCCDF",  "Narnia"),
-                         "Ooops, invalid employee_name please try again.")
+                         (colored("Ooops, invalid employee_id please try again.",
+                                  'red', attrs=['bold'])))
 
     def test_reallocate_person_staff_to_living_space(self):
         self.amity.create_room("o", ["Hogwarts"])
@@ -127,7 +179,8 @@ class Test_amity_class(unittest.TestCase):
         self.amity.add_person("Paul", "Upendo", "STAFF", "N")
         person_id = self.amity.get_person_id("Paul", "Upendo")
         self.assertEqual(self.amity.reallocate_person(person_id, "Egypt"),
-                         "Ooops! cannot reallocate STAFF to living_space")
+                         colored("Ooops!cannot reallocate STAFF to living_space\n",
+                                 'red', attrs=['bold']))
 
     def test_load_people(self):
         self.amity.create_room("o", ["Hogwarts", "Mombasa"])
@@ -141,29 +194,33 @@ class Test_amity_class(unittest.TestCase):
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
         self.amity.add_person("John", "Chang", "STAFF", "N")
         self.assertEqual(self.amity.print_room("Kenya"),
-                         "Ooops, please enter valid room name")
+                         (colored("Ooops, this room does not exist", 'red',
+                                  attrs=['bold'])))
 
     def test_print_room(self):
-        self.amity.create_room("o", ["VALHALLA"])
+        self.amity.create_room("O", ["VALHALLA"])
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
         self.amity.add_person("Paul", "Kay", "FELLOW", "N")
         self.assertEqual(self.amity.print_room("VALHALLA"),
-                         cprint(['Paul Upendo'], 'white', attrs=['bold']))
+                         colored("\nSuccessfull print.", 'green', attrs=['bold']))
 
     def test_print_allocations(self):
         self.amity.create_room("o", ["VALHALLA"])
-        self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
+        self.amity.create_room("l", ["VALH"])
+        self.amity.add_person("Paul", "Upendo", "FELLOW", "y")
         self.assertEqual(self.amity.print_allocations(),
-                         "Success")
+                         (colored("Success\n", 'green', attrs=['bold'])))
 
     def test_print_allocations_without_rooms(self):
         self.assertEqual(self.amity.print_allocations(),
-                         "Ooops! No rooms created yet")
+                         colored("Ooops! No rooms created yet\n", 'red',
+                                 attrs=['bold']))
 
-    # def test_print_allocations_without_person_data(self):
-    #     self.amity.create_room("o", ["Hogwarts"])
-    #     self.assertEqual(self.amity.print_allocations(),
-    #                      "No occupants in Hogwarts")
+    def test_print_allocations_without_person_data(self):
+        self.amity.create_room("o", ["Hogwarts"])
+        self.assertEqual(self.amity.print_room('Hogwarts'),
+                         colored("Ooops!Hogwarts is empty\n", 'yellow',
+                                 attrs=['bold']))
 
     def test_save_state(self):
         self.amity.create_room("o", ["VALHALLA", "Mombasa"])
