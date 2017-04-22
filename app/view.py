@@ -78,7 +78,7 @@ class App(cmd.Cmd):
 
         room_type = arg['<room_type>']
         room_name = arg['<room_name>']
-        amity.create_room(room_type, room_name)
+        print(amity.create_room(room_type, room_name))
 
     @classmethod
     @docopt_cmd
@@ -89,7 +89,7 @@ class App(cmd.Cmd):
         last_name = arg['<last_name>']
         role = arg['<role>']
         accomodation = arg['<accomodation>']
-        amity.add_person(first_name, last_name, role, accomodation)
+        print(amity.add_person(first_name, last_name, role, accomodation))
 
     @classmethod
     @docopt_cmd
@@ -97,7 +97,7 @@ class App(cmd.Cmd):
         """Usage: reallocate_person <emp_id> <room_name>"""
         emp_id = arg['<emp_id>']
         room_name = arg['<room_name>']
-        amity.reallocate_person(emp_id, room_name)
+        print(amity.reallocate_person(emp_id, room_name))
 
     @classmethod
     @docopt_cmd
@@ -105,21 +105,21 @@ class App(cmd.Cmd):
         """Usage: load_people <file_name>"""
 
         file_name = arg['<file_name>']
-        amity.load_people(file_name)
+        print(amity.load_people(file_name))
 
     @classmethod
     @docopt_cmd
     def do_print_allocations(self, arg):
         """Usage: print_allocations [--file_name]"""
 
-        amity.print_allocations()
+        print(amity.print_allocations())
 
     @classmethod
     @docopt_cmd
     def do_print_unallocated(self, arg):
         """Usage: unallocated [--file_name]"""
 
-        amity.print_unallocated()
+        print(amity.print_unallocated())
 
     @classmethod
     @docopt_cmd
@@ -127,7 +127,7 @@ class App(cmd.Cmd):
         """Usage: print_room <room_name>"""
 
         room_name = arg['<room_name>']
-        amity.print_room(room_name)
+        print(amity.print_room(room_name))
 
     @classmethod
     @docopt_cmd
