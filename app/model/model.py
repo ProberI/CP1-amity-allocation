@@ -19,11 +19,9 @@ class All_rooms(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     Room_name = Column(String(250))
     Room_type = Column(String(250))
+    Occupants = Column(String(500), nullable=True)
 
 
 def create_db(db_name):
     engine = create_engine('sqlite:///model/' + db_name + '.db')
     Base.metadata.create_all(engine)
-
-
-create_db('amity')

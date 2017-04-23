@@ -34,7 +34,9 @@ class Amity():
 
     def create_room(self, room_type, name):
         self.room_type = room_type
+
         for room_name in name:
+
             if self.room_type.upper() not in ("LIVING_SPACE", "LIVING", "OFFICE",
                                               "O", "L"):
 
@@ -48,12 +50,16 @@ class Amity():
                 self.offices.append(Office(room_name.upper()))
                 self.all_office_names.append(room_name.upper())
                 self.all_rooms.append(room_name.upper())
+                office_msg = (self.room_type + " " + room_name + " successfully created!")
+                cprint(office_msg + '\n', 'green', attrs=['bold'])
             elif (self.room_type.upper() in ["LIVING_SPACE", "L", "LIVING"]):
                 self.room_type = "LIVING_SPACE"
                 self.living_spaces.append(Living(room_name.upper()))
                 self.all_living_names.append(room_name.upper())
                 self.all_rooms.append(room_name.upper())
-        msg = (self.room_type + " " + room_name + " successfully created!")
+                living_msg = (self.room_type + " " + room_name + " successfully created!")
+                cprint(living_msg + '\n', 'green', attrs=['bold'])
+        msg = ("Successfull creation!")
         return (colored(msg + "\n", 'green', attrs=['bold']))
 
     def add_person(self, First_name, Last_Name, role, Accomodation="N"):
@@ -88,6 +94,8 @@ class Amity():
                                  % self.person_name), 'red', attrs=['bold']))
 
             else:
+                if not Accomodation:
+                    Accomodation
                 if self.Role.upper() == "FELLOW":
                     self.Person_id = self.genarate_user_ID()
                     person_name = (Fellow(self.First_name, self.Last_Name).get_name())
@@ -331,8 +339,7 @@ class Amity():
             print(self.add_person(first_name, last_name, role, accomodation))
 
         self.print_allocations()
-        print(colored("Data successfull loaded", 'yellow', attrs=['bold']))
-        return "Data successfull loaded"
+        return (colored("Data successfull loaded", 'yellow', attrs=['bold']))
 
     def print_allocations(self):
         table_room_data = []
@@ -364,7 +371,8 @@ class Amity():
                     if allocated_rooms.occupants:
                         table_room_data.append(allocated_rooms.get_room_name())
                         table_room_type.append(allocated_rooms.Rm_type)
-                        table_people_data.append(allocated_rooms.get_occupants())
+                        table_people_data.append(' '.join(str(x)
+                                                          for x in allocated_rooms.get_occupants()))
 
             print('\n' + tabulate({
                 'Room_name': table_room_data,
@@ -376,10 +384,14 @@ class Amity():
         return (colored("Success\n", 'green', attrs=['bold']))
 
     def print_unallocated(self):
-        print('\n' + tabulate({
-            'UNALLOCATED PEOPLE': self.unallocated}, headers='keys',
-            tablefmt="fancy_grid") + '\n')
-        return "Success"
+        if not self.unallocated:
+            return colored("Yeiiy!! All persons are currently allocated.",
+                           'green', attrs=['bold'])
+        else:
+            print('\n' + tabulate({
+                'UNALLOCATED PEOPLE': self.unallocated}, headers='keys',
+                tablefmt="fancy_grid") + '\n')
+            return colored("Success", 'green', attrs=['bold'])
 
     def print_room(self, room_name):
         if room_name.upper() not in self.all_rooms:
@@ -404,13 +416,13 @@ class Amity():
         return colored("\nSuccessfull print.", 'green', attrs=['bold'])
 
     def save_state(self, db_name):
-        """
-        TODO
-            - Check if db exists
-        """
         self.db_name = db_name
+        file_name = self.db_name + '.db'
+
         model.create_db(self.db_name)
-        engine = create_engine('sqlite:///model/' + self.db_name + '.db')
+        engine = create_engine('sqlite:///model/' + file_name)
+        Base.metadata.drop_all(engine)
+        Base.metadata.create_all(engine)
         Base.metadata.bind = engine
 
         DBSession = sessionmaker(bind=engine)
@@ -418,40 +430,41 @@ class Amity():
         try:
             if (not self.offices and not self.living_spaces and
                     not self.fellow_info and not self.staff_info):
-                cprint("Please input data before save\n", 'red', attrs=['bold'])
-                return "Please input data before save"
 
-            if self.room_type == "OFFICE" or self.room_type == "LIVING_SPACE":
-                for room in self.offices:
-                    self.new_room = All_rooms()
-                    self.new_room.Room_name = room.get_room_name()
-                    self.new_room.Room_type = room.Rm_type
-                    self.session.add(self.new_room)
+                return colored("No data to save", 'yellow', attrs=['bold'])
 
-                for room in self.living_spaces:
-                    self.new_room = All_rooms()
-                    self.new_room.Room_name = room.get_room_name()
-                    self.new_room.Room_type = room.Rm_type
-                    self.session.add(self.new_room)
+            for room in self.offices:
+                self.new_room = All_rooms()
+                self.new_room.Room_name = room.get_room_name()
+                self.new_room.Room_type = "OFFICE"
+                self.new_room.Occupants = ' '.join(str(x) for
+                                                   x in room.get_occupants())
+                self.session.add(self.new_room)
 
-            elif self.Role == "FELLOW" or self.Role == "STAFF":
-                for person_id, name in self.fellow_info.items():
-                    self.new_person = Employees()
-                    self.new_person.Emp_Id = person_id
-                    self.new_person.Person_name = name
-                    self.new_person.role = "FELLOW"
-                    self.session.add(self.new_person)
+            for room in self.living_spaces:
+                self.new_room = All_rooms()
+                self.new_room.Room_name = room.get_room_name()
+                self.new_room.Room_type = "LIVING_SPACE"
+                self.new_room.Occupants = ' '.join(str(x) for
+                                                   x in room.get_occupants())
+                self.session.add(self.new_room)
 
-                for staff_id, staff_name in self.staff_info.items():
-                    self.new_person = Employees()
-                    self.new_person.Emp_Id = staff_id
-                    self.new_person.Person_name = staff_name
-                    self.new_person.role = "STAFF"
-                    self.session.add(self.new_person)
+            for person_id, name in self.fellow_info.items():
+                self.new_person = Employees()
+                self.new_person.Emp_Id = person_id
+                self.new_person.Person_name = name
+                self.new_person.role = "FELLOW"
+                self.session.add(self.new_person)
+
+            for staff_id, staff_name in self.staff_info.items():
+                self.new_person = Employees()
+                self.new_person.Emp_Id = staff_id
+                self.new_person.Person_name = staff_name
+                self.new_person.role = "STAFF"
+                self.session.add(self.new_person)
 
             self.session.commit()
-            print(colored("Data saved successfuly", 'blue', attrs=['bold']))
-            return "Data saved successfully"
+            return (colored("Data saved successfuly\n", 'blue', attrs=['bold']))
 
         except exc.SQLAlchemyError as error:
             print(error)
@@ -463,21 +476,71 @@ class Amity():
             Base.metadata.bind = engine
 
             DBSession = sessionmaker(bind=engine)
+
             self.session = DBSession()
 
-            room_data = ([str(x[0])for x in
-                          self.session.query(All_rooms.Room_name).all()])
-            person_data = ([str(x[0])for x in
-                            self.session.query(Employees.Person_name).all()])
-            for rum in room_data:
-                self.all_rooms.append(rum)
-            for Person in person_data:
+            office_data = ([str(x[0])for x in
+                            self.session.query(All_rooms.Room_name).filter
+                            (All_rooms.Room_type == 'OFFICE')])
+            living_data = ([str(x[0])for x in
+                            self.session.query(All_rooms.Room_name).filter
+                            (All_rooms.Room_type == 'LIVING_SPACE')])
+
+            fellow_data = ([str(x[0])for x in
+                            self.session.query(Employees.Person_name).filter(Employees.role == "FELLOW")])
+
+            staff_data = ([str(x[0])for x in
+                           self.session.query(Employees.Person_name).filter(Employees.role == "STAFF")])
+
+            for Person in fellow_data:
+                self.Role = "FELLOW"
                 self.all_people.append(Person)
-            print("success")
-            return "success"
+                person_id = ''.join([str(x[0])for x in
+                                     self.session.query(Employees.Emp_Id).filter(Employees.Person_name == Person)])
+
+                self.fellow_info[person_id] = Person
+
+            for person in staff_data:
+                self.Role = "STAFF"
+                self.all_people.append(person)
+                person_id = ''.join([str(x[0])for x in
+                                     self.session.query(Employees.Emp_Id).filter(Employees.Person_name == person)])
+
+                self.staff_info[person_id] = person
+
+            for rum in office_data:
+                self.room_type = "OFFICE"
+                self.all_rooms.append(rum)
+                self.offices.append(Office(rum))
+                self.all_office_names.append(rum)
+
+                for office in self.offices:
+                    occupants = ' '.join([str(x[0])for x in
+                                          self.session.query(All_rooms.Occupants).filter(All_rooms.Room_name == rum)])
+                    if office.get_room_name() in rum:
+                        if rum not in self.allocations:
+                            self.allocations.append(office)
+                            if occupants not in office.occupants:
+                                office.add_occupants(occupants)
+
+            for rum in living_data:
+                self.room_type = "LIVING_SPACE"
+                self.all_rooms.append(rum)
+                self.living_spaces.append(Living(rum))
+                self.all_living_names.append(rum)
+
+                for living in self.living_spaces:
+                    occupants = ' '.join([str(x[0])for x in
+                                          self.session.query(All_rooms.Occupants).filter(All_rooms.Room_name == rum)])
+                    if living.get_room_name() in rum:
+                        if rum not in self.allocations:
+                            self.allocations.append(living)
+                            if occupants not in living.occupants:
+                                living.add_occupants(occupants)
+
+            return colored("success", 'green', attrs=['bold'])
         except exc.SQLAlchemyError as error:
             if error:
-                print("Database is empty")
                 return "No database"
 
     def get_person_id(self, first_name, last_name):
@@ -492,7 +555,7 @@ class Amity():
             for person_id, person_name in self.staff_info.items():
                 if person_name == full_name.upper():
                     my_person_id = person_id
-            print(colored(my_person_id, 'yellow', attrs=['bold']))
+
             return my_person_id
         else:
             return "Ooops! %s does not exist" % full_name

@@ -5,7 +5,7 @@ Andela Employees randomly and efficiently.
 
 Usage:
     Amitié create_room <room_type> <room_name>...
-    Amitié add_person <first_name> <last_name> <role> <accomodation>
+    Amitié add_person <first_name> <last_name> <role> [<accomodation>]
     Amitié reallocate_person <emp_id> <room_name>
     Amitié load_people <file_name>
     Amitié print_allocations [--file_name]
@@ -83,18 +83,24 @@ class App(cmd.Cmd):
     @classmethod
     @docopt_cmd
     def do_add_person(self, arg):
-        """Usage: add_person <first_name> <last_name> <role> <accomodation>"""
+        """Usage: add_person <first_name> <last_name> <role> [<accomodation>]"""
 
         first_name = arg['<first_name>']
         last_name = arg['<last_name>']
         role = arg['<role>']
+        if not arg['<accomodation>']:
+            arg['<accomodation>'] = 'N'
+        else:
+            arg['<accomodation>']
         accomodation = arg['<accomodation>']
+
         print(amity.add_person(first_name, last_name, role, accomodation))
 
     @classmethod
     @docopt_cmd
     def do_reallocate_person(self, arg):
         """Usage: reallocate_person <emp_id> <room_name>"""
+
         emp_id = arg['<emp_id>']
         room_name = arg['<room_name>']
         print(amity.reallocate_person(emp_id, room_name))
@@ -133,23 +139,26 @@ class App(cmd.Cmd):
     @docopt_cmd
     def do_save_state(self, arg):
         """Usage: save_state <db_name>"""
+
         db_name = arg['<db_name>']
-        amity.save_state(db_name)
+        print(amity.save_state(db_name))
 
     @classmethod
     @docopt_cmd
     def do_get_id(self, arg):
         """Usage: get_person_id <f_name> <l_name>"""
+
         f_name = arg['<f_name>']
         l_name = arg['<l_name>']
-        amity.get_person_id(f_name, l_name)
+        print(amity.get_person_id(f_name, l_name))
 
     @classmethod
     @docopt_cmd
     def do_load_state(self, arg):
         """Usage: load_state <db_name>"""
+
         db_name = arg['<db_name>']
-        amity.load_state(db_name)
+        print(amity.load_state(db_name))
 
     @classmethod
     def do_quit(self, arg):
