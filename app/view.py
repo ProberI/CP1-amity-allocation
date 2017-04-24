@@ -126,9 +126,13 @@ class App(cmd.Cmd):
     @classmethod
     @docopt_cmd
     def do_print_unallocated(self, arg):
-        """Usage: unallocated [--file_name]"""
+        """Usage: unallocated [--o=file_name]"""
 
-        print(amity.print_unallocated())
+        if arg['--o']:
+            file_name = arg['--o']
+            print(amity.print_unallocated(filename=file_name))
+        else:
+            print(amity.print_unallocated())
 
     @classmethod
     @docopt_cmd

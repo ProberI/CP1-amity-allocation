@@ -250,11 +250,11 @@ class Amity():
                         pass
         if self.offices:
             for office in self.offices:
-                if office.occupants:
+                if office.occupants and office not in self.allocations:
                     self.allocations.append(office)
         elif self.living_spaces:
             for living in self.living_spaces:
-                if living.occupants:
+                if living.occupants and living not in self.allocations:
                     self.allocations.append(living)
 
     def reallocate_person(self, employee_id, new_room):
@@ -344,10 +344,7 @@ class Amity():
                 accomodation = "N"
             else:
                 accomodation = data[3]
-
             print(self.add_person(first_name, last_name, role, accomodation))
-
-        self.print_allocations()
         return (colored("Data successfull loaded", 'yellow', attrs=['bold']))
 
     def print_allocations(self, filename=''):
@@ -414,15 +411,29 @@ class Amity():
 
         return (colored("Success\n", 'green', attrs=['bold']))
 
-    def print_unallocated(self):
+    def print_unallocated(self, filename=''):
         if not self.unallocated:
             return colored("Yeiiy!! All persons are currently allocated.",
                            'green', attrs=['bold'])
         else:
-            print('\n' + tabulate({
-                'UNALLOCATED PEOPLE': self.unallocated}, headers='keys',
-                tablefmt="fancy_grid") + '\n')
-            return colored("Success", 'green', attrs=['bold'])
+            if filename:
+                try:
+                    file_obj = open(filename, 'w')
+
+                    try:
+                        file_obj.write('\n UNALLOCATED PEOPLE')
+                        file_obj.write('\n' + '-' * 30 + '\n')
+                        file_obj.write(', '.join(self.unallocated))
+                    finally:
+                        file_obj.close()
+
+                except IOError as e:
+                    return str(e)
+            else:
+                print('\n' + tabulate({
+                    'UNALLOCATED PEOPLE': self.unallocated}, headers='keys',
+                    tablefmt="fancy_grid") + '\n')
+                return colored("Success", 'green', attrs=['bold'])
 
     def print_room(self, room_name):
         if room_name.upper() not in self.all_rooms:
