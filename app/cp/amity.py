@@ -94,8 +94,6 @@ class Amity():
                                  % self.person_name), 'red', attrs=['bold']))
 
             else:
-                if not Accomodation:
-                    Accomodation
                 if self.Role.upper() == "FELLOW":
                     self.Person_id = self.genarate_user_ID()
                     person_name = (Fellow(self.First_name, self.Last_Name).get_name())

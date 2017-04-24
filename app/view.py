@@ -91,7 +91,6 @@ class App(cmd.Cmd):
         if not arg['<accomodation>']:
             arg['<accomodation>'] = 'N'
         else:
-            arg['<accomodation>']
         accomodation = arg['<accomodation>']
 
         print(amity.add_person(first_name, last_name, role, accomodation))
