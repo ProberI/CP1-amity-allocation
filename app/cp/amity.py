@@ -282,9 +282,12 @@ class Amity():
                                         return colored(msg, 'red', attrs=['bold'])
                                     else:
                                         office.occupants.remove(fellow_name)
+
                                 if new_room.upper() in office.get_room_name():
                                     office.add_occupants(fellow_name)
                                     self.allocations.append(office)
+                                    if fellow_name in self.unallocated:
+                                        self.unallocated.remove(fellow_name)
                     return colored("Success", 'green', attrs=['bold'])
 
                 elif new_room.upper() in self.all_living_names:
@@ -300,6 +303,9 @@ class Amity():
                                 if new_room.upper() in living.get_room_name():
                                     living.add_occupants(fellow_name)
                                     self.allocations.append(living)
+                                    if fellow_name in self.unallocated:
+                                        self.unallocated.remove(fellow_name)
+
                     return colored("Success", 'green', attrs=['bold'])
 
             if employee_id.upper() in self.staff_info.keys():
@@ -321,6 +327,9 @@ class Amity():
                             if new_room.upper() in office.get_room_name():
                                 office.add_occupants(staff_name)
                                 self.allocations.append(office)
+                                if staff_name in self.unallocated:
+                                    self.unallocated.remove(staff_name)
+
                 return colored("Success", 'green', attrs=['bold'])
 
     def load_people(self, file_name):
@@ -419,11 +428,11 @@ class Amity():
         self.db_name = db_name
         file_name = self.db_name + '.db'
 
-        model.create_db(self.db_name)
         engine = create_engine('sqlite:///model/' + file_name)
         Base.metadata.drop_all(engine)
         Base.metadata.create_all(engine)
         Base.metadata.bind = engine
+        model.create_db(self.db_name)
 
         DBSession = sessionmaker(bind=engine)
         self.session = DBSession()
@@ -511,6 +520,7 @@ class Amity():
             for rum in office_data:
                 self.room_type = "OFFICE"
                 self.all_rooms.append(rum)
+
                 self.offices.append(Office(rum))
                 self.all_office_names.append(rum)
 
@@ -521,11 +531,13 @@ class Amity():
                         if rum not in self.allocations:
                             self.allocations.append(office)
                             if occupants not in office.occupants:
+                                office.occupants.clear()
                                 office.add_occupants(occupants)
 
             for rum in living_data:
                 self.room_type = "LIVING_SPACE"
                 self.all_rooms.append(rum)
+
                 self.living_spaces.append(Living(rum))
                 self.all_living_names.append(rum)
 
@@ -536,6 +548,7 @@ class Amity():
                         if rum not in self.allocations:
                             self.allocations.append(living)
                             if occupants not in living.occupants:
+                                living.occupants.clear()
                                 living.add_occupants(occupants)
 
             return colored("success", 'green', attrs=['bold'])
@@ -549,7 +562,6 @@ class Amity():
             for person_id, person_name in self.fellow_info.items():
                 if person_name == full_name.upper():
                     my_person_id = person_id
-            print(colored(my_person_id, 'yellow', attrs=['bold']))
             return my_person_id
         elif full_name.upper() in self.staff_info.values():
             for person_id, person_name in self.staff_info.items():
