@@ -8,7 +8,7 @@ Usage:
     Amitié add_person <first_name> <last_name> <role> [<accomodation>]
     Amitié reallocate_person <emp_id> <room_name>
     Amitié load_people <file_name>
-    Amitié print_allocations [--file_name]
+    Amitié print_allocations [--o=file_name]
     Amitié unallocated [--file_name]
     Amitié print_room <room_name>
     Amitié save_state <db_name>
@@ -116,9 +116,12 @@ class App(cmd.Cmd):
     @classmethod
     @docopt_cmd
     def do_print_allocations(self, arg):
-        """Usage: print_allocations [--file_name]"""
-
-        print(amity.print_allocations())
+        """Usage: print_allocations [--o=file_name]"""
+        if arg['--o']:
+            file_name = arg['--o']
+            print(amity.print_allocations(filename=file_name))
+        else:
+            print(amity.print_allocations())
 
     @classmethod
     @docopt_cmd

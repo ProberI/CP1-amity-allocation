@@ -350,7 +350,7 @@ class Amity():
         self.print_allocations()
         return (colored("Data successfull loaded", 'yellow', attrs=['bold']))
 
-    def print_allocations(self):
+    def print_allocations(self, filename=''):
         table_room_data = []
         table_people_data = []
         table_room_type = []
@@ -364,7 +364,8 @@ class Amity():
                 elif room_office in self.allocations and not room_office.occupants:
                     self.allocations.remove(room_office)
                 elif room_office.occupants:
-                    self.allocations.append(room_office)
+                    if room_office not in self.allocations:
+                        self.allocations.append(room_office)
 
             for room_living in self.living_spaces:
                 if not room_living.occupants:
@@ -373,7 +374,8 @@ class Amity():
                 elif room_living in self.allocations and not room_living.occupants:
                     self.allocations.remove(room_living)
                 elif room_living.occupants:
-                    self.allocations.append(room_living)
+                    if room_living not in self.allocations:
+                        self.allocations.append(room_living)
 
             for allocated_rooms in self.allocations:
                 if allocated_rooms.get_room_name() not in table_room_data:
@@ -382,13 +384,33 @@ class Amity():
                         table_room_type.append(allocated_rooms.Rm_type)
                         table_people_data.append(' '.join(str(x)
                                                           for x in allocated_rooms.get_occupants()))
+            if filename:
 
-            print('\n' + tabulate({
-                'Room_name': table_room_data,
-                'Room_type': table_room_type,
-                'Occupants': table_people_data
-            }, headers="keys",
-                tablefmt="fancy_grid") + '\n')
+                try:
+                    file_obj = open(filename, 'w')
+
+                    try:
+
+                        for room in self.allocations:
+                            file_obj.write('\n')
+                            file_obj.write('Room_name: ' + room.get_room_name())
+                            file_obj.write('\n' + '-' * 30 + '\n')
+                            file_obj.write(', '.join(room.get_occupants()))
+                            file_obj.write('\n')
+                    finally:
+                        file_obj.close()
+                except IOError as e:
+                    return str(e)
+
+            else:
+                print(self.allocations)
+
+                print('\n' + tabulate({
+                    'Room_name': table_room_data,
+                    'Room_type': table_room_type,
+                    'Occupants': table_people_data
+                }, headers="keys",
+                    tablefmt="fancy_grid") + '\n')
 
         return (colored("Success\n", 'green', attrs=['bold']))
 
@@ -529,6 +551,7 @@ class Amity():
                                           self.session.query(All_rooms.Occupants).filter(All_rooms.Room_name == rum)])
                     if office.get_room_name() in rum:
                         if rum not in self.allocations:
+                            self.allocations.clear()
                             self.allocations.append(office)
                             if occupants not in office.occupants:
                                 office.occupants.clear()
@@ -546,6 +569,7 @@ class Amity():
                                           self.session.query(All_rooms.Occupants).filter(All_rooms.Room_name == rum)])
                     if living.get_room_name() in rum:
                         if rum not in self.allocations:
+                            self.allocations.clear()
                             self.allocations.append(living)
                             if occupants not in living.occupants:
                                 living.occupants.clear()
