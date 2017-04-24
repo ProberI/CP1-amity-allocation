@@ -145,10 +145,13 @@ class App(cmd.Cmd):
     @classmethod
     @docopt_cmd
     def do_save_state(self, arg):
-        """Usage: save_state <db_name>"""
+        """Usage: save_state [--db=sqlite_database]"""
 
-        db_name = arg['<db_name>']
-        print(amity.save_state(db_name))
+        if arg['--db']:
+            sqlite_database = arg['--db']
+            print(amity.save_state(db_name=sqlite_database))
+        else:
+            print(amity.save_state())
 
     @classmethod
     @docopt_cmd

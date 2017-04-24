@@ -400,7 +400,6 @@ class Amity():
                     return str(e)
 
             else:
-                print(self.allocations)
 
                 print('\n' + tabulate({
                     'Room_name': table_room_data,
@@ -457,18 +456,29 @@ class Amity():
 
         return colored("\nSuccessfull print.", 'green', attrs=['bold'])
 
-    def save_state(self, db_name):
-        self.db_name = db_name
-        file_name = self.db_name + '.db'
+    def save_state(self, db_name=''):
+        if db_name:
+            self.db_name = db_name
+            file_name = self.db_name + '.db'
 
-        engine = create_engine('sqlite:///model/' + file_name)
-        Base.metadata.drop_all(engine)
-        Base.metadata.create_all(engine)
-        Base.metadata.bind = engine
-        model.create_db(self.db_name)
+            engine = create_engine('sqlite:///model/' + file_name)
+            Base.metadata.drop_all(engine)
+            Base.metadata.create_all(engine)
+            Base.metadata.bind = engine
+            model.create_db(self.db_name)
+            DBSession = sessionmaker(bind=engine)
+            self.session = DBSession()
+        else:
+            self.db_name = 'amity'
+            file_name = self.db_name + '.db'
+            engine = create_engine('sqlite:///model/' + file_name)
+            Base.metadata.drop_all(engine)
+            Base.metadata.create_all(engine)
+            Base.metadata.bind = engine
+            model.create_db(self.db_name)
+            DBSession = sessionmaker(bind=engine)
+            self.session = DBSession()
 
-        DBSession = sessionmaker(bind=engine)
-        self.session = DBSession()
         try:
             if (not self.offices and not self.living_spaces and
                     not self.fellow_info and not self.staff_info):
