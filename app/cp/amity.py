@@ -614,3 +614,36 @@ class Amity():
             return my_person_id
         else:
             return "Ooops! %s does not exist" % full_name
+
+    def list_people(self):
+        ids = []
+        names = []
+        staff_ids = []
+        staff_names = []
+        msg = 'Ooops! No Employee or staff data available at the moment\n'
+        if self.staff_info or self.fellow_info:
+            for fellow_id, fellow_name in self.fellow_info.items():
+                ids.append(fellow_id)
+                names.append(fellow_name)
+
+            for staff_id, staff_name in self.staff_info.items():
+                staff_ids.append(staff_id)
+                staff_names.append(staff_name)
+
+            cprint(('\n' + 'FELLOW DATA' + '\n' + '=' * 30 + '\n'), 'green')
+            print('\n' + tabulate({
+                'Fellow_id': ids,
+                'Fellow_name': names},
+                headers='keys',
+                tablefmt="fancy_grid") + '\n')
+
+            cprint(('\n' + 'STAFF DATA' + '\n' + '=' * 30 + '\n'), 'green')
+            print('\n' + tabulate({
+                'Staff_id': staff_ids,
+                'Staff_names': staff_names},
+                headers='keys',
+                tablefmt='fancy_grid') + '\n')
+
+            return colored('Employees list success.', 'green', attrs=['bold'])
+        else:
+            return colored(msg, 'yellow', attrs=['bold'])

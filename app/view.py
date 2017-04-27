@@ -13,6 +13,7 @@ Usage:
     Amitié print_room <room_name>
     Amitié save_state <db_name>
     Amitié load_state <db_name>
+    Amitié list_people
     Amitié (-i | --interactive)
     Amitié (-h | --help | --version)
 
@@ -91,7 +92,7 @@ class App(cmd.Cmd):
         if not arg['<accomodation>']:
             arg['<accomodation>'] = 'N'
         else:
-        accomodation = arg['<accomodation>']
+            accomodation = arg['<accomodation>']
 
         print(amity.add_person(first_name, last_name, role, accomodation))
 
@@ -168,6 +169,13 @@ class App(cmd.Cmd):
 
         db_name = arg['<db_name>']
         print(amity.load_state(db_name))
+
+    @classmethod
+    @docopt_cmd
+    def do_list_people(self, arg):
+        """Usage: list_people"""
+
+        print(amity.list_people())
 
     @classmethod
     def do_quit(self, arg):
