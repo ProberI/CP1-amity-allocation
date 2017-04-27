@@ -8,7 +8,8 @@ checkpoint_rubrick.txt
 
 #UML_nomnoml
 .DS_Store
-
+#Database files
+*.db
 # Distribution / packaging
 .Python
 env/
