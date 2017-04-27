@@ -698,3 +698,24 @@ class Amity():
                                     allocated.occupants.remove(fellow)
 
             return colored('Operation succcess!', 'green', attrs=['bold'])
+
+    def delete_room(self, room_name):
+        if room_name.upper() not in self.all_rooms:
+            return colored('Ooops! This particular room name does not exist\n',
+                           'yellow', attrs=['bold'])
+        else:
+            for room in self.all_rooms:
+                if room_name.upper() in room:
+                    self.all_rooms.remove(room)
+
+            for office in self.offices:
+                if room_name.upper() in office.get_room_name():
+                    self.offices.remove(office)
+                    self.all_office_names.remove(room_name.upper())
+
+            for living in self.living_spaces:
+                if room_name.upper() in living.get_room_name():
+                    self.living_spaces.remove(living)
+                    self.all_living_names.remove(room_name.upper())
+
+            return colored('Operation succcess!', 'green', attrs=['bold'])

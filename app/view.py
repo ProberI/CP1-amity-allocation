@@ -14,6 +14,7 @@ Usage:
     Amitié save_state <db_name>
     Amitié load_state <db_name>
     Amitié delete_person <person_id>
+    Amitié delete_rooom <room_name>
     Amitié list_people
     Amitié list_rooms
     Amitié (-i | --interactive)
@@ -171,6 +172,14 @@ class App(cmd.Cmd):
 
         employee = arg['<person_id>']
         print(amity.delete_person(employee))
+
+    @classmethod
+    @docopt_cmd
+    def do_delete_room(self, arg):
+        """Usage: delete_rooom <room_name>"""
+
+        selected_room = arg['<room_name>']
+        print(amity.delete_room(selected_room))
 
     @classmethod
     @docopt_cmd
