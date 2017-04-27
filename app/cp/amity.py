@@ -668,3 +668,29 @@ class Amity():
             return colored('Room listing success.\n', 'green', attrs=['bold'])
         else:
             return colored(msg, 'yellow', attrs=['bold'])
+
+    def delete_person(self, person_id):
+        if(person_id.upper() not in self.staff_info.keys() and person_id.upper() not in
+           self.fellow_info.keys()):
+            return (colored("Ooops! This particular Id doesn't exist",
+                            'red', attrs=['bold']))
+        if person_id.upper() in self.fellow_info.keys() or person_id.upper() in self.staff_info.keys():
+            # Keyword list used to prevent RuntimeError: dict value changed during iteration
+            for staff_id, staff_name in list(self.staff_info.items()):
+                if person_id in staff_id:
+                    del self.fellow_info[staff_id]
+                for person in self.all_people:
+                    if staff_name in person:
+                        self.all_people.remove(staff_name)
+
+            for fellow_id, fellow_name in list(self.fellow_info.items()):
+                if person_id.upper() in fellow_id:
+                    del self.fellow_info[fellow_id]
+                    for fellow in self.all_people:
+                        if fellow_name in fellow:
+                            self.all_people.remove(fellow)
+                            for allocated in self.allocations:
+                                if fellow in allocated.occupants:
+                                    allocated.occupants.remove(fellow)
+
+            return colored('Operation succcess!', 'green', attrs=['bold'])

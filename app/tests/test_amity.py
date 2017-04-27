@@ -263,3 +263,15 @@ class Test_amity_class(unittest.TestCase):
         msg = 'Ooops! No rooms exist yet\n'
         self.assertEqual(self.amity.list_rooms(),
                          colored(msg, 'yellow', attrs=['bold']))
+
+    def test_delete_person_non_existent(self):
+        self.assertEqual(self.amity.delete_person('KHYC'),
+                         (colored("Ooops! This particular Id doesn't exist",
+                                  'red', attrs=['bold'])))
+
+    def test_delete_person(self):
+        self.amity.add_person('Paul', 'Upendo', 'FELLOW', 'N')
+        person_id = self.amity.get_person_id('Paul', 'Upendo')
+        self.assertEqual(self.amity.delete_person(person_id),
+                         colored('Operation success!', 'green',
+                                 attrs=['bold']))
