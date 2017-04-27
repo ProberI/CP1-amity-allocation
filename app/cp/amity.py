@@ -697,7 +697,7 @@ class Amity():
                                 if fellow in allocated.occupants:
                                     allocated.occupants.remove(fellow)
 
-            return colored('Operation succcess!', 'green', attrs=['bold'])
+            return colored('Operation success!', 'green', attrs=['bold'])
 
     def delete_room(self, room_name):
         if room_name.upper() not in self.all_rooms:
@@ -717,5 +717,4 @@ class Amity():
                 if room_name.upper() in living.get_room_name():
                     self.living_spaces.remove(living)
                     self.all_living_names.remove(room_name.upper())
-
             return colored('Operation succcess!', 'green', attrs=['bold'])

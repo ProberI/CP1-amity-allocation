@@ -275,3 +275,18 @@ class Test_amity_class(unittest.TestCase):
         self.assertEqual(self.amity.delete_person(person_id),
                          colored('Operation success!', 'green',
                                  attrs=['bold']))
+
+    def test_delete_room_without_existence(self):
+        self.assertEqual(self.amity.delete_room('Dojo'),
+                         colored('Ooops! This particular room name does not exist\n',
+                                 'yellow', attrs=['bold']))
+
+    def test_delete_room(self):
+        self.amity.create_room("o", ["VALHALLA", "Mombasa"])
+        self.amity.create_room("L", ["Dojo"])
+        self.assertEqual(self.amity.delete_room('Mombasa'),
+                         colored('Operation succcess!', 'green', attrs=['bold']))
+
+    def test_allocate_room_randomly_unallocation(self):
+        self.amity.add_person('Paul', 'Upendo', 'fellow', 'n')
+        self.assertEqual(['PAUL UPENDO'], self.amity.unallocated)
