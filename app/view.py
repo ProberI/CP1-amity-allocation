@@ -14,6 +14,7 @@ Usage:
     Amitié save_state <db_name>
     Amitié load_state <db_name>
     Amitié list_people
+    Amitié list_rooms
     Amitié (-i | --interactive)
     Amitié (-h | --help | --version)
 
@@ -176,6 +177,13 @@ class App(cmd.Cmd):
         """Usage: list_people"""
 
         print(amity.list_people())
+
+    @classmethod
+    @docopt_cmd
+    def do_list_rooms(self, arg):
+        """Usage: list_rooms"""
+
+        print(amity.list_rooms())
 
     @classmethod
     def do_quit(self, arg):

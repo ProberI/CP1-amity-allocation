@@ -644,6 +644,27 @@ class Amity():
                 headers='keys',
                 tablefmt='fancy_grid') + '\n')
 
-            return colored('Employees list success.', 'green', attrs=['bold'])
+            return colored('Employee listing success.', 'green', attrs=['bold'])
+        else:
+            return colored(msg, 'yellow', attrs=['bold'])
+
+    def list_rooms(self):
+        room_list = []
+        type_list = []
+        msg = 'Ooops! No rooms exist yet\n'
+        if self.offices or self.living_spaces:
+            for office in self.offices:
+                room_list.append(office.get_room_name())
+                type_list.append(office.Rm_type)
+            for living in self.living_spaces:
+                room_list.append(living.get_room_name())
+                type_list.append(living.Rm_type)
+
+            print('\n' + tabulate({
+                'Room_type': type_list,
+                'Room_name': room_list},
+                headers='keys', tablefmt='fancy_grid') + '\n')
+
+            return colored('Room listing success.\n', 'green', attrs=['bold'])
         else:
             return colored(msg, 'yellow', attrs=['bold'])
