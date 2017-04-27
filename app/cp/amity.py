@@ -676,12 +676,16 @@ class Amity():
                             'red', attrs=['bold']))
         if person_id.upper() in self.fellow_info.keys() or person_id.upper() in self.staff_info.keys():
             # Keyword list used to prevent RuntimeError: dict value changed during iteration
+
             for staff_id, staff_name in list(self.staff_info.items()):
-                if person_id in staff_id:
-                    del self.fellow_info[staff_id]
-                for person in self.all_people:
-                    if staff_name in person:
-                        self.all_people.remove(staff_name)
+                if person_id.upper() in staff_id:
+                    del self.staff_info[staff_id]
+                    for staff in self.all_people:
+                        if staff_name in staff:
+                            self.all_people.remove(staff_name)
+                            for allocated in self.allocations:
+                                if staff in allocated.occupants:
+                                    allocated.occupants.remove(staff)
 
             for fellow_id, fellow_name in list(self.fellow_info.items()):
                 if person_id.upper() in fellow_id:
