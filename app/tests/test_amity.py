@@ -251,4 +251,15 @@ class Test_amity_class(unittest.TestCase):
         self.amity.add_person("Paul", "Upendo", "FELLOW", "Y")
         self.amity.add_person("Pau", "Upend", "STAFF", "N")
         self.assertEqual(self.amity.list_people(), colored(
-            'Employees list success.', 'green', attrs=['bold']))
+            'Employee listing success.', 'green', attrs=['bold']))
+
+    def test_list_rooms(self):
+        self.amity.create_room("o", ["VALHALLA", "Mombasa"])
+        self.amity.create_room("L", ["Dojo"])
+        self.assertEqual(self.amity.list_rooms(), colored(
+            'Room listing success.\n', 'green', attrs=['bold']))
+
+    def test_list_rooms_without_existence(self):
+        msg = 'Ooops! No rooms exist yet\n'
+        self.assertEqual(self.amity.list_rooms(),
+                         colored(msg, 'yellow', attrs=['bold']))
