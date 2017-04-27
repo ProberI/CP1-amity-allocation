@@ -241,3 +241,14 @@ class Test_amity_class(unittest.TestCase):
         self.amity.add_person("Paul", "Upendo", "STAFF", "N")
         self.assertEqual(self.amity.get_person_id("Pal", "Upeno"),
                          "Ooops! Pal Upeno does not exist")
+
+    def test_list_people_without_data(self):
+        msg = 'Ooops! No Employee or staff data available at the moment\n'
+        self.assertEqual(self.amity.list_people(), colored(msg, 'yellow',
+                                                           attrs=['bold']))
+
+    def test_list_people(self):
+        self.amity.add_person("Paul", "Upendo", "FELLOW", "Y")
+        self.amity.add_person("Pau", "Upend", "STAFF", "N")
+        self.assertEqual(self.amity.list_people(), colored(
+            'Employees list success.', 'green', attrs=['bold']))
