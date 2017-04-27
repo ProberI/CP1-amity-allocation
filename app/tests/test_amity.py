@@ -220,10 +220,16 @@ class Test_amity_class(unittest.TestCase):
                          colored("Ooops! No rooms created yet\n", 'red',
                                  attrs=['bold']))
 
-    def test_print_allocations_without_person_data(self):
+    def test_print_room_office_without_person_data(self):
         self.amity.create_room("o", ["Hogwarts"])
         self.assertEqual(self.amity.print_room('Hogwarts'),
                          colored("Ooops!Hogwarts is empty\n", 'yellow',
+                                 attrs=['bold']))
+
+    def test_print_room_living_without_person_data(self):
+        self.amity.create_room("l", ["Dojo"])
+        self.assertEqual(self.amity.print_room('Dojo'),
+                         colored("Ooops!Dojo is empty\n", 'yellow',
                                  attrs=['bold']))
 
     def test_save_state(self):
@@ -287,6 +293,14 @@ class Test_amity_class(unittest.TestCase):
         self.assertEqual(self.amity.delete_room('Mombasa'),
                          colored('Operation succcess!', 'green', attrs=['bold']))
 
-    def test_allocate_room_randomly_unallocation(self):
+    def test_print_unallocated(self):
         self.amity.add_person('Paul', 'Upendo', 'fellow', 'n')
-        self.assertEqual(['PAUL UPENDO'], self.amity.unallocated)
+        self.assertEqual(self.amity.print_unallocated(),
+                         colored("Success", 'green', attrs=['bold']))
+
+    def test_print_unallocated_when_all_are_allocated(self):
+        self.amity.create_room("o", ["VALHALLA", "Mombasa"])
+        self.amity.add_person('Paul', 'Upendo', 'fellow', 'n')
+        self.assertEqual(self.amity.print_unallocated(),
+                         colored("Yeiiy!! All persons are currently allocated.",
+                                 'green', attrs=['bold']))
