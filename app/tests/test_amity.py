@@ -122,9 +122,17 @@ class Test_amity_class(unittest.TestCase):
                                  attrs=['bold']))
 
     @unittest.expectedFailure
-    def test_reallocate_person_from_office(self):
+    def test_reallocate_person_fellow_from_office(self):
         self.amity.create_room("o", ["Narnia", "Hogwarts"])
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
+        person_id = self.amity.get_person_id("Paul", "Upendo")
+        self.assertEqual(self.amity.reallocate_person(person_id, "Narnia"),
+                         colored("Success", 'green', attrs=['bold']))
+
+    @unittest.expectedFailure
+    def test_reallocate_person_staff_from_office(self):
+        self.amity.create_room("o", ["Narnia", "Hogwarts"])
+        self.amity.add_person("Paul", "Upendo", "STAFF", "N")
         person_id = self.amity.get_person_id("Paul", "Upendo")
         self.assertEqual(self.amity.reallocate_person(person_id, "Narnia"),
                          colored("Success", 'green', attrs=['bold']))
@@ -189,7 +197,7 @@ class Test_amity_class(unittest.TestCase):
         self.amity.create_room("l", ["Egypt"])
         file_name = 'app/cp/names.txt'
         self.assertEqual(self.amity.load_people(file_name),
-                         (colored("Data successfull loaded", 'yellow',
+                         (colored("Data successfull loaded", 'green',
                                   attrs=['bold'])))
 
     def test_print_room_non_existent(self):
@@ -238,7 +246,7 @@ class Test_amity_class(unittest.TestCase):
         self.amity.add_person("Paul", "Upendo", "FELLOW", "Y")
         self.amity.add_person("Pau", "Upend", "STAFF", "N")
         self.assertEqual(self.amity.save_state("Try"), (colored(
-            "Data saved successfuly\n", 'blue', attrs=['bold'])))
+            "Data saved successfuly\n", 'green', attrs=['bold'])))
         self.assertEqual(self.amity.load_state('Try'),
                          colored("success", 'green', attrs=['bold']))
 
@@ -275,8 +283,15 @@ class Test_amity_class(unittest.TestCase):
                          (colored("Ooops! This particular Id doesn't exist",
                                   'red', attrs=['bold'])))
 
-    def test_delete_person(self):
+    def test_delete_person_fellow(self):
         self.amity.add_person('Paul', 'Upendo', 'FELLOW', 'N')
+        person_id = self.amity.get_person_id('Paul', 'Upendo')
+        self.assertEqual(self.amity.delete_person(person_id),
+                         colored('Operation success!', 'green',
+                                 attrs=['bold']))
+
+    def test_delete_staff(self):
+        self.amity.add_person('Paul', 'Upendo', 'STAFF', 'N')
         person_id = self.amity.get_person_id('Paul', 'Upendo')
         self.assertEqual(self.amity.delete_person(person_id),
                          colored('Operation success!', 'green',
@@ -304,3 +319,10 @@ class Test_amity_class(unittest.TestCase):
         self.assertEqual(self.amity.print_unallocated(),
                          colored("Yeiiy!! All persons are currently allocated.",
                                  'green', attrs=['bold']))
+
+    def test_save_state_with_no_data(self):
+        self.assertEqual(self.amity.save_state('test'), colored(
+            "No data to save", 'yellow', attrs=['bold']))
+
+    def test_load_state_of_non_existent_database(self):
+        self.assertEqual(self.amity.load_state('hij'), "No database")
