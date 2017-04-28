@@ -343,7 +343,7 @@ class Amity():
             else:
                 accomodation = data[3]
             print(self.add_person(first_name, last_name, role, accomodation))
-        return (colored("Data successfull loaded", 'yellow', attrs=['bold']))
+        return (colored("Data successfull loaded", 'green', attrs=['bold']))
 
     def print_allocations(self, filename=''):
         table_room_data = []
@@ -355,7 +355,7 @@ class Amity():
             for room_office in self.offices:
                 if not room_office.occupants:
                     cprint("No occupants in %s" % room_office.get_room_name(),
-                           'red', attrs=['bold'])
+                           'yellow', attrs=['bold'])
                 elif room_office in self.allocations and not room_office.occupants:
                     self.allocations.remove(room_office)
                 elif room_office.occupants:
@@ -365,7 +365,7 @@ class Amity():
             for room_living in self.living_spaces:
                 if not room_living.occupants:
                     cprint("No occupants in %s" % room_living.get_room_name(),
-                           'red', attrs=['bold'])
+                           'yellow', attrs=['bold'])
                 elif room_living in self.allocations and not room_living.occupants:
                     self.allocations.remove(room_living)
                 elif room_living.occupants:
@@ -514,7 +514,7 @@ class Amity():
                 self.session.add(self.new_person)
 
             self.session.commit()
-            return (colored("Data saved successfuly\n", 'blue', attrs=['bold']))
+            return (colored("Data saved successfuly\n", 'green', attrs=['bold']))
 
         except exc.SQLAlchemyError as error:
             print(error)
