@@ -121,27 +121,27 @@ class Test_amity_class(unittest.TestCase):
                          colored("Living_space cannot allocated be to staff\n", 'red',
                                  attrs=['bold']))
 
-    @unittest.expectedFailure
     def test_reallocate_person_fellow_from_office(self):
-        self.amity.create_room("o", ["Narnia", "Hogwarts"])
+        self.amity.create_room("o", ["Narnia"])
         self.amity.add_person("Paul", "Upendo", "FELLOW", "N")
         person_id = self.amity.get_person_id("Paul", "Upendo")
-        self.assertEqual(self.amity.reallocate_person(person_id, "Narnia"),
+        self.amity.create_room("o", ["Hogwarts"])
+        self.assertEqual(self.amity.reallocate_person(person_id, "Hogwarts"),
                          colored("Success", 'green', attrs=['bold']))
 
-    @unittest.expectedFailure
     def test_reallocate_person_staff_from_office(self):
-        self.amity.create_room("o", ["Narnia", "Hogwarts"])
+        self.amity.create_room("o", ["Narnia"])
         self.amity.add_person("Paul", "Upendo", "STAFF", "N")
+        self.amity.create_room("o", ['Hogwarts'])
         person_id = self.amity.get_person_id("Paul", "Upendo")
-        self.assertEqual(self.amity.reallocate_person(person_id, "Narnia"),
+        self.assertEqual(self.amity.reallocate_person(person_id, "Hogwarts"),
                          colored("Success", 'green', attrs=['bold']))
 
-    @unittest.expectedFailure
     def test_reallocate_person_from_living_space(self):
         self.amity.create_room("o", ["Narnia", "Hogwarts"])
-        self.amity.create_room("l", ["Dojo", "amity"])
+        self.amity.create_room("l", ["Dojo"])
         self.amity.add_person("Paul", "Upendo", "FELLOW", "Y")
+        self.amity.create_room("l", ["Amity"])
         person_id = self.amity.get_person_id("Paul", "Upendo")
         self.assertEqual(self.amity.reallocate_person(person_id, "Amity"),
                          colored("Success", 'green', attrs=['bold']))
