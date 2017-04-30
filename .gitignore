@@ -2,13 +2,14 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+checkpoint_rubrick.txt
 # C extensions
 *.so
 
 #UML_nomnoml
 .DS_Store
-
+#Database files
+*.db
 # Distribution / packaging
 .Python
 env/
