@@ -12,6 +12,7 @@ class Employees(Base):
     Emp_Id = Column(String(250))
     Person_name = Column(String(350))
     role = Column(String(250))
+    unallocated = Column(String(100))
 
 
 class All_rooms(Base):

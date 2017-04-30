@@ -1,16 +1,19 @@
+# system imports
 import random
 import string
 
+# ORM database imports
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import exc
 from model.model import Employees, All_rooms, Base
 from model import model
 
+# terminal output beautification imports
 from termcolor import colored, cprint
 from tabulate import tabulate
 
-
+# class imports
 from cp.living import Living
 from cp.office import Office
 from cp.fellow import Fellow
@@ -18,6 +21,12 @@ from cp.staff import Staff
 
 
 class Amity():
+    '''
+    Class Amity contains declaration of important data structures to
+    persist data while the program runs. Different data structures
+    have been used in different ways. Mostly lists and dictionaries.
+
+    '''
 
     def __init__(self):
         self.all_people = []
@@ -30,9 +39,16 @@ class Amity():
         self.fellow_info = {}
         self.staff_info = {}
         self.all_rooms = []
-        global my_person_id
+        global my_person_id  # Declared as global to enable access through out the program
 
     def create_room(self, room_type, name):
+        '''
+        create_room function takes a room_type and room_name as arguments,
+        room_type can only be office or living_spaces or their initial letters.
+        The function the goes forward to create respective objects of offices
+        and living_spaces. A success message is passsed thereafter.
+
+        '''
         self.room_type = room_type
 
         for room_name in name:
@@ -63,10 +79,19 @@ class Amity():
         return (colored(msg + "\n", 'green', attrs=['bold']))
 
     def add_person(self, First_name, Last_Name, role, Accomodation="N"):
+        '''
+        add_person function takes First_name, Last_Name, role and Accomodation
+        arguments. Role can only be staff or fellow and accomodation options if
+        left empty will default to N for no. The function creates people objects
+        depending on their roles from the Staff  and Fellow classes. Fellows and
+        staff are added to respective dictionaries and lists.
+
+        '''
         self.First_name = First_name
         self.Last_Name = Last_Name
         self.Role = role
         self.Accomodation = Accomodation
+        # The variable special holds a list of special characters on the keyboard
         special = [r'''\\''', r'''+''', r'''-''', r'''&''', r'''|''', r'''!''',
                    r'''(''', r''')''', r'''{''', r'''}''', r'''[''', r''']''',
                    r'''^''', r'''~''', r'''*''', r'''?''', r''':''', r'''"''',
@@ -113,16 +138,30 @@ class Amity():
 
     @staticmethod
     def genarate_user_ID():
+        '''
+        This function randomly generates a series of 5 alphabet characters every
+        time it is called. The random characters are saved for each user Id
+
+        '''
         person_id = ''.join([random.choice(string.ascii_uppercase)
                              for n in range(5)])
+        # .join is used here to convert the output to string
         return person_id
 
     def allocate_room_randomly(self):
+        '''
+        This function is called everytime a person is added into the system.
+        It checks for edgecases while adding people into the system and prevents
+        cases where staff are assigned accomodation spaces and also avoids duplication
+        or allocation of a person to the same room more than once. It selects
+        a fellow, staff and room randomly before allocation.
+
+        '''
         if self.Role.upper() == "FELLOW":
 
             for fellow in self.fellow_info.values():
                 listt = []
-                listt.append(fellow)
+                listt.append(fellow)  # list of fellow names fron fellow_info dict
             selected_fellow = random.choice(listt)
 
             if self.Accomodation.upper() == "Y":
@@ -159,6 +198,7 @@ class Amity():
                     else:
                         cprint("Living_space not allocated\n", 'yellow', attrs=['bold'])
                         if selected_fellow not in self.unallocated:
+                            # If person  misses a room he/she is appended to unallocated list
                             self.unallocated.append(selected_fellow)
                         else:
                             pass
@@ -198,7 +238,7 @@ class Amity():
                 staff_list = []
                 staff_list.append(staff)
             selected_staff = random.choice(staff_list)
-
+            # Barring staff from getting accomodation spaces
             if self.Accomodation.upper() == "Y":
                 if self.offices:
                     for office in self.offices:
@@ -256,6 +296,12 @@ class Amity():
                     self.allocations.append(living)
 
     def reallocate_person(self, employee_id, new_room):
+        '''
+        This function uses the unique person_id and the new_room where the
+        respective person is to be reallocated to from a previous allocation.
+        It then reallocated specified person to the specified room name.
+
+        '''
         if(employee_id.upper() not in self.staff_info.keys() and employee_id.upper() not
                 in self.fellow_info.keys() and new_room.upper() not in self.all_rooms):
             return (colored("Ooops!Can't reallocate with no rooms and people.",
@@ -269,6 +315,7 @@ class Amity():
             return (colored("Ooops, invalid employee_id please try again.", 'red',
                             attrs=['bold']))
         else:
+
             if employee_id.upper() in self.fellow_info.keys():
                 msg = 'Ooops! cannot reallocate person to same room\n'
                 if new_room.upper() in self.all_office_names:
@@ -276,6 +323,7 @@ class Amity():
                         if fellow_id == employee_id.upper():
                             for office in self.offices:
                                 if fellow_name in office.get_occupants():
+                                    # Prevents reallocation of a person to the same room
                                     if new_room.upper() in office.get_room_name():
                                         return colored(msg, 'red', attrs=['bold'])
                                     else:
@@ -331,10 +379,16 @@ class Amity():
                 return colored("Success", 'green', attrs=['bold'])
 
     def load_people(self, file_name):
+        '''
+        This function loads people from a specified filename and dumps their
+        data into their respective data structures by calling the add_person
+        function.
+        '''
         file_name = 'cp/names.txt'
         f = open(file_name, mode='r', encoding='utf-8')
         for line in f.readlines():
             data = line.split()
+            # Data is each word in the line is a list
             first_name = data[0]
             last_name = data[1]
             role = data[2]
@@ -346,6 +400,11 @@ class Amity():
         return (colored("Data successfull loaded", 'green', attrs=['bold']))
 
     def print_allocations(self, filename=''):
+        '''
+        print_allocations function prints allocations room with its occupants.
+        The output can be in file format or in tabulated format. This is decided
+        the filename is specified or not.
+        '''
         table_room_data = []
         table_people_data = []
         table_room_type = []
@@ -433,6 +492,9 @@ class Amity():
                 return colored("Success", 'green', attrs=['bold'])
 
     def print_room(self, room_name):
+        '''
+        Prints occupants for each room.
+        '''
         if room_name.upper() not in self.all_rooms:
             return(colored("Ooops, this room does not exist", 'red',
                            attrs=['bold']))
@@ -455,6 +517,11 @@ class Amity():
         return colored("\nSuccessfull print.", 'green', attrs=['bold'])
 
     def save_state(self, db_name=''):
+        '''
+        Uses ORM to save data into a specified database. If no db_name is specified,
+        the default db_name is amity.
+
+        '''
         if db_name:
             self.db_name = db_name
             file_name = self.db_name + '.db'
@@ -504,6 +571,8 @@ class Amity():
                 self.new_person.Emp_Id = person_id
                 self.new_person.Person_name = name
                 self.new_person.role = "FELLOW"
+                if name in self.unallocated:
+                    self.new_person.unallocated = 'YES'
                 self.session.add(self.new_person)
 
             for staff_id, staff_name in self.staff_info.items():
@@ -511,6 +580,8 @@ class Amity():
                 self.new_person.Emp_Id = staff_id
                 self.new_person.Person_name = staff_name
                 self.new_person.role = "STAFF"
+                if staff_name in self.unallocated:
+                    self.new_person.unallocated = 'YES'
                 self.session.add(self.new_person)
 
             self.session.commit()
@@ -520,6 +591,11 @@ class Amity():
             print(error)
 
     def load_state(self, db_name):
+        '''
+        Loads data back into the program from a previous execution.
+        Recreates people and room objects once the are from the database and
+        being stored into their respective data structures.
+        '''
 
         try:
             engine = create_engine('sqlite:///model/' + db_name + '.db')
@@ -542,6 +618,9 @@ class Amity():
             staff_data = ([str(x[0])for x in
                            self.session.query(Employees.Person_name).filter(Employees.role == "STAFF")])
 
+            unallocated_person = ([str(x[0])for x in
+                                   self.session.query(Employees.Person_name).filter(Employees.unallocated == "YES")])
+
             for Person in fellow_data:
                 self.Role = "FELLOW"
                 self.all_people.append(Person)
@@ -549,6 +628,11 @@ class Amity():
                                      self.session.query(Employees.Emp_Id).filter(Employees.Person_name == Person)])
 
                 self.fellow_info[person_id] = Person
+                if unallocated_person:
+                    if Person not in self.unallocated and Person in unallocated_person:
+                        self.unallocated.append(Person)
+                    else:
+                        pass
 
             for person in staff_data:
                 self.Role = "STAFF"
@@ -557,6 +641,11 @@ class Amity():
                                      self.session.query(Employees.Emp_Id).filter(Employees.Person_name == person)])
 
                 self.staff_info[person_id] = person
+                if unallocated_person:
+                    if person not in self.unallocated and person in unallocated_person:
+                        self.unallocated.append(person)
+                    else:
+                        pass
 
             for rum in office_data:
                 self.room_type = "OFFICE"
@@ -600,6 +689,10 @@ class Amity():
                 return "No database"
 
     def get_person_id(self, first_name, last_name):
+        '''
+        This function return the unique person_id from the specified first_name
+        and last_name.
+        '''
         full_name = first_name + " " + last_name
         if full_name.upper() in self.fellow_info.values():
             for person_id, person_name in self.fellow_info.items():
@@ -616,6 +709,9 @@ class Amity():
             return "Ooops! %s does not exist" % full_name
 
     def list_people(self):
+        '''
+        Outputs a list of people persisted during the program's excetion.
+        '''
         ids = []
         names = []
         staff_ids = []
@@ -649,6 +745,9 @@ class Amity():
             return colored(msg, 'yellow', attrs=['bold'])
 
     def list_rooms(self):
+        '''
+        Outputs a list of rooms persisted during the program's excetion.
+        '''
         room_list = []
         type_list = []
         msg = 'Ooops! No rooms exist yet\n'
@@ -670,6 +769,10 @@ class Amity():
             return colored(msg, 'yellow', attrs=['bold'])
 
     def delete_person(self, person_id):
+        '''
+        Completely deletes a person from the system.
+        '''
+
         if(person_id.upper() not in self.staff_info.keys() and person_id.upper() not in
            self.fellow_info.keys()):
             return (colored("Ooops! This particular Id doesn't exist",
@@ -700,6 +803,9 @@ class Amity():
             return colored('Operation success!', 'green', attrs=['bold'])
 
     def delete_room(self, room_name):
+        '''
+        Completely deletes a room from the system.
+        '''
         if room_name.upper() not in self.all_rooms:
             return colored('Ooops! This particular room name does not exist\n',
                            'yellow', attrs=['bold'])

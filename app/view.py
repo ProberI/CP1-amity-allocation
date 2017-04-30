@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """
 Amitié is an interactive commandline application to help you allocate rooms to
 Andela Employees randomly and efficiently.
@@ -25,13 +26,16 @@ Options:
     -i, --interactive  Interactive Mode
     -h, --help  Show this screen and exit.
 """
-
+import os
 import sys
 import cmd
+import time
 
 from docopt import docopt, DocoptExit
 
 from termcolor import colored, cprint
+
+from pyfiglet import figlet_format
 
 from cp.amity import Amity
 
@@ -65,12 +69,99 @@ def docopt_cmd(func):
 
 
 def app_header():
-    cprint("=================================================", 'blue')
+    cprint(' @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ',
+           'red', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ',
+           'red', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ',
+           'red', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ',
+           'red', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ',
+           'red', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@@#####@@@####@@@###+@@###@########@###@@@@#+@@@@@@@@@@@@@@@@@@@@ ',
+           'red', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@@;`  ,@@@````#@#.` `@@` `@,```` ``@#` #@@;. @@@@@@@@@@@@@@@@@@@@ ',
+           'red', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@@.`.` @@@`   #@@.` `@@   @:`` ` ``@@ `,@@ `:@@@@@@@@@@@@@@@@@@@@ ',
+           'red', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@@ ` ` @@@     @#:`  @@  ,@@@@``:@@@@`` #@ ,@@@@@@@@@@@@@@@@@@@@@ ',
+           'green', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@#``#``@@@` `..#``  ,@@`  @@@@. ,@@@@+`  @``#@@@@@@@@@@@@@@@@@@@@ ',
+           'green', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@#``# .#@@   ``@. ```@@` `@@@@: ,@@@@#` :`.,@@@@@@@@@@@@@@@@@@@@@ ',
+           'green', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@+ .@``+@@` `  @``   @@`.`@@@@:`:@@@@@`   .#@@@@@@@@@@@@@@@@@@@@@ ',
+           'green', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@, `@` ,@@` .` @. ````@@``@@@@``.@@@@@+```.#@@@@@@@@@@@@@@@@@@@@@ ',
+           'green', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@` .@```@@` ```#` `` #@` `@@@@..:@#@@@@` .,#@@@@@@@@@@@@@@@@@@@@@ ',
+           'green', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@.``@.``@@  `:`.```  #@```@@@@``:@@@@@@``,#@@@@@@@@@@@@@@@@@@@@@@ ',
+           'green', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@#. ````.@@. `# ` :  .@@`  @@@#,.,@@@@@@;` @@@@@@@@@@@@@@@@@@@@@@@ ',
+           'green', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@#.`       @@```#   ''`.#@. `@@@@:`;@@@@@@; .@@@@@@@@@@@@@@@@@@@@@@@ ',
+           'green', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@: ### `+@`.:@`` @```@@` `@@@@.;``@@@@@@;``@@@@@@@@@@@@@@@@@@@@@@@ ',
+           'yellow', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@: `@@#`+@@@@@@##@@+, @@` `@@@@@@@@@@@@@;  @@@@@@@@@@@@@@@@@@@@@@@ ',
+           'yellow', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@. ,@@@@@@;`. ` . #@@+@#`:#@@+`   ``.+@@@:`@@@@@@@@@@@@@@@@@@@@@@@ ',
+           'yellow', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@#@@@@;` .`+:`#.```+#@@@@@``` #. # ,```#@@@@@@@@@@@@@@@@@@@@@@@@@ ',
+           'yellow', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@@@@ ,```# ``.,.@`` `@@@,``.#`` ``  ,;`. #@@@@@@@@@@@@@@@@@@@@@@@ ',
+           'yellow', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@@#````:  ,+##+.. +; ,#.``# `.+#@# `  ``;`@@#@@@@@@@@@@@@@@@@@@@@ ',
+           'yellow', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@@@ `,: :@@@@#@#@@#``# ``@ `##@@@@@@@@# `; `#@@@@@@@@@@@@@@@@@@@@@ ',
+           'yellow', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@#`:#`.@@####@##@@@@+``..`,##@#@@##@@@@@;`,# ##@@@@@@@@@@@@@@@@@@@ ',
+           'yellow', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@@`,``:@@#@@##@+####@##.#.;##@@@@#@#@@#@@@#``  #@@@@@@@@@@@@@@@@@@@ ',
+           'yellow', attrs=['bold'])
+    time.sleep(0.2)
+    cprint(' @@@@@@@@@@@@@@@@@@  # :@#.@#@###@###@#@@+`,@@####@##@@@#@#@@#`#``@@@@@@@@@@@@@@@@@@@ ',
+           'yellow', attrs=['bold'])
+    time.sleep(0.8)
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print("\n")
+    cprint(figlet_format('AMITY', font='eftichess'), 'cyan')
+    cprint('=' * 70,  'cyan')
+    cprint('=' * 70, 'green')
+    cprint('=' * 70 + '\n', 'yellow')
 
 
 class App(cmd.Cmd):
+    os.system('cls' if os.name == 'nt' else 'clear')
     intro = 'Welcome to Amitié!' + ' (Type help for a list of commands.)'
-    custom_prompt = colored('Amitié ', 'green', attrs=[
+    custom_prompt = colored('Amitié ', 'cyan', attrs=[
         'bold']) + colored('-->', 'grey', attrs=['bold', 'blink'])
     prompt = custom_prompt
     file = None
