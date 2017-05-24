@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ProberI/CP1-amity-allocation.svg?branch=master)](https://travis-ci.org/ProberI/CP1-amity-allocation)
+[![Build Status](https://travis-ci.org/paulupendo/CP1-amity-allocation.svg?branch=master)](https://travis-ci.org/paulupendo/CP1-amity-allocation)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4879e38ba60d40a995a967ac1f669dcc)](https://www.codacy.com/app/ProberI/CP1-amity-allocation?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ProberI/CP1-amity-allocation&amp;utm_campaign=Badge_Grade)
 # AMITY ROOM ALLOCATION SYSTEM
 #### Amity is a room allocation and management system for one of andela's facilities called 'Amity'
